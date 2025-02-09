@@ -1,5 +1,6 @@
 package lazuli_lib.lazuli;
 
+import lazuli_lib.lazuli.rendering.LazuliHudRenderStep;
 import lazuli_lib.lazuli.rendering.RendererParticleSpawner;
 import lazuli_lib.lazuli.rendering.WorldRenderQueueManager;
 import lazuli_lib.lazuli.rendering.lazuli_particles.ModClientParticles;
@@ -12,7 +13,6 @@ public class LazuliClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		//LazuliHudRenderStep.register(); //thats WIP not a priority
-		//LazuliWorldRenderStep.register();
         ModParticles.registerModParticles();
         ModClientParticles.RegisterClientParticles();
 		RendererParticleSpawner.register();

@@ -2,6 +2,7 @@ package lazuli_lib.lazuli.rendering.lazuli_particles;
 
 import lazuli_lib.lazuli.rendering.RenderingHelper;
 import lazuli_lib.lazuli.rendering.WorldRenderQueueManager;
+import lazuli_lib.lazuli.utill.LazuliMathUtils;
 import lazuli_lib.lazuli.utill.Triangle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -60,6 +61,17 @@ public class SingleTickParticle extends SpriteBillboardParticle {
 
 		// Full brightness
 		int light = 15728880;
+
+		int[] testColor = {200,200,200,200};
+
+		RenderingHelper.renderPlayerFacingQuad(
+				vertexConsumer,
+				new Vec3d(5,5,0),
+				new Vec3d(-5,6,4),
+				1,
+				minU, minV, maxU, maxV, testColor, light, camera
+		);
+
 
 		// Iterate through the queued triangles and render each
 		for (Triangle tri : WorldRenderQueueManager.getTriangleQueue()) {
