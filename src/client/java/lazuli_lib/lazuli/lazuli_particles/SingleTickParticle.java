@@ -1,9 +1,9 @@
-package lazuli_lib.lazuli.rendering.lazuli_particles;
+package lazuli_lib.lazuli.lazuli_particles;
 
+import lazuli_lib.lazuli.data_containers.LazuliLine;
 import lazuli_lib.lazuli.rendering.RenderingHelper;
-import lazuli_lib.lazuli.rendering.WorldRenderQueueManager;
-import lazuli_lib.lazuli.utill.LazuliMathUtils;
-import lazuli_lib.lazuli.utill.Triangle;
+import lazuli_lib.lazuli.rendering.LazuliWorldRenderQueueManager;
+import lazuli_lib.lazuli.data_containers.Triangle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
@@ -49,9 +49,7 @@ public class SingleTickParticle extends SpriteBillboardParticle {
 
 	@Override
 	public void buildGeometry(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
-		// Get the camera position to adjust triangles relative to it
-		Vec3d cameraPos = camera.getPos();
-		Vec3d particleOrigin = new Vec3d(this.x - cameraPos.x, this.y - cameraPos.y, this.z - cameraPos.z);
+
 
 		// Texture UV coordinates
 		float minU = this.getMinU();
@@ -62,29 +60,31 @@ public class SingleTickParticle extends SpriteBillboardParticle {
 		// Full brightness
 		int light = 15728880;
 
-		int[] testColor = {200,200,200,200};
-
-		RenderingHelper.renderPlayerFacingQuad(
-				vertexConsumer,
-				new Vec3d(5,5,0),
-				new Vec3d(-5,6,4),
-				1,
-				minU, minV, maxU, maxV, testColor, light, camera
-		);
-
-
 		// Iterate through the queued triangles and render each
-		for (Triangle tri : WorldRenderQueueManager.getTriangleQueue()) {
+		for (Triangle tri : LazuliWorldRenderQueueManager.getTriangleQueue()) {
 			int[] color = tri.getColorAsArray();
 
 			// Render the triangle using the helper
 			RenderingHelper.renderQuadDoubleSided(
 					vertexConsumer,
-					particleOrigin.add(tri.getVertex1()),
-					particleOrigin.add(tri.getVertex2()),
-					particleOrigin.add(tri.getVertex3()),
-					particleOrigin.add(tri.getVertex3()), // Repeated last vertex (since it's a quad function)
+					camera,
+					tri.getVertex1(),
+					tri.getVertex2(),
+					tri.getVertex3(),
+					tri.getVertex3(), // Repeated last vertex (since it's a quad function)
 					minU, minV, maxU, maxV, color, light
+			);
+		}
+		for (LazuliLine line : LazuliWorldRenderQueueManager.getLineQueue()) {
+			int[] color = line.getColorAsArray();
+
+			// Render the triangle using the helper
+			RenderingHelper.renderPlayerFacingQuad(
+					vertexConsumer,
+					line.getVertex1(),
+					line.getVertex2(),
+					line.getWidth(), line.getZ(),
+					minU, minV, maxU, maxV, color, light, camera
 			);
 		}
 	}

@@ -1,5 +1,5 @@
 #
-# https://help.github.com/articles/dealing-with-line-endings/
+# https://help.github.com/articles/dealing-with-LazuliLine-endings/
 #
 # Linux start script should use lf
 /gradlew        text eol=lf

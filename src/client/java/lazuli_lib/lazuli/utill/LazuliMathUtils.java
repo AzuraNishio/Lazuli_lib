@@ -30,4 +30,26 @@ public class LazuliMathUtils {
                 .add(crossProductComponent.multiply(sinTheta));
     }
 
+    public static int[] addArrays(int[] a, int[] b) {
+        if (a.length != b.length) {
+            throw new IllegalArgumentException("Arrays must have the same length!");
+        }
+
+        int[] result = new int[a.length];
+        for (int i = 0; i < a.length; i++) {
+            result[i] = a[i] + b[i];
+        }
+        return result;
+    }
+
+    public static int[] multiplyAndRound(int[] array, double multiplier) {
+        int[] result = new int[array.length];
+        for (int i = 0; i < array.length; i++) {
+            result[i] = (int) Math.round(array[i] * multiplier);
+        }
+        return result;
+    }
+
+
+
 }

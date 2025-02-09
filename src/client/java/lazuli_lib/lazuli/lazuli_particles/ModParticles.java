@@ -1,4 +1,4 @@
-package lazuli_lib.lazuli.rendering.lazuli_particles;
+package lazuli_lib.lazuli.lazuli_particles;
 
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.particle.DefaultParticleType;

@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 public class RenderingHelper {
 
     public static void renderQuadDoubleSided(
-        VertexConsumer vertexConsumer,
+        VertexConsumer vertexConsumer, Camera camera,
         Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, 
         float minU, float minV, float maxU, float maxV, 
         int[] color, int light
@@ -20,6 +20,12 @@ public class RenderingHelper {
         if (color.length != 4) {
             throw new IllegalArgumentException("Color array must have 4 elements (RGBA).");
         }
+
+        Vec3d cameraPos = camera.getPos();
+        v1 = v1.subtract(cameraPos);
+        v2 = v2.subtract(cameraPos);
+        v3 = v3.subtract(cameraPos);
+        v4 = v4.subtract(cameraPos);
 
         // Add vertices in the correct order (counterclockwise)
         vertex(vertexConsumer, v1, minU, minV, color, light);
@@ -37,7 +43,7 @@ public class RenderingHelper {
     }
 
     public static void renderQuad(
-            VertexConsumer vertexConsumer,
+            VertexConsumer vertexConsumer, Camera camera,
             Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4,
             float minU, float minV, float maxU, float maxV,
             int[] color, int light
@@ -45,6 +51,12 @@ public class RenderingHelper {
         if (color.length != 4) {
             throw new IllegalArgumentException("Color array must have 4 elements (RGBA).");
         }
+
+        Vec3d cameraPos = camera.getPos();
+        v1 = v1.subtract(cameraPos);
+        v2 = v2.subtract(cameraPos);
+        v3 = v3.subtract(cameraPos);
+        v4 = v4.subtract(cameraPos);
 
         // Add vertices in the correct order (counterclockwise)
         vertex(vertexConsumer, v1, minU, minV, color, light);
@@ -55,7 +67,7 @@ public class RenderingHelper {
 
     public static void renderPlayerFacingQuad(
             VertexConsumer vertexConsumer,
-            Vec3d v1, Vec3d v2, double lineWidth,
+            Vec3d v1, Vec3d v2, double lineWidth, double Z,
             float minU, float minV, float maxU, float maxV,
             int[] color, int light, Camera camera
     ) {
@@ -73,10 +85,20 @@ public class RenderingHelper {
         Vec3d up = right.multiply(lineWidth);
         Vec3d down = up.multiply(-1);
 
-        Vec3d v3 = v2.add(new Vec3d(0,1,0));
-        Vec3d v4 = v1.add(new Vec3d(0,1,0));
+        Vec3d lineDir = v1.subtract(v2).normalize();
+        Vec3d cameraDifferenceV1 = v1.subtract(camera.getPos());
+        Vec3d cameraDifferenceV2 = v2.subtract(camera.getPos());
 
-      renderQuadDoubleSided(vertexConsumer,v1,v2,v3,v4,minU,minV,maxU,maxV,color,light);
+        Vec3d ScaledNormalV1 = LazuliMathUtils.rotateAroundAxis(cameraDifferenceV1,lineDir,90).normalize().multiply(lineWidth);
+        Vec3d ScaledNormalV2 = LazuliMathUtils.rotateAroundAxis(cameraDifferenceV1,lineDir,90).normalize().multiply(lineWidth);
+
+        Vec3d v3 = v2.add(ScaledNormalV2).subtract(cameraDifferenceV2.multiply(Z));
+        Vec3d v4 = v1.add(ScaledNormalV1).subtract(cameraDifferenceV1.multiply(Z));
+
+        v1 = v1.subtract(ScaledNormalV1).subtract(cameraDifferenceV1.multiply(Z));
+        v2 = v2.subtract(ScaledNormalV2).subtract(cameraDifferenceV2.multiply(Z));
+
+      renderQuadDoubleSided(vertexConsumer,camera, v1,v2,v3,v4,minU,minV,maxU,maxV,color,light);
     }
 
 

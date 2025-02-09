@@ -1,6 +1,6 @@
 package lazuli_lib.lazuli.rendering;
 
-import lazuli_lib.lazuli.rendering.lazuli_particles.ModParticles;
+import lazuli_lib.lazuli.lazuli_particles.ModParticles;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
