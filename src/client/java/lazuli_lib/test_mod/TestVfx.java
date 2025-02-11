@@ -50,7 +50,7 @@ public class TestVfx {
         // Register the tick event listener to add random cracks
         ClientTickEvents.END_WORLD_TICK.register(client -> {
             //===========[start ticking zone]=======================================================
-            //tickCounter++;
+            tickCounter++;
 
 
 

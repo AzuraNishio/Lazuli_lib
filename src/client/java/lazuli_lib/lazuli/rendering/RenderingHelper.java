@@ -30,8 +30,6 @@ public class RenderingHelper {
         v3 = v3.subtract(cameraPos);
         v4 = v4.subtract(cameraPos);
 
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-
         // Add vertices in the correct order (counterclockwise)
         vertex(vertexConsumer, v1, minU, minV, color, light);
         vertex(vertexConsumer, v2, minU, maxV, color, light);
@@ -57,7 +55,6 @@ public class RenderingHelper {
             throw new IllegalArgumentException("Color array must have 4 elements (RGBA).");
         }
 
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
 
         Vec3d cameraPos = camera.getPos();
@@ -83,7 +80,6 @@ public class RenderingHelper {
             throw new IllegalArgumentException("Color array must have 4 elements (RGBA).");
         }
 
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
 
         // Get camera forward direction
