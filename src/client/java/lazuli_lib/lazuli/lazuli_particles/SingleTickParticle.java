@@ -1,6 +1,8 @@
 package lazuli_lib.lazuli.lazuli_particles;
 
 import lazuli_lib.lazuli.data_containers.LazuliLine;
+import lazuli_lib.lazuli.data_containers.LazuliLineBuffer;
+import lazuli_lib.lazuli.data_containers.TriangleBuffer;
 import lazuli_lib.lazuli.rendering.RenderingHelper;
 import lazuli_lib.lazuli.rendering.LazuliWorldRenderQueueManager;
 import lazuli_lib.lazuli.data_containers.Triangle;
@@ -60,33 +62,42 @@ public class SingleTickParticle extends SpriteBillboardParticle {
 		// Full brightness
 		int light = 15728880;
 
-		// Iterate through the queued triangles and render each
-		for (Triangle tri : LazuliWorldRenderQueueManager.getTriangleQueue()) {
-			int[] color = tri.getColorAsArray();
+// Iterate through the queued triangle buffers and render each buffer
+		LazuliWorldRenderQueueManager.flushBuffers();
 
-			// Render the triangle using the helper
-			RenderingHelper.renderQuadDoubleSided(
-					vertexConsumer,
-					camera,
-					tri.getVertex1(),
-					tri.getVertex2(),
-					tri.getVertex3(),
-					tri.getVertex3(), // Repeated last vertex (since it's a quad function)
-					minU, minV, maxU, maxV, color, light
-			);
-		}
-		for (LazuliLine line : LazuliWorldRenderQueueManager.getLineQueue()) {
-			int[] color = line.getColorAsArray();
+		for (TriangleBuffer triangleBuffer : LazuliWorldRenderQueueManager.getTriangleQueue()) {
+			for (Triangle tri : triangleBuffer.getTriangles()) {
+				int[] color = tri.getColorAsArray();
 
-			// Render the triangle using the helper
-			RenderingHelper.renderPlayerFacingQuad(
-					vertexConsumer,
-					line.getVertex1(),
-					line.getVertex2(),
-					line.getWidth(), line.getZ(),
-					minU, minV, maxU, maxV, color, light, camera
-			);
+				// Render the triangle using the helper
+				RenderingHelper.renderQuadDoubleSided(
+						vertexConsumer,
+						camera,
+						tri.getVertex1(),
+						tri.getVertex2(),
+						tri.getVertex3(),
+						tri.getVertex3(), // Repeated last vertex (since it's a quad function)
+						minU, minV, maxU, maxV, color, light
+				);
+			}
 		}
+
+// Iterate through the queued line buffers and render each buffer
+		for (LazuliLineBuffer lineBuffer : LazuliWorldRenderQueueManager.getLineQueue()) {
+			for (LazuliLine line : lineBuffer.getLines()) {
+				int[] color = line.getColorAsArray();
+
+				// Render the line using the helper
+				RenderingHelper.renderPlayerFacingQuad(
+						vertexConsumer,
+						line.getVertex1(),
+						line.getVertex2(),
+						line.getWidth(), line.getZ(),
+						minU, minV, maxU, maxV, color, light, camera
+				);
+			}
+		}
+
 	}
 
 

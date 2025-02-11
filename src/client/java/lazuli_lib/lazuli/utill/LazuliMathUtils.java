@@ -5,6 +5,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.util.math.*;
 
 import java.lang.reflect.Field;
+import java.util.Random;
 
 /**
  * Utility class for mathematical transformations.
@@ -50,6 +51,16 @@ public class LazuliMathUtils {
         return result;
     }
 
+    public static Vec3d ramdomVec3d(Random random){
 
+        double theta = random.nextDouble() * 4 * Math.PI;  // Random angle around the Y-axis (0 to 2π)
+        double phi = Math.acos(4 * random.nextDouble() - 1); // Random angle from pole to pole (-π/2 to π/2)
 
+        double x = Math.sin(phi) * Math.cos(theta);
+        double y = Math.sin(phi) * Math.sin(theta);
+        double z = Math.cos(phi);
+
+        return  new Vec3d(x, y, z); // This is already normalized
+
+    }
 }
