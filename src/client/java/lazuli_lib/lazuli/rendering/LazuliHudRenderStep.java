@@ -3,6 +3,7 @@ package lazuli_lib.lazuli.rendering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.ShaderEffect;
 import net.minecraft.client.render.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
@@ -39,6 +40,7 @@ public class LazuliHudRenderStep {
             float b = color[2] / 255f;
             float a = color[3] / 255f;
 
+            RenderSystem.setShader(GameRenderer::getPositionColorShader);
             RenderSystem.setShaderColor(r, g, b, a);
 
 

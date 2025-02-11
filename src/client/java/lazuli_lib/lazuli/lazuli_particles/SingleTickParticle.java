@@ -53,6 +53,8 @@ public class SingleTickParticle extends SpriteBillboardParticle {
 	public void buildGeometry(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
 
 
+
+
 		// Texture UV coordinates
 		float minU = this.getMinU();
 		float maxU = this.getMaxU();

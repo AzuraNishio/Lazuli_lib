@@ -3,7 +3,7 @@
 	"package": "lazuli_lib.lazuli.mixin.client",
 	"compatibilityLevel": "JAVA_17",
 	"client": [
-		"ExampleClientMixin"
+      "CameraMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -3,11 +3,13 @@ package lazuli_lib.test_mod;
 import lazuli_lib.lazuli.data_containers.LazuliLine;
 import lazuli_lib.lazuli.data_containers.Triangle;
 import lazuli_lib.lazuli.preset_renders.PortalVfxManager;
+import lazuli_lib.lazuli.rendering.LazuliCameraManager;
 import lazuli_lib.lazuli.rendering.LazuliHudRenderManager;
 import lazuli_lib.lazuli.rendering.LazuliWorldRenderQueueManager;
 import lazuli_lib.lazuli.utill.LazuliMathUtils;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Random;
@@ -19,6 +21,11 @@ public class TestVfx {
     private static int seed = 1;
 
     public static void runTestRenders() {
+
+
+        LazuliCameraManager.setCameraDisplacement(new Vec3d(0,0,0));
+        LazuliCameraManager.setCameraRotationDisplacement(new Quaternion(0, (float) Math.sin(Math.PI / 4), 0, (float) Math.cos(Math.PI / 4)));
+
         PortalVfxManager.createSingleDimensionalRift(
                 new Vec3d(-5,5,-5),
                 new Vec3d(5,5,5),
@@ -33,8 +40,8 @@ public class TestVfx {
         LazuliWorldRenderQueueManager.addTriangle(
                 new Triangle(
                         new Vec3d(5, 0, 0),
-                         new Vec3d(5, 0, 0),
-                         new Vec3d(5, 0, 0),
+                         new Vec3d(-5, 0, 0),
+                         new Vec3d(0, 5, 0),
                         LazuliMathUtils.rgbaToInt(100,100,100,255)
                 )
         );
@@ -43,7 +50,7 @@ public class TestVfx {
         // Register the tick event listener to add random cracks
         ClientTickEvents.END_WORLD_TICK.register(client -> {
             //===========[start ticking zone]=======================================================
-            tickCounter++;
+            //tickCounter++;
 
 
 

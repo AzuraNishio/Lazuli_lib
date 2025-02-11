@@ -1,8 +1,10 @@
 package lazuli_lib.lazuli.rendering;
 
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import lazuli_lib.lazuli.utill.LazuliMathUtils;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.util.math.Vec3d;
 
@@ -21,11 +23,14 @@ public class RenderingHelper {
             throw new IllegalArgumentException("Color array must have 4 elements (RGBA).");
         }
 
+
         Vec3d cameraPos = camera.getPos();
         v1 = v1.subtract(cameraPos);
         v2 = v2.subtract(cameraPos);
         v3 = v3.subtract(cameraPos);
         v4 = v4.subtract(cameraPos);
+
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
         // Add vertices in the correct order (counterclockwise)
         vertex(vertexConsumer, v1, minU, minV, color, light);
@@ -52,6 +57,9 @@ public class RenderingHelper {
             throw new IllegalArgumentException("Color array must have 4 elements (RGBA).");
         }
 
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
+
         Vec3d cameraPos = camera.getPos();
         v1 = v1.subtract(cameraPos);
         v2 = v2.subtract(cameraPos);
@@ -74,6 +82,9 @@ public class RenderingHelper {
         if (color.length != 4) {
             throw new IllegalArgumentException("Color array must have 4 elements (RGBA).");
         }
+
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
 
         // Get camera forward direction
         Vec3d cameraDir = getDirectionFromCamera(camera);
