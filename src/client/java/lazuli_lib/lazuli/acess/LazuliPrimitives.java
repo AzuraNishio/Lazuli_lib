@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 
 public class LazuliPrimitives {
     // ✅ Register and Retrieve Primitives
-//    public static final TriangleBuffer SPHERE_TRIANGLES = registerTrianglePrimitive("sphere");
+    public static final TriangleBuffer SPHERE_TRIANGLES = registerTrianglePrimitive("sphere");
 //    public static final LazuliLineBuffer SPHERE_LINES = registerLinePrimitive("sphere");
 
     public static final TriangleBuffer CUBE_TRIANGLES = registerTrianglePrimitive("cube");

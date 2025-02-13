@@ -50,6 +50,10 @@ public class TriangleBuffer {
         return new Vec3d(relative.x * scale.x, relative.y * scale.y, relative.z * scale.z).add(pivot);
     }
 
+    public void mergeBuffer(TriangleBuffer InBuffer) {
+        triangles.addAll(InBuffer.getTriangles());
+    }
+
     // ✅ Rotate around X-axis at a pivot point
     public void rotateX(double angle, Vec3d pivot) {
         double cos = Math.cos(angle);

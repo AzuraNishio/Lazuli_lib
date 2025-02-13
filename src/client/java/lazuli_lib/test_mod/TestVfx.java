@@ -27,7 +27,7 @@ public class TestVfx {
         LazuliCameraManager.setCameraDisplacement(new Vec3d(0,0,0));
         LazuliCameraManager.setCameraRotationDisplacement(new Quaternion(0, (float) Math.sin(Math.PI / 4), 0, (float) Math.cos(Math.PI / 4)));
 
-        TriangleBuffer cube = LazuliPrimitives.CUBE_TRIANGLES;
+        TriangleBuffer cube = LazuliPrimitives.SPHERE_TRIANGLES;
 
         // Register the tick event listener to add random cracks
         ClientTickEvents.END_WORLD_TICK.register(client -> {
@@ -38,8 +38,8 @@ public class TestVfx {
                 LazuliWorldRenderQueueManager.addLongTriangleBuffer(0, cube);
             }
             if (tickCounter > 2) {
-                    cube.rotateY(0.1,new Vec3d(0.5,1.5,0.5));
-                    cube.rotateX(0.0235,new Vec3d(0.5,1.5,0.5));
+                  //  cube.rotateY(0.1,new Vec3d(0.5,1.5,0.5));
+                  //  cube.rotateX(0.0235,new Vec3d(0.5,1.5,0.5));
                     LazuliWorldRenderQueueManager.addLongTriangleBuffer(0, cube);
             }
 
