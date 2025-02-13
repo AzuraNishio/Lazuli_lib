@@ -1,4 +1,4 @@
-package lazuli_lib.lazuli.rendering;
+package lazuli_lib.lazuli.acess;
 
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Quaternion;

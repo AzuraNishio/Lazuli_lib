@@ -1,11 +1,11 @@
-package lazuli_lib.lazuli.lazuli_particles;
+package lazuli_lib.lazuli.core.lazuli_particles;
 
-import lazuli_lib.lazuli.data_containers.LazuliLine;
-import lazuli_lib.lazuli.data_containers.LazuliLineBuffer;
-import lazuli_lib.lazuli.data_containers.TriangleBuffer;
-import lazuli_lib.lazuli.rendering.RenderingHelper;
-import lazuli_lib.lazuli.rendering.LazuliWorldRenderQueueManager;
-import lazuli_lib.lazuli.data_containers.Triangle;
+import lazuli_lib.lazuli.acess.data_containers.LazuliLine;
+import lazuli_lib.lazuli.acess.data_containers.LazuliLineBuffer;
+import lazuli_lib.lazuli.acess.data_containers.TriangleBuffer;
+import lazuli_lib.lazuli.core.rendering.RenderingHelper;
+import lazuli_lib.lazuli.acess.LazuliWorldRenderQueueManager;
+import lazuli_lib.lazuli.acess.data_containers.Triangle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;

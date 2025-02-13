@@ -1,15 +1,13 @@
-package lazuli_lib.lazuli.mixin.client;
+package lazuli_lib.lazuli.core.mixin;
 
-import lazuli_lib.lazuli.data_containers.LazuliLine;
-import lazuli_lib.lazuli.data_containers.LazuliLineBuffer;
-import lazuli_lib.lazuli.data_containers.TriangleBuffer;
-import lazuli_lib.lazuli.rendering.RenderingHelper;
-import lazuli_lib.lazuli.rendering.LazuliWorldRenderQueueManager;
-import lazuli_lib.lazuli.data_containers.Triangle;
+import lazuli_lib.lazuli.acess.data_containers.LazuliLine;
+import lazuli_lib.lazuli.acess.data_containers.LazuliLineBuffer;
+import lazuli_lib.lazuli.acess.data_containers.TriangleBuffer;
+import lazuli_lib.lazuli.core.rendering.RenderingHelper;
+import lazuli_lib.lazuli.acess.LazuliWorldRenderQueueManager;
+import lazuli_lib.lazuli.acess.data_containers.Triangle;
 import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;

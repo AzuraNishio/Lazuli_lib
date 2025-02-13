@@ -1,13 +1,14 @@
 package lazuli_lib.lazuli;
 
-import lazuli_lib.lazuli.rendering.LazuliHudRenderManager;
-import lazuli_lib.lazuli.rendering.LazuliHudRenderStep;
-import lazuli_lib.lazuli.rendering.RendererParticleSpawner;
-import lazuli_lib.lazuli.lazuli_particles.ModClientParticles;
-import lazuli_lib.lazuli.lazuli_particles.ModParticles;
-import lazuli_lib.lazuli.preset_renders.PortalVfxManager;
+import lazuli_lib.lazuli.acess.LazuliHudRenderManager;
+import lazuli_lib.lazuli.acess.LazuliPrimitives;
+import lazuli_lib.lazuli.core.rendering.LazuliHudRenderStep;
+import lazuli_lib.lazuli.core.rendering.RendererParticleSpawner;
+import lazuli_lib.lazuli.core.lazuli_particles.ModClientParticles;
+import lazuli_lib.lazuli.core.lazuli_particles.ModParticles;
 import lazuli_lib.test_mod.TestVfx;
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.util.Lazy;
 
 public class LazuliClient implements ClientModInitializer {
 	@Override
@@ -17,6 +18,7 @@ public class LazuliClient implements ClientModInitializer {
         ModClientParticles.RegisterClientParticles();
 		RendererParticleSpawner.register();
 		LazuliHudRenderManager.register();
+		LazuliPrimitives.registerPrimitives();
 
 		TestVfx.runTestRenders();
 	}

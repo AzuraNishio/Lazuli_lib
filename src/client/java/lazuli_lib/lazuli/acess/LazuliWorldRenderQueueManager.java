@@ -1,9 +1,9 @@
-package lazuli_lib.lazuli.rendering;
+package lazuli_lib.lazuli.acess;
 
-import lazuli_lib.lazuli.data_containers.LazuliLineBuffer;
-import lazuli_lib.lazuli.data_containers.Triangle;
-import lazuli_lib.lazuli.data_containers.TriangleBuffer;
-import lazuli_lib.lazuli.data_containers.LazuliLine;
+import lazuli_lib.lazuli.acess.data_containers.LazuliLineBuffer;
+import lazuli_lib.lazuli.acess.data_containers.Triangle;
+import lazuli_lib.lazuli.acess.data_containers.TriangleBuffer;
+import lazuli_lib.lazuli.acess.data_containers.LazuliLine;
 
 
 import java.util.*;

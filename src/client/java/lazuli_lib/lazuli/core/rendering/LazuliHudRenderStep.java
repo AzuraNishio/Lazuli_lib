@@ -1,13 +1,11 @@
-package lazuli_lib.lazuli.rendering;
+package lazuli_lib.lazuli.core.rendering;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import lazuli_lib.lazuli.acess.LazuliHudRenderManager;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderEffect;
 import net.minecraft.client.render.*;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
-import net.minecraft.world.World;
 
 public class LazuliHudRenderStep {
 

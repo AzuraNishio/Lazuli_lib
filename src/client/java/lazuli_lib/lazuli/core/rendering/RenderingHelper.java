@@ -1,10 +1,8 @@
-package lazuli_lib.lazuli.rendering;
+package lazuli_lib.lazuli.core.rendering;
 
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import lazuli_lib.lazuli.utill.LazuliMathUtils;
+import lazuli_lib.lazuli.acess.utill.LazuliMathUtils;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.util.math.Vec3d;
 

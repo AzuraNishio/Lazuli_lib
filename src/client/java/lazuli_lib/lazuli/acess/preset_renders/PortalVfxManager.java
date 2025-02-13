@@ -1,12 +1,12 @@
-package lazuli_lib.lazuli.preset_renders;
+package lazuli_lib.lazuli.acess.preset_renders;
 
 
 
 import net.minecraft.util.math.Vec3d;
-import lazuli_lib.lazuli.rendering.LazuliWorldRenderQueueManager;
-import lazuli_lib.lazuli.utill.LazuliMathUtils;
-import lazuli_lib.lazuli.data_containers.LazuliLine;
-import lazuli_lib.lazuli.data_containers.LazuliLineBuffer;
+import lazuli_lib.lazuli.acess.LazuliWorldRenderQueueManager;
+import lazuli_lib.lazuli.acess.utill.LazuliMathUtils;
+import lazuli_lib.lazuli.acess.data_containers.LazuliLine;
+import lazuli_lib.lazuli.acess.data_containers.LazuliLineBuffer;
 
 
 import java.util.Random;

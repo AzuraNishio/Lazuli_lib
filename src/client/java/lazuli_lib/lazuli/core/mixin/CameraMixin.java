@@ -1,12 +1,10 @@
-package lazuli_lib.lazuli.mixin.client;
+package lazuli_lib.lazuli.core.mixin;
 
-import lazuli_lib.lazuli.rendering.LazuliCameraManager;
+import lazuli_lib.lazuli.acess.LazuliCameraManager;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.BlockView;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -15,7 +13,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Camera.class)
 public class CameraMixin {

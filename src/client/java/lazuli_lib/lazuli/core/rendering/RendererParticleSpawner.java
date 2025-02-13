@@ -1,10 +1,9 @@
-package lazuli_lib.lazuli.rendering;
+package lazuli_lib.lazuli.core.rendering;
 
-import lazuli_lib.lazuli.lazuli_particles.ModParticles;
+import lazuli_lib.lazuli.core.lazuli_particles.ModParticles;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 

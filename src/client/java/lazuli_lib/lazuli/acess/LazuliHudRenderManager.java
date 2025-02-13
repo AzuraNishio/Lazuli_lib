@@ -1,6 +1,5 @@
-package lazuli_lib.lazuli.rendering;
+package lazuli_lib.lazuli.acess;
 
-import lazuli_lib.lazuli.utill.LazuliMathUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 public class LazuliHudRenderManager {

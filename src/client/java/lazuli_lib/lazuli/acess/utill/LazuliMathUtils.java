@@ -1,4 +1,4 @@
-package lazuli_lib.lazuli.utill;
+package lazuli_lib.lazuli.acess.utill;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
