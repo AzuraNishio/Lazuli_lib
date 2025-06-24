@@ -15,6 +15,10 @@
 	"icon": "assets/lazuli_lib/icon.png",
 	"environment": "*",
 	"entrypoints": {
+		"client": [
+			"nishio.lazuli_lib.Lazuli_Lib_Client",
+			"nishio.test_mod.test_mod_client"
+		],
 		"main": [
 			"nishio.lazuli_lib.Lazuli_Lib"
 		]

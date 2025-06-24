@@ -3,7 +3,8 @@
 	"package": "nishio.lazuli_lib.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"PostProcessingRegistryMixin",
+		"ZoomMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
