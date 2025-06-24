@@ -1,4 +1,5 @@
 package nishio.lazuli_lib.core;
+/** Utility for toggling zoom mechanics. */
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.SimpleOption;

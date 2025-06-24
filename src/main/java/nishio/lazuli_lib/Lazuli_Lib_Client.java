@@ -1,4 +1,5 @@
 package nishio.lazuli_lib;
+/** Client side initialization of Lazuli library. */
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;

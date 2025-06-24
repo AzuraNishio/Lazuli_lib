@@ -1,4 +1,5 @@
 package nishio.lazuli_lib.core;
+/** Main entry for hooking render callbacks. */
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;

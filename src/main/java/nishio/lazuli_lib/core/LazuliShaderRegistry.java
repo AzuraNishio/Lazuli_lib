@@ -1,4 +1,5 @@
 package nishio.lazuli_lib.core;
+/** Handles registration of shaders and post processors. */
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;

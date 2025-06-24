@@ -1,4 +1,5 @@
 package nishio.lazuli_lib.core;
+/** Provides helpers for generating geometry. */
 
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Camera;

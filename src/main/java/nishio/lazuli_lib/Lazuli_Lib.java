@@ -1,4 +1,5 @@
 package nishio.lazuli_lib;
+/** Main mod entry point. */
 
 import net.fabricmc.api.ModInitializer;
 

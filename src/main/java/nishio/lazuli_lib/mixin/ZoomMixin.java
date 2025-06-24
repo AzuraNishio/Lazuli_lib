@@ -1,4 +1,5 @@
 package nishio.lazuli_lib.mixin;
+/** Mixin adjusting FOV when zooming. */
 
 
 import net.minecraft.client.render.GameRenderer;

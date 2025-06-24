@@ -1,4 +1,5 @@
 package nishio.lazuli_lib.core;
+/** Manages temporary camera transformations. */
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;

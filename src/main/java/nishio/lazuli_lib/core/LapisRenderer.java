@@ -1,4 +1,5 @@
 package nishio.lazuli_lib.core;
+/** Convenience wrappers around RenderSystem. */
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gl.ShaderProgram;

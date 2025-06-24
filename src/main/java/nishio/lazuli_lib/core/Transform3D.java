@@ -1,4 +1,5 @@
 package nishio.lazuli_lib.core;
+/** Simple position and rotation transform. */
 
 import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;

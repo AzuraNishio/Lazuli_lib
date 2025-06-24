@@ -1,4 +1,5 @@
 package nishio.test_mod;
+/** Client entry point for the test mod. */
 
 import net.fabricmc.api.ClientModInitializer;
 import nishio.lazuli_lib.core.LazuliRenderingRegistry;

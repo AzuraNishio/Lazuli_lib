@@ -1,4 +1,5 @@
 package nishio.lazuli_lib.core;
+/** High level wrapper around BufferBuilder. */
 
 import net.minecraft.client.render.*;
 import net.minecraft.util.math.Vec3d;

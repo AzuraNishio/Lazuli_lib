@@ -1,4 +1,5 @@
 package nishio.lazuli_lib.core;
+/** Registry for custom post processing pipelines. */
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceFactory;

@@ -1,4 +1,5 @@
 package nishio.test_mod;
+/** Renderer utility for the test mod. */
 
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexFormat;
