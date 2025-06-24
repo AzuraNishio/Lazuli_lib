@@ -1,0 +1,20 @@
+{
+    "targets": [
+        "swap"
+    ],
+    "passes": [
+        {
+            "name": "test",
+            "intarget": "minecraft:main",
+            "outtarget": "swap",
+            "uniforms": [
+
+            ]
+        },
+        {
+            "name": "blit",
+            "intarget": "swap",
+            "outtarget": "minecraft:main"
+        }
+    ]
+}

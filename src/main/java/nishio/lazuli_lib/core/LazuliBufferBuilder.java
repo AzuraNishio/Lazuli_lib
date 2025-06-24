@@ -18,6 +18,7 @@ public class LazuliBufferBuilder {
     private int lastLight = 0;
     private int lastOverlay = 0;
     private float lastNormalX = 0.0f, lastNormalY = 1.0f, lastNormalZ = 0.0f;
+    private final float clampDist = 500;
 
     //===========================================[Bunch of overloaded builder methods]===========================================
     public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix, Transform3D renderSpace) {
@@ -134,6 +135,9 @@ public class LazuliBufferBuilder {
         // Subtract camera position if needed
         if (useCamera && camera != null) {
             transformed = transformed.subtract(camera.getPos());
+        }
+        if (transformed.length()>clampDist) {
+            transformed = transformed.normalize().multiply(clampDist+(0.002*(transformed.length()-clampDist)));
         }
 
         buffer.vertex(matrix4f, (float) transformed.x, (float) transformed.y, (float) transformed.z);

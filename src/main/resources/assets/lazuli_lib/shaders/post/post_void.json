@@ -1,0 +1,65 @@
+{
+  "targets": [
+    "swap"
+  ],
+  "passes": [
+    {
+      "name": "post_void",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "uniforms": [
+
+      ]
+    },
+    {
+      "name": "bits",
+      "intarget": "swap",
+      "outtarget": "minecraft:main",
+      "uniforms": [
+        {
+          "name": "Resolution",
+          "values": [ 16.0 ]
+        },
+
+        {
+          "name": "ProjMat",
+          "type": "matrix4x4",
+          "count": 16,
+          "values": [
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+          ]
+        },
+        {
+          "name": "InSize",
+          "type": "float",
+          "count": 2,
+          "values": [ 1920.0, 1080.0 ]
+        },
+        {
+          "name": "OutSize",
+          "type": "float",
+          "count": 2,
+          "values": [ 1920.0, 1080.0 ]
+        },
+        {
+          "name": "u_resolution",
+          "type": "float",
+          "count": 2,
+          "values": [ 1920.0, 1080.0 ]
+        },
+        {
+          "name": "u_time",
+          "type": "float",
+          "values": [ 0.0 ]
+        },
+        {
+          "name": "MosaicSize",
+          "values": [ 4.0 ]
+        }
+      ]
+    }
+  ]
+}

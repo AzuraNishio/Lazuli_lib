@@ -1,0 +1,30 @@
+{
+  "targets": [
+    "swap"
+  ],
+  "passes": [
+    {
+      "name": "post_vhs",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "uniforms": [
+
+      ]
+    },
+    {
+      "name": "bits",
+      "intarget": "swap",
+      "outtarget": "minecraft:main",
+      "uniforms": [
+        {
+          "name": "Resolution",
+          "values": [ 16.0 ]
+        },
+        {
+          "name": "MosaicSize",
+          "values": [ 4.0 ]
+        }
+      ]
+    }
+  ]
+}

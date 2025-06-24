@@ -1,0 +1,53 @@
+{
+  "vertex": "lazuli_lib:rendertype_test_atmosphere",
+  "fragment": "lazuli_lib:rendertype_test_atmosphere",
+
+  "blend": {
+    "func": "add",
+    "srcrgb": "srcalpha",
+    "dstrgb": "1-srcalpha"
+  },
+
+  "samplers": [
+    { "name": "Sampler0" },
+    { "name": "Sampler1" }
+  ],
+  "uniforms": [
+    {
+      "name": "ModelViewMat",
+      "type": "matrix4x4",
+      "count": 16,
+      "values": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+    },
+    {
+      "name": "ProjMat",
+      "type": "matrix4x4",
+      "count": 16,
+      "values": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+    },
+    {
+      "name": "ColorModulator",
+      "type": "float",
+      "count": 4,
+      "values": [1.0, 1.0, 1.0, 1.0]
+    },
+    {
+      "name": "bloomThreshold",
+      "type": "float",
+      "count": 1,
+      "values": [10.8]
+    },
+    {
+      "name": "bloomIntensity",
+      "type": "float",
+      "count": 1,
+      "values": [1.0]
+    },
+    {
+      "name": "bloomColor",
+      "type": "float",
+      "count": 3,
+      "values": [0.0, 0.9, 0.0]
+    }
+  ]
+}

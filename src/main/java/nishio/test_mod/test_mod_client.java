@@ -7,6 +7,8 @@ import nishio.lazuli_lib.core.LazuliShaderRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class test_mod_client implements ClientModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("Really Cool Mod");
 
@@ -14,5 +16,10 @@ public class test_mod_client implements ClientModInitializer {
 	public void onInitializeClient() {
 		LOGGER.info("Really cool mod loading");
 		renderer.register();
-	}
+        try {
+            ModShaders.registerShaders();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
