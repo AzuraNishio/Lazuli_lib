@@ -19,6 +19,7 @@ public class LazuliBufferBuilder {
     private int lastOverlay = 0;
     private float lastNormalX = 0.0f, lastNormalY = 1.0f, lastNormalZ = 0.0f;
     private final float clampDist = 500;
+    private boolean isEmpty = true;
 
     //===========================================[Bunch of overloaded builder methods]===========================================
     public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix, Transform3D renderSpace) {
@@ -114,13 +115,19 @@ public class LazuliBufferBuilder {
     }
 
     public void drawAndReset() {
-        BuiltBuffer builtBuffer = buffer.end();
-        BufferRenderer.drawWithGlobalProgram(builtBuffer);
-        this.buffer = this.tessellator.begin(builtBuffer.getDrawParameters().mode(), builtBuffer.getDrawParameters().format());
+        if (!isEmpty) {
+            BuiltBuffer builtBuffer = buffer.end();
+            BufferRenderer.drawWithGlobalProgram(builtBuffer);
+            this.isEmpty = true;
+            this.buffer = this.tessellator.begin(builtBuffer.getDrawParameters().mode(), builtBuffer.getDrawParameters().format());
+        }
     }
 
     public void draw(){
-        BufferRenderer.drawWithGlobalProgram(buffer.end());
+        if (!isEmpty) {
+            BufferRenderer.drawWithGlobalProgram(buffer.end());
+            this.isEmpty = true;
+        }
     }
 
 
@@ -131,6 +138,7 @@ public class LazuliBufferBuilder {
     public LazuliBufferBuilder vertex(Vec3d vec) {
         // Apply transform from render space
         Vec3d transformed = renderSpace.transformPoint(vec);
+        this.isEmpty = false;
 
         // Subtract camera position if needed
         if (useCamera && camera != null) {
