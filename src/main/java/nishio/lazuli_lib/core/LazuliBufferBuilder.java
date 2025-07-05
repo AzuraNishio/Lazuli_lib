@@ -155,26 +155,37 @@ public class LazuliBufferBuilder {
 
     public LazuliBufferBuilder color(int r, int g, int b, int a) {
         buffer.color(r, g, b, a);
+        lastR = r;
+        lastG = g;
+        lastB = b;
+        lastA = a;
         return this;
     }
 
     public LazuliBufferBuilder texture(float u, float v) {
         buffer.texture(u, v);
+        lastU = u;
+        lastV = v;
         return this;
     }
 
     public LazuliBufferBuilder overlay(int overlay) {
         buffer.overlay(overlay);
+        lastOverlay = overlay;
         return this;
     }
 
     public LazuliBufferBuilder light(int light) {
         buffer.light(light);
+        lastLight = light;
         return this;
     }
 
     public LazuliBufferBuilder normal(float x, float y, float z) {
         buffer.normal(x, y, z);
+        lastNormalX = x;
+        lastNormalY = y;
+        lastNormalZ = z;
         return this;
     }
 
