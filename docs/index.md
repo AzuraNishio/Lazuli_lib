@@ -2,7 +2,9 @@
 
 Welcome to the Lazuli Library documentation.
 
-This page will guide you through installing the library via **JitPack** so you can use it in your Gradle project.
+This page will guide you through installing the library via **JitPack** so you can use it in your mod.
+
+LazuliLib is currently compatible with fabric mods on 1.20 or above.
 
 ## Using JitPack
 
@@ -14,14 +16,13 @@ repositories {
 }
 ```
 
-2. Include Lazuli Library as a dependency. Replace `USER` with the GitHub username that hosts this repository and `VERSION` with the desired release tag or commit hash:
+2. Include Lazuli Library as a dependency. Replace `VERSION` with the desired release tag or commit hash:
 
 ```gradle
 dependencies {
-    modImplementation 'com.github.USER:Lazuli_lib:VERSION'
+    modImplementation 'com.github.AzuraNishio:Lazuli_lib:VERSION'
 }
 ```
 
-The library is published as a Fabric mod, so `modImplementation` is typically used, but `implementation` also works for non‑mod projects.
 
-With these entries added, Gradle will fetch Lazuli Library from JitPack the next time you build your project.
+After adding those entrys, rebuild the gradle.
