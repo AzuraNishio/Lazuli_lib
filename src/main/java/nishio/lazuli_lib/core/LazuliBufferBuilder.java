@@ -189,6 +189,14 @@ public class LazuliBufferBuilder {
         return this;
     }
 
+    public LazuliBufferBuilder normal(Vec3d n) {
+        buffer.normal((float) n.x, (float) n.y, (float) n.z);
+        lastNormalX = (float) n.x;
+        lastNormalY = (float) n.y;
+        lastNormalZ = (float) n.z;
+        return this;
+    }
+
 
     public LazuliBufferBuilder addVertex(LazuliVertex v) {
         Vec3d pos = v.getPos();
