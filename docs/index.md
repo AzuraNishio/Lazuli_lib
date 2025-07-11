@@ -5,16 +5,16 @@
 ---
 
 ## First Steps
-- [Installation](installation.mb)
-- [Setting up the shaders directory](fileStructure.mb)
-- [Registering a shader](LazuliShaderRegistry.mb)
+- [Installation](installation.md)
+- [Setting up the shaders directory](fileStructure.md)
+- [Registering a shader](LazuliShaderRegistry.md)
 
 ## Post-Processing
-- [Writing and using a simple post-processing shader](postProcessing.mb)
-- [Using post-processing uniforms](postUniforms.mb)
-- [Creating multi-pass post-processing shaders](multiPassPostShaders.mb)
+- [Writing and using a simple post-processing shader](postProcessing.md)
+- [Using post-processing uniforms](postUniforms.md)
+- [Creating multi-pass post-processing shaders](multiPassPostShaders.md)
 
 ## Custom Rendering
-- [Rendering a quad](LazuliBufferBuilder.mb)
-- [Using custom shaders](Shaders.mb)
-- [Using shader uniforms](shaderUniforms.mb)
+- [Rendering a quad](LazuliBufferBuilder.md)
+- [Using custom shaders](Shaders.md)
+- [Using shader uniforms](shaderUniforms.md)
