@@ -33,16 +33,12 @@ public class LazuliGeometryBuilder {
             int     res,            float  radius,
             Vec3d   center,         Vec3d axle,
             float   roll,           boolean flipNormals,
-            Camera  camera,
             LazuliBufferBuilder bufferBuilder
     ) {
-        Vec3d displacement = camera.getPos().subtract(center);     // camera-relative
-
         float angle2 = 0f;
-        Vec3d yAxle = axle;
-        Vec3d xAxle = (yAxle.x == 0 && yAxle.z == 0) ? new Vec3d(1, 0, 0)
-                : new Vec3d(yAxle.x, 0, yAxle.z).normalize().rotateY(90);
-        Vec3d zAxle = LazuliMathUtils.rotateAroundAxis(xAxle, yAxle, 90);
+        Vec3d xAxle = (axle.x == 0 && axle.z == 0) ? new Vec3d(1, 0, 0)
+                : new Vec3d(axle.x, 0, axle.z).normalize().rotateY(90);
+        Vec3d zAxle = LazuliMathUtils.rotateAroundAxis(xAxle, axle, 90);
 
         for (int p = 0; p < res; p++) {
             float nextAngle2    = angle2 + (float) (PI / res);
@@ -61,10 +57,10 @@ public class LazuliGeometryBuilder {
                 Vec3d v4 = new Vec3d( sin(angle) * thisRingRad, thisRingY, cos(angle) * thisRingRad );
 
                 // sphere-local → world
-                v1 = yAxle.multiply(v1.y).add(xAxle.multiply(v1.x)).add(zAxle.multiply(v1.z));
-                v2 = yAxle.multiply(v2.y).add(xAxle.multiply(v2.x)).add(zAxle.multiply(v2.z));
-                v3 = yAxle.multiply(v3.y).add(xAxle.multiply(v3.x)).add(zAxle.multiply(v3.z));
-                v4 = yAxle.multiply(v4.y).add(xAxle.multiply(v4.x)).add(zAxle.multiply(v4.z));
+                v1 = axle.multiply(v1.y).add(xAxle.multiply(v1.x)).add(zAxle.multiply(v1.z));
+                v2 = axle.multiply(v2.y).add(xAxle.multiply(v2.x)).add(zAxle.multiply(v2.z));
+                v3 = axle.multiply(v3.y).add(xAxle.multiply(v3.x)).add(zAxle.multiply(v3.z));
+                v4 = axle.multiply(v4.y).add(xAxle.multiply(v4.x)).add(zAxle.multiply(v4.z));
 
                 // UVs
                 double U1 = (angle - roll          ) / (2 * PI);
@@ -74,15 +70,15 @@ public class LazuliGeometryBuilder {
 
                 // Emit quad
                 if (flipNormals) {
-                    addVertexTextureNormal(v4.subtract(displacement), U2, V2, v4, bufferBuilder);
-                    addVertexTextureNormal(v3.subtract(displacement), U2, V1, v3, bufferBuilder);
-                    addVertexTextureNormal(v2.subtract(displacement), U1, V1, v2, bufferBuilder);
-                    addVertexTextureNormal(v1.subtract(displacement), U1, V2, v1, bufferBuilder);
+                    addVertexTextureNormal(v4.add(center), U2, V2, v4, bufferBuilder);
+                    addVertexTextureNormal(v3.add(center), U2, V1, v3, bufferBuilder);
+                    addVertexTextureNormal(v2.add(center), U1, V1, v2, bufferBuilder);
+                    addVertexTextureNormal(v1.add(center), U1, V2, v1, bufferBuilder);
                 } else {
-                    addVertexTextureNormal(v1.subtract(displacement), U1, V2, v1, bufferBuilder);
-                    addVertexTextureNormal(v2.subtract(displacement), U1, V1, v2, bufferBuilder);
-                    addVertexTextureNormal(v3.subtract(displacement), U2, V1, v3, bufferBuilder);
-                    addVertexTextureNormal(v4.subtract(displacement), U2, V2, v4, bufferBuilder);
+                    addVertexTextureNormal(v1.add(center), U1, V2, v1, bufferBuilder);
+                    addVertexTextureNormal(v2.add(center), U1, V1, v2, bufferBuilder);
+                    addVertexTextureNormal(v3.add(center), U2, V1, v3, bufferBuilder);
+                    addVertexTextureNormal(v4.add(center), U2, V2, v4, bufferBuilder);
                 }
             }
         }
@@ -567,8 +563,8 @@ public class LazuliGeometryBuilder {
         Vec3d bottomCenter = center.add(axle.normalize().multiply(-(height-radius*2)*0.5f - radius));
 
         // Use half-spheres facing outwards: just call existing textured sphere
-        buildTexturedSphere(res, radius, topCenter, axle, roll, flipNormals, camera, bb);
-        buildTexturedSphere(res, radius, bottomCenter, axle.multiply(-1), roll, flipNormals, camera, bb);
+        buildTexturedSphere(res, radius, topCenter, axle, roll, flipNormals, bb);
+        buildTexturedSphere(res, radius, bottomCenter, axle.multiply(-1), roll, flipNormals, bb);
     }
 
 }
