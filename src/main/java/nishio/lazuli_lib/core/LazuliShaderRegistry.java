@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.util.Window;
@@ -19,7 +18,7 @@ import java.util.Map;
 public class LazuliShaderRegistry {
 
     private static final Map<String, ShaderProgram> SHADER_MAP = new HashMap<>();
-    private static final Map<String, PostEffectProcessor> POST_PROCESSOR_MAP = new HashMap<>();
+    private static final Map<String, LazuliPostEffectShader> POST_PROCESSOR_MAP = new HashMap<>();
 
     private static int resX ;
     private static int resY;
@@ -50,7 +49,7 @@ public class LazuliShaderRegistry {
             Framebuffer framebuffer = client.getFramebuffer();
 
             try {
-                PostEffectProcessor processor = new PostEffectProcessor(
+                LazuliPostEffectShader processor = new LazuliPostEffectShader(
                         client.getTextureManager(),
                         factory,
                         framebuffer,
@@ -63,13 +62,12 @@ public class LazuliShaderRegistry {
                 Lazuli_Lib_Client.LOGGER.info("Post-processing shader '{}' registered in callback.", name);
 
             } catch (IOException e) {
-                System.err.println("[NewHorizons] Failed to load post-processing shader: " + name + " <============================================================================================");
-                System.err.println("================================================[stack trace]================================================");
+                Lazuli_Lib_Client.LOGGER.error("Failed to load post-processing shader: {} <============================================================================================", name);
+                Lazuli_Lib_Client.LOGGER.error("================================================[stack trace]================================================");
                 e.printStackTrace();
-                System.err.println("================================================[  closing  ]================================================");
+                Lazuli_Lib_Client.LOGGER.error("================================================[  closing  ]================================================");
             }
         });
-
     }
 
     public static void register(){
@@ -88,12 +86,10 @@ public class LazuliShaderRegistry {
     }
 
     private static void windowResized(int height, int width) {
-        for (Map.Entry<String, PostEffectProcessor> entry : POST_PROCESSOR_MAP.entrySet()) {
-            PostEffectProcessor processor = entry.getValue();
+        for (Map.Entry<String, LazuliPostEffectShader> entry : POST_PROCESSOR_MAP.entrySet()) {
+            LazuliPostEffectShader processor = entry.getValue();
             if (processor != null) {
                 processor.setupDimensions(width, height);
-                System.out.println("[NewHorizons] Resized post-processor: " + entry.getKey() +
-                        " to " + width + "x" + height);
             }
         }
     }
@@ -104,7 +100,7 @@ public class LazuliShaderRegistry {
         return SHADER_MAP.get(name);
     }
 
-    public static PostEffectProcessor getPostProcessor(String name) {
+    public static LazuliPostEffectShader getPostProcessor(String name) {
         return POST_PROCESSOR_MAP.get(name);
     }
 }
