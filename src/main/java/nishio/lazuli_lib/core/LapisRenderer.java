@@ -69,47 +69,8 @@ public class LapisRenderer {
     }
 
     public static BufferBuilder drawAndReset(BufferBuilder buffer, Tessellator tessellator) {
-        BuiltBuffer builtBuffer =  buffer.end();
-        BufferRenderer.drawWithGlobalProgram(builtBuffer);
-        return tessellator.begin(builtBuffer.getDrawParameters().mode(), builtBuffer.getDrawParameters().format());
+        buffer.end();
+        tessellator.draw(); // ✅ Only draw what's already in the buffer
+        return buffer;
     }
-
-
-    public static void cleanupRenderSystem() {
-        LazuliGeometryBuilder.disableLongRangeClamping();
-        LapisRenderer.disableBlend();
-        LapisRenderer.setShaderColor(1f,1f,1f,1f);
-        LapisRenderer.depthMask(true);
-        LapisRenderer.setShaderFogShape(FogShape.CYLINDER);
-        LapisRenderer.setShaderFogColor(0f,0f,0f);
-        LapisRenderer.setShader(GameRenderer::getPositionColorProgram);
-        LapisRenderer.enableDepthTest();
-    }
-
-    public static void reallyFarAwayRendering() {
-        LazuliGeometryBuilder.enableLongRangeClamping();
-        LapisRenderer.setShaderFogStart(Integer.MAX_VALUE);
-        LapisRenderer.setShaderFogEnd(Integer.MAX_VALUE);
-    }
-
-    public static void farAwayRendering() {
-        LazuliGeometryBuilder.disableLongRangeClamping();
-        LapisRenderer.setShaderFogStart(Integer.MAX_VALUE);
-        LapisRenderer.setShaderFogEnd(Integer.MAX_VALUE);
-    }
-
-    public static void enableLongRangeClamping(){
-        LazuliGeometryBuilder.enableLongRangeClamping();
-    }
-
-    public static void disableLongRangeClamping(){
-        LazuliGeometryBuilder.disableLongRangeClamping();
-    }
-
-    public static void setLongRangeClamping(boolean bol){
-        LazuliGeometryBuilder.setLongRangeClamping(bol);
-    }
-
-
-
 }
