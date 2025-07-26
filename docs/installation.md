@@ -43,7 +43,8 @@ dependencies {
 
 > **Tip:**  
 > • Use `1.0+` to pick the latest `1.0.x` release (e.g., `1.0.2`).  
-> • Use `master-SNAPSHOT` (or a full commit SHA) to grab the bleeding-edge build.
+> • Use `master-SNAPSHOT` (or a full commit SHA) to grab the bleeding-edge build.  
+> • For 1.20 use v1.1.2-1.20.
 
 ---
 
