@@ -1,10 +1,8 @@
 package nishio.lazuli_lib.core;
-
 /** Main entry for hooking render callbacks. */
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.FogShape;
@@ -15,6 +13,7 @@ import net.minecraft.util.Identifier;
 import org.joml.Matrix4d;
 import org.joml.Matrix4f;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,35 +28,34 @@ public class LazuliRenderingRegistry {
     private static boolean wasZooming = false;
     private static Matrix4f matrix4f;
 
+
     public static final Identifier CELESTIAL_SYNC =
-            new Identifier("new_horizons", "celestial_sync");
+            Identifier.of("new_horizons", "celestial_sync");
 
     public static void registerLazuliRenderPhases() {
         WorldRenderEvents.LAST.register(context -> {
             camera = context.camera();
-            matrix4f = context.matrixStack().peek().getPositionMatrix(); // replacement for positionMatrix()
-
+            matrix4f = context.positionMatrix();
             if (camera == null || matrix4f == null) return;
 
-            float tickDelta = MinecraftClient.getInstance().getTickDelta(); // replacement for tickCounter().getTickDelta(true)
+            float tickDelta = context.tickCounter().getTickDelta(true);
 
             Tessellator tessellator = Tessellator.getInstance();
             time.updateAndGet(v -> v + tickDelta);
 
-            // Matrix transformations
+            //Matrix transformations! Yayyyyyyyyyyyyyyyyyyyyyy
             MatrixStack ms = new MatrixStack();
             ms.multiplyPositionMatrix(matrix4f);
             ms.push();
             ms.multiply(camera.getRotation());
             Matrix4f viewProj = ms.peek().getPositionMatrix();
-            customViewProj = viewProj;
 
-            // Run registered render callbacks
+            //run registered render phases
             for (LazuliRenderEvents.LazuliRenderCallback callback : RENDER_CALLBACKS) {
                 callback.render(context, viewProj, tickDelta);
             }
 
-            // Restore vanilla render state
+            // 6) Restore vanilla render state
             RenderSystem.disableBlend();
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
             RenderSystem.depthMask(true);
@@ -90,4 +88,5 @@ public class LazuliRenderingRegistry {
                 (float)d.m30(), (float)d.m31(), (float)d.m32(), (float)d.m33()
         );
     }
+
 }

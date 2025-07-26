@@ -7,6 +7,8 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.util.math.Vec3d;
 import nishio.lazuli_lib.core.LazuliRenderingRegistry;
 import nishio.lazuli_lib.core.LazuliShaderRegistry;
+import nishio.lazuli_lib.core.LazuliClock;
+import nishio.test_mod.TestModClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +25,8 @@ public class Lazuli_Lib_Client implements ClientModInitializer {
 				===========================================================================""");
 
 		//Calling all parts of the lib:
-		LazuliRenderingRegistry.registerLazuliRenderPhases();
-		LazuliShaderRegistry.register();
-	}
+                LazuliRenderingRegistry.registerLazuliRenderPhases();
+                LazuliShaderRegistry.register();
+                LazuliClock.register();
+        }
 }
