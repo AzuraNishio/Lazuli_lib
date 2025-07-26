@@ -69,8 +69,7 @@ public class LapisRenderer {
     }
 
     public static BufferBuilder drawAndReset(BufferBuilder buffer, Tessellator tessellator) {
-        buffer.end();
-        tessellator.draw(); // ✅ Only draw what's already in the buffer
+        BufferRenderer.draw(buffer.end());
         return buffer;
     }
 }
