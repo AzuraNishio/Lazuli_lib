@@ -16,6 +16,22 @@ public class LazuliVertex {
         return this;
     }
 
+    public LazuliVertex displacePos(Vec3d dis){
+        this.x += dis.x;
+        this.y += dis.y;
+        this.z += dis.z;
+
+        return this;
+    }
+
+    public LazuliVertex displacePos(double x, double y, double z){
+        this.x += x;
+        this.y += y;
+        this.z += z;
+
+        return this;
+    }
+
     public LazuliVertex pos(Vec3d pos) {
         this.x = pos.x; this.y = pos.y; this.z = pos.z;
         return this;
