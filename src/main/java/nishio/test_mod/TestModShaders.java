@@ -1,8 +1,8 @@
 package nishio.test_mod;
 
 import net.minecraft.client.render.VertexFormats;
-import nishio.lazuli_lib.Lazuli_Lib;
 import nishio.lazuli_lib.core.LazuliShaderRegistry;
+import nishio.lazuli_lib.internals.Lazuli_Lib;
 
 public class TestModShaders {
     public static String RENDER_TYPE_ATMOSPHERE = "rendertype_test_atmosphere";

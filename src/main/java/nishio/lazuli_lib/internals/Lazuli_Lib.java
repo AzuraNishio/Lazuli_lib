@@ -1,8 +1,9 @@
-package nishio.lazuli_lib;
+package nishio.lazuli_lib.internals;
 /** Main mod entry point. */
 
 import net.fabricmc.api.ModInitializer;
 
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,5 +20,9 @@ public class Lazuli_Lib implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
+	}
+
+	public static Identifier id(String s){
+		return Identifier.of(MOD_ID, s);
 	}
 }

@@ -15,14 +15,14 @@ public class TestRenderer {
     private static final Random RANDOM   = new Random();
     public static void register(){
         LazuliClock.Cronometer cronometer = LazuliClock.newCronometer();
-        LazuliRenderingRegistry.registerRenderCallback((context, viewProjMatrix, tickDelta) -> {
+        LazuliRenderingRegistry.registerRenderCallback((context) -> {
             float t = cronometer.readLerpedTicks();
             if (t > 20){
                 cronometer.reset();
                 head = new Vec3d(0, 100, 340);
             }
 
-            LazuliBufferBuilder bb = new LazuliBufferBuilder(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, viewProjMatrix, context.camera());
+            LazuliBufferBuilder bb = context.getLazuliBB(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL);
             LapisRenderer.enableCull();
             LapisRenderer.enableDepthTest();
             LapisRenderer.setShader(LazuliShaderRegistry.getShader(TestModShaders.RENDER_TYPE_ATMOSPHERE));

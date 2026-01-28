@@ -16,10 +16,11 @@
 	"environment": "*",
 	"entrypoints": {
 		"client": [
-			"nishio.lazuli_lib.Lazuli_Lib_Client"
+			"nishio.lazuli_lib.internals.Lazuli_Lib_Client",
+			"nishio.test_mod.TestModClient"
 		],
 		"main": [
-			"nishio.lazuli_lib.Lazuli_Lib"
+			"nishio.lazuli_lib.internals.Lazuli_Lib"
 		]
 	},
 	"mixins": [

@@ -52,7 +52,7 @@ public class LazuliRenderingRegistry {
 
             //run registered render phases
             for (LazuliRenderEvents.LazuliRenderCallback callback : RENDER_CALLBACKS) {
-                callback.render(context, viewProj, tickDelta);
+                callback.render(new LazuliRenderContext(viewProj, context, tickDelta));
             }
 
             // 6) Restore vanilla render state

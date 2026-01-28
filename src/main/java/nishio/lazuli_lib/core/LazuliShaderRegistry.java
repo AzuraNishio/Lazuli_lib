@@ -9,7 +9,7 @@ import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.util.Window;
 import net.minecraft.util.Identifier;
-import nishio.lazuli_lib.Lazuli_Lib_Client;
+import nishio.lazuli_lib.internals.Lazuli_Lib_Client;
 
 import java.io.IOException;
 import java.util.HashMap;

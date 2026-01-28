@@ -16,7 +16,7 @@ public class LazuliRenderEvents {
 
     @FunctionalInterface
     public interface LazuliRenderCallback {
-        void render(WorldRenderContext context, Matrix4f viewProjectionMatrix, float tickDelta);
+        void render(LazuliRenderContext context);
     }
 
     @FunctionalInterface
