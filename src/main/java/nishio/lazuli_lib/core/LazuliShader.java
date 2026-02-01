@@ -17,7 +17,7 @@ public class LazuliShader {
     public LazuliBlendMode blendMode;
     public List<String> samplers;
 
-    public LazuliShader(String namespace, String vertexPath, String fragmentPath, String jsonPath, LazuliBlendMode blendMode, VertexFormat vertexFormat, Map<String, LazuliUniform<?>> uniforms, List<String> samplers){
+    public LazuliShader(String namespace, String jsonPath, String fragmentPath, String vertexPath, LazuliBlendMode blendMode, VertexFormat vertexFormat, Map<String, LazuliUniform<?>> uniforms, List<String> samplers){
         this.namespace = namespace;
         this.Uniforms = uniforms;
         this.vertexPath = vertexPath;

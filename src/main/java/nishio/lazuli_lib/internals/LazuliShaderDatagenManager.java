@@ -91,13 +91,6 @@ public class LazuliShaderDatagenManager {
     }
 
     static private void createMetadataAndLogo(Path path) throws IOException {
-
-        Path logoPath = path.resolve("pack.png");
-        if(!Files.exists(logoPath)){
-            Path logo = path.getParent().getParent().resolve("src/main/resources/assets/lazuli_lib/icon.png");
-            Files.copy(logo, logoPath);
-        }
-
         Path metaPath = path.resolve("pack.mcmeta");
 
         JsonObject meta = new JsonObject();
@@ -108,6 +101,12 @@ public class LazuliShaderDatagenManager {
 
         Files.createDirectories(metaPath.getParent());
         Files.writeString(metaPath, GSON.toJson(meta));
+
+        Path logoPath = path.resolve("pack.png");
+        if(!Files.exists(logoPath)){
+            Path logo = path.getParent().getParent().resolve("src/main/resources/assets/lazuli_lib/icon.png");
+            Files.copy(logo, logoPath);
+        }
 
     }
 
