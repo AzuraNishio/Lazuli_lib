@@ -4,6 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import nishio.lazuli_lib.core.LazuliBlendMode;
 import nishio.lazuli_lib.core.LazuliShader;
@@ -42,10 +43,9 @@ public class TestModShaders {
         samplers.add("Sampler0");
 
         testShader = new LazuliShader(
-                TestModClient.MOD_ID,
-                RENDER_TYPE_TEST,
-                RENDER_TYPE_TEST,
-                RENDER_TYPE_TEST,
+                Identifier.of(TestModClient.MOD_ID, RENDER_TYPE_TEST),
+                Identifier.of(TestModClient.MOD_ID, RENDER_TYPE_TEST),
+                Identifier.of(TestModClient.MOD_ID, RENDER_TYPE_TEST),
                 LazuliBlendMode.DEFAULT,
                 VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
                 uniforms,

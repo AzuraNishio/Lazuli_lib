@@ -44,9 +44,21 @@ public class LazuliShaderRegistry {
         });
     }
 
+    public static void registerShader(Identifier jsonPath, VertexFormat format) {
+        boolean dataGenerated = false;
+        namespaces.add(jsonPath.getNamespace());
+
+        CoreShaderRegistrationCallback.EVENT.register(ctx -> {
+            ctx.register(jsonPath, format, shaderProgram -> {
+                SHADER_MAP.put(jsonPath.getPath(), shaderProgram);
+                Lazuli_Lib_Client.LOGGER.info("Shader '{}' registered!", jsonPath.getPath());
+            });
+        });
+    }
+
     public static void registerShader(LazuliShader shader) {
         LazuliShaderDatagenManager.registerShader(shader);
-        namespaces.add(shader.namespace);
+        namespaces.add(shader.jsonId.getNamespace());
     }
 
     public static void close(){

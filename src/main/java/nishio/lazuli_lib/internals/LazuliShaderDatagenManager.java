@@ -65,7 +65,7 @@ public class LazuliShaderDatagenManager {
 
         //Separate shaders by namespace
         for (LazuliShader s : shaders){
-            String ns = s.namespace;
+            String ns = s.jsonId.getNamespace();
             if (!shaderSets.containsKey(ns)){
                 shaderSets.put(ns, new ArrayList<>());
             }

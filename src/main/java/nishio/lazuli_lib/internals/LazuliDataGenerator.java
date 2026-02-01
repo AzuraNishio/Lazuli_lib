@@ -1,17 +1,12 @@
 package nishio.lazuli_lib.internals;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.data.DataOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
 import net.minecraft.util.Identifier;
 import nishio.lazuli_lib.core.LazuliShader;
-import nishio.lazuli_lib.core.LazuliUniform;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,39 +40,7 @@ public abstract class LazuliDataGenerator implements DataProvider {
     };
 
     public void registerShader(LazuliShader s) {
-        JsonObject shaderJson = new JsonObject();
-
-        // Adding the vertex and fragment shaders
-        shaderJson.addProperty("vertex", s.vertexId().toString());
-        shaderJson.addProperty("fragment", s.fragmentId().toString());
-
-        // Adding Attributes
-        JsonArray attributesJson = new JsonArray();
-        for (String attribute : s.getVertexAttributesNames()) {
-            attributesJson.add(attribute);
-        }
-
-        shaderJson.add("attributes", attributesJson);
-
-        // Adding Samplers
-        JsonArray samplersJson = new JsonArray();
-        for (String sampler : s.samplers) {
-            JsonObject samplerJson = new JsonObject();
-
-            samplerJson.addProperty("name", sampler);
-            samplersJson.add(samplerJson);
-        }
-        shaderJson.add("samplers", samplersJson);
-
-        // Adding Uniforms
-        JsonArray uniformJson = new JsonArray();
-        for (LazuliUniform<?> uniform : s.Uniforms.values()) {
-            uniformJson.add(uniform.toJsonObject());
-        }
-        shaderJson.add("uniforms", uniformJson);
-
-        // Putting the shader json into the map
-        shaderJsons.put(Identifier.of(s.namespace, "core/" + s.jsonPath), shaderJson);
+        shaderJsons.put(s.jsonId.withPrefixedPath("core/"), s.toJson());
     }
 
     @Override
