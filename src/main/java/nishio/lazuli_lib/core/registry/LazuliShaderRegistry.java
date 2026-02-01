@@ -1,4 +1,4 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.registry;
 /** Handles registration of shaders and post processors. */
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -9,6 +9,9 @@ import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.util.Window;
 import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.core.post_processing.LazuliPostEffectShader;
+import nishio.lazuli_lib.core.shaders.LazuliShader;
+import nishio.lazuli_lib.internals.LazuliPostProcessingRegistry;
 import nishio.lazuli_lib.internals.LazuliShaderDatagenManager;
 import nishio.lazuli_lib.internals.Lazuli_Lib_Client;
 

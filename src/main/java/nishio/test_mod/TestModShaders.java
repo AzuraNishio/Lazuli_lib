@@ -1,22 +1,15 @@
 package nishio.test_mod;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.SharedConstants;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
-import nishio.lazuli_lib.core.LazuliBlendMode;
-import nishio.lazuli_lib.core.LazuliShader;
-import nishio.lazuli_lib.core.LazuliShaderRegistry;
-import nishio.lazuli_lib.core.LazuliUniform;
-import nishio.lazuli_lib.internals.LazuliDataGenerator;
-import nishio.lazuli_lib.internals.LazuliShaderDatagenManager;
+import nishio.lazuli_lib.core.shaders.LazuliBlendMode;
+import nishio.lazuli_lib.core.shaders.LazuliShader;
+import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
+import nishio.lazuli_lib.core.shaders.LazuliUniform;
 import nishio.lazuli_lib.internals.Lazuli_Lib;
 import nishio.lazuli_lib.internals.LazulidefaultUniforms;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

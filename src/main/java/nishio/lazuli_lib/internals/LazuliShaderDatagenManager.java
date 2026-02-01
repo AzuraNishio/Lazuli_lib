@@ -6,7 +6,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resource.ResourcePackManager;
-import nishio.lazuli_lib.core.LazuliShader;
+import nishio.lazuli_lib.core.shaders.LazuliShader;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,7 +1,8 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.world_rendering;
 
 import net.minecraft.client.render.Camera;
 import net.minecraft.util.math.Vec3d;
+import nishio.lazuli_lib.core.miscellaneous.LazuliMathUtils;
 import org.joml.Vector3f;
 
 /* Lazuli */

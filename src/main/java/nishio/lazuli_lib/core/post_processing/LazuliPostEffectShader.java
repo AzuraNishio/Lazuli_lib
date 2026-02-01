@@ -1,4 +1,4 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.post_processing;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

@@ -1,4 +1,4 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.post_processing;
 /** Utility for toggling zoom mechanics. */
 
 import net.minecraft.client.MinecraftClient;

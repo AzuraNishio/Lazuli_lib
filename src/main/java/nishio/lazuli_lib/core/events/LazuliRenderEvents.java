@@ -1,36 +1,31 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.events;
 /** Main entry for hooking render callbacks. */
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.FogShape;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.core.world_rendering.LapisRenderer;
+import nishio.lazuli_lib.core.world_rendering.LazuliRenderContext;
 import org.joml.Matrix4d;
 import org.joml.Matrix4f;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class LazuliRenderingRegistry {
+public class LazuliRenderEvents {
 
     private static Camera camera;
     private static Matrix4f customViewProj;
-    private static final List<LazuliRenderEvents.LazuliRenderCallback> RENDER_CALLBACKS = new CopyOnWriteArrayList<>();
-    private static final List<LazuliRenderEvents.LazuliPostCallback> POST_CALLBACKS = new CopyOnWriteArrayList<>();
+    private static final List<nishio.lazuli_lib.internals.LazuliRenderEvents.LazuliRenderCallback> RENDER_CALLBACKS = new CopyOnWriteArrayList<>();
+    private static final List<nishio.lazuli_lib.internals.LazuliRenderEvents.LazuliPostCallback> POST_CALLBACKS = new CopyOnWriteArrayList<>();
     public static final AtomicReference<Float> time = new AtomicReference<>(0f);
     private static boolean wasZooming = false;
     private static Matrix4f matrix4f;
 
-
-    public static final Identifier CELESTIAL_SYNC =
-            Identifier.of("new_horizons", "celestial_sync");
 
     public static void registerLazuliRenderPhases() {
         WorldRenderEvents.LAST.register(context -> {
@@ -56,7 +51,7 @@ public class LazuliRenderingRegistry {
             LapisRenderer.setShaderColor(1f,1f,1f,1f);
 
             //run registered render phases
-            for (LazuliRenderEvents.LazuliRenderCallback callback : RENDER_CALLBACKS) {
+            for (nishio.lazuli_lib.internals.LazuliRenderEvents.LazuliRenderCallback callback : RENDER_CALLBACKS) {
                 callback.render(new LazuliRenderContext(viewProj, context, tickDelta));
             }
 
@@ -69,19 +64,19 @@ public class LazuliRenderingRegistry {
             LapisRenderer.setShader(GameRenderer::getPositionColorProgram);
             LapisRenderer.enableDepthTest();
 
-            for (LazuliRenderEvents.LazuliPostCallback callback : POST_CALLBACKS) {
+            for (nishio.lazuli_lib.internals.LazuliRenderEvents.LazuliPostCallback callback : POST_CALLBACKS) {
                 callback.post(context, customViewProj, tickDelta);
             }
         });
     }
 
     /** Register a custom geometry rendering callback */
-    public static void registerRenderCallback(LazuliRenderEvents.LazuliRenderCallback callback) {
+    public static void registerRenderCallback(nishio.lazuli_lib.internals.LazuliRenderEvents.LazuliRenderCallback callback) {
         RENDER_CALLBACKS.add(callback);
     }
 
     /** Register a custom post rendering callback (your planets, rings, etc.). */
-    public static void registerPostCallback(LazuliRenderEvents.LazuliPostCallback callback) {
+    public static void registerPostCallback(nishio.lazuli_lib.internals.LazuliRenderEvents.LazuliPostCallback callback) {
         POST_CALLBACKS.add(callback);
     }
 

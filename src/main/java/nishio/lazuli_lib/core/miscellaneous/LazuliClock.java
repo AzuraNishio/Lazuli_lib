@@ -1,4 +1,4 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.miscellaneous;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;   // ← new import

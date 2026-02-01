@@ -1,10 +1,11 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.world_rendering;
 /** Convenience wrappers around RenderSystem. */
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.*;
 import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.core.shaders.LazuliShader;
 
 import java.util.List;
 import java.util.function.Supplier;

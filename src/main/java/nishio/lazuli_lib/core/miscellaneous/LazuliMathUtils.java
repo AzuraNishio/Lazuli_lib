@@ -1,4 +1,4 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.miscellaneous;
 
 import net.minecraft.util.math.Vec3d;
 

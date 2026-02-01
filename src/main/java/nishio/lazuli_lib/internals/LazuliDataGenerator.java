@@ -5,7 +5,7 @@ import net.minecraft.data.DataOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
 import net.minecraft.util.Identifier;
-import nishio.lazuli_lib.core.LazuliShader;
+import nishio.lazuli_lib.core.shaders.LazuliShader;
 
 import java.util.HashMap;
 import java.util.List;

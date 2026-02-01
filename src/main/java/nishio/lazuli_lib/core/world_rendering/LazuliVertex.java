@@ -1,4 +1,4 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.world_rendering;
 /** Fluent vertex builder used by LazuliBufferBuilder. */
 
 import net.minecraft.util.math.Vec3d;

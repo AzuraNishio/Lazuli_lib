@@ -1,10 +1,12 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.shaders;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.core.world_rendering.LapisRenderer;
+import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 
 import java.util.List;
 import java.util.Map;

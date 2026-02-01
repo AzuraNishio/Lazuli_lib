@@ -1,16 +1,12 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.shaders;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.Uniform;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
 import nishio.lazuli_lib.internals.LazuliLog;
 import nishio.lazuli_lib.internals.LazuliUniformType;
-import org.joml.*;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 

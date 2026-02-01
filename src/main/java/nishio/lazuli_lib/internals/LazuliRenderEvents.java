@@ -1,7 +1,8 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.internals;
 /** Registers callbacks for world rendering. */
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import nishio.lazuli_lib.core.world_rendering.LazuliRenderContext;
 import org.joml.Matrix4f;
 
 import java.util.List;

@@ -1,13 +1,11 @@
 package nishio.lazuli_lib.internals;
 
-import nishio.lazuli_lib.core.LazuliUniform;
+import nishio.lazuli_lib.core.shaders.LazuliUniform;
 import org.joml.Matrix4f;
 
 import java.awt.*;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class LazulidefaultUniforms {
     //    { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },

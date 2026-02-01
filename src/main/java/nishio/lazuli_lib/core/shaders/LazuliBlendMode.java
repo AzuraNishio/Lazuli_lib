@@ -1,4 +1,4 @@
-package nishio.lazuli_lib.core;
+package nishio.lazuli_lib.core.shaders;
 
 public class LazuliBlendMode {
     private final String func;

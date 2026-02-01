@@ -1,13 +1,13 @@
 package nishio.test_mod;
 /** Renderer utility for the test mod. */
 
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.math.Vec3d;
-import nishio.lazuli_lib.core.*;
-import nishio.lazuli_lib.core.LapisRenderer;
-import nishio.lazuli_lib.core.LazuliBufferBuilder;
+import nishio.lazuli_lib.core.world_rendering.LapisRenderer;
+import nishio.lazuli_lib.core.world_rendering.LazuliBufferBuilder;
+import nishio.lazuli_lib.core.events.LazuliRenderEvents;
+import nishio.lazuli_lib.core.miscellaneous.LazuliClock;
+import nishio.lazuli_lib.core.world_rendering.LazuliVertex;
 import nishio.lazuli_lib.internals.Lazuli_Lib;
 
 import java.util.Random;
@@ -18,7 +18,7 @@ public class TestRenderer {
     private static final Random RANDOM   = new Random();
     public static void register(){
         LazuliClock.Cronometer cronometer = LazuliClock.newCronometer();
-        LazuliRenderingRegistry.registerRenderCallback((context) -> {
+        LazuliRenderEvents.registerRenderCallback((context) -> {
             LazuliBufferBuilder bb = context.getLazuliBB(VertexFormat.DrawMode.QUADS);
 
             LapisRenderer.setShader(TestModShaders.testShader.getProgram());
@@ -38,7 +38,7 @@ public class TestRenderer {
             bb.draw();
         });
 
-        LazuliRenderingRegistry.registerPostCallback((context, viewProjMatrix, tickDelta) -> {
+        LazuliRenderEvents.registerPostCallback((context, viewProjMatrix, tickDelta) -> {
             //LazuliShaderRegistry.getPostProcessor(TestModShaders.CONTRAST).render(tickDelta);
         });
     }
