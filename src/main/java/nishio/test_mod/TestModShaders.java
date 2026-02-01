@@ -10,6 +10,7 @@ import nishio.lazuli_lib.core.LazuliShader;
 import nishio.lazuli_lib.core.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.LazuliUniform;
 import nishio.lazuli_lib.internals.LazuliDataGenerator;
+import nishio.lazuli_lib.internals.LazuliShaderDatagenManager;
 import nishio.lazuli_lib.internals.Lazuli_Lib;
 import nishio.lazuli_lib.internals.LazulidefaultUniforms;
 
@@ -51,45 +52,13 @@ public class TestModShaders {
                 samplers
         );
 
-        var loader = FabricLoader.getInstance();
-
-        List<LazuliShader> shaders = new ArrayList<>();
-        shaders.add(testShader);
-
-        if (!loader.isDevelopmentEnvironment()) return;
-
-        //Path output = FabricLoader.getInstance()
-        //        .getGameDir()
-        //        .resolve("lazuli-generated");
-
-
-        // Generate directly into src/main/resources
-        Path projectRoot = FabricLoader.getInstance().getGameDir().getParent();
-        Path output = projectRoot.resolve("src/main/lazuli_gen/");
+        LazuliShaderRegistry.registerShader(testShader);
+        LazuliShaderRegistry.close();
 
 
 
-        DataGenerator generator =
-                new DataGenerator(output, SharedConstants.getGameVersion(), true);
-
-        DataGenerator.Pack pack =
-                generator.createVanillaPack(true);
-
-        pack.addProvider((op) -> new LazuliDataGenerator(op, shaders) {
-            @Override
-            public String getName() {
-                return "test_mod";
-            }
-        });
 
 
-        try {
-            generator.run();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        //testShader.register();
     }
 
 }

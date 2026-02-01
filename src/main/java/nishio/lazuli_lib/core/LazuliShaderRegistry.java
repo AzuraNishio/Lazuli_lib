@@ -9,11 +9,14 @@ import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.util.Window;
 import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.internals.LazuliShaderDatagenManager;
 import nishio.lazuli_lib.internals.Lazuli_Lib_Client;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class LazuliShaderRegistry {
 
@@ -23,11 +26,12 @@ public class LazuliShaderRegistry {
     private static int resX ;
     private static int resY;
 
-    /**
-     * Registers a core shader and stores it in SHADER_MAP.
-     */
+    private static Set<String> namespaces = new HashSet<>();
+
     public static void registerShader(String name, String nameSpace, VertexFormat format) {
         Identifier shaderId = Identifier.of(nameSpace, name);
+        boolean dataGenerated = false;
+        namespaces.add(nameSpace);
 
         CoreShaderRegistrationCallback.EVENT.register(ctx -> {
             ctx.register(shaderId, format, shaderProgram -> {
@@ -35,6 +39,18 @@ public class LazuliShaderRegistry {
                 Lazuli_Lib_Client.LOGGER.info("Shader '{}' registered!", name);
             });
         });
+    }
+
+    public static void registerShader(LazuliShader shader) {
+        LazuliShaderDatagenManager.registerShader(shader);
+        namespaces.add(shader.namespace);
+    }
+
+    public static void close(){
+        for(String n : namespaces){
+            LazuliShaderDatagenManager.genNamespace(n);
+        }
+        namespaces.clear();
     }
 
     /**
@@ -96,7 +112,7 @@ public class LazuliShaderRegistry {
 
 
 
-    public static ShaderProgram getShader(String name) {
+    public static ShaderProgram getShaderFromName(String name) {
         return SHADER_MAP.get(name);
     }
 

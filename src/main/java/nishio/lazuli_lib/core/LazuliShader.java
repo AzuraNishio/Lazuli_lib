@@ -33,7 +33,7 @@ public class LazuliShader {
     }
 
     public ShaderProgram getProgram(){
-        return LazuliShaderRegistry.getShader(jsonPath);
+        return LazuliShaderRegistry.getShaderFromName(jsonPath);
     };
 
     public Identifier vertexId(){return Identifier.of(namespace, vertexPath);}

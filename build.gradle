@@ -21,7 +21,7 @@ repositories {
 sourceSets {
 	main {
 		resources {
-			srcDirs += ['src/main/lazuli_datagen']
+			srcDirs += ['src/main/lazuli_gen']
 		}
 	}
 }

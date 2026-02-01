@@ -37,6 +37,7 @@ public class Lazuli_Lib_Client implements ClientModInitializer {
 		LazuliRenderingRegistry.registerLazuliRenderPhases();
 		LazuliShaderRegistry.register();
 		LazuliClock.register();
+
 	}
 
 

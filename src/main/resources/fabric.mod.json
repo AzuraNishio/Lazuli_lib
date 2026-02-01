@@ -21,6 +21,9 @@
 		],
 		"main": [
 			"nishio.lazuli_lib.internals.Lazuli_Lib"
+		],
+		"preLaunch": [
+			"nishio.lazuli_lib.internals.LazuliPreLaunch"
 		]
 	},
 	"mixins": [
