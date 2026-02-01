@@ -65,7 +65,7 @@ public class TestModShaders {
 
         // Generate directly into src/main/resources
         Path projectRoot = FabricLoader.getInstance().getGameDir().getParent();
-        Path output = projectRoot.resolve("src/main/generated/");
+        Path output = projectRoot.resolve("src/main/lazuli_gen/");
 
 
 
