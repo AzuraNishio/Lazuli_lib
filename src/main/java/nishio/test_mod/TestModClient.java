@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class TestModClient implements ClientModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("Really Cool Mod");
+	public static final String MOD_ID = "test_mod";
 
 	@Override
 	public void onInitializeClient() {

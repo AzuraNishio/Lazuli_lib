@@ -14,12 +14,14 @@ public class LazuliBufferBuilder {
     private Camera camera = null;
     private final Tessellator tessellator;
     private float lastR = 1.0f, lastG = 1.0f, lastB = 1.0f, lastA = 1.0f;
-    private float lastU = 0.0f, lastV = 0.0f;
+    private float lastU = 0f, lastV = 0f;
     private int lastLight = 0;
     private int lastOverlay = 0;
     private float lastNormalX = 0.0f, lastNormalY = 1.0f, lastNormalZ = 0.0f;
     private final float clampDist = 500;
     private boolean isEmpty = true;
+    private boolean uvSet = false;
+    private int vertexCount = 0;
 
     //===========================================[Bunch of overloaded builder methods]===========================================
     public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix, Transform3D renderSpace) {
@@ -120,6 +122,7 @@ public class LazuliBufferBuilder {
             BufferRenderer.drawWithGlobalProgram(builtBuffer);
             this.isEmpty = true;
             this.buffer = this.tessellator.begin(builtBuffer.getDrawParameters().mode(), builtBuffer.getDrawParameters().format());
+            vertexCount = 0;
         }
     }
 
@@ -127,6 +130,7 @@ public class LazuliBufferBuilder {
         if (!isEmpty) {
             BufferRenderer.drawWithGlobalProgram(buffer.end());
             this.isEmpty = true;
+            vertexCount = 0;
         }
     }
 
@@ -147,6 +151,8 @@ public class LazuliBufferBuilder {
         if (transformed.length()>clampDist) {
             transformed = transformed.normalize().multiply(clampDist+(0.002*(transformed.length()-clampDist)));
         }
+
+        vertexCount++;
 
         buffer.vertex(matrix4f, (float) transformed.x, (float) transformed.y, (float) transformed.z);
         return this;
@@ -214,9 +220,17 @@ public class LazuliBufferBuilder {
         color((int)(lastR * 255f), (int)(lastG * 255f), (int)(lastB * 255f), (int)(lastA * 255f));
 
         // Texture coordinates
-        if (v.u != null) lastU = v.u;
-        if (v.v != null) lastV = v.v;
-        texture(lastU, lastV);
+        if (v.u != null) { lastU = v.u; uvSet = true; };
+        if (v.v != null) { lastV = v.v; uvSet = true; };
+
+        if (uvSet){
+            texture(lastU, lastV);
+        } else {
+            texture((float) Math.floor((double) (vertexCount % 4) / 2), (float) Math.floor((double) ((vertexCount + 1) % 4) / 2));
+        }
+
+
+
 
         // Light
         if (v.light != null) lastLight = v.light;

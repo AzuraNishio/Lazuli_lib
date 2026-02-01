@@ -37,40 +37,7 @@ public class Lazuli_Lib_Client implements ClientModInitializer {
 		LazuliRenderingRegistry.registerLazuliRenderPhases();
 		LazuliShaderRegistry.register();
 		LazuliClock.register();
-
-		runShaderDatagen();
 	}
-
-	private static void runShaderDatagen() {
-		var loader = FabricLoader.getInstance();
-
-		if (!loader.isDevelopmentEnvironment()) return;
-
-		Path output = FabricLoader.getInstance()
-				.getGameDir()
-				.resolve("lazuli-generated");
-
-		DataGenerator generator =
-				new DataGenerator(output, SharedConstants.getGameVersion(), true);
-
-		DataGenerator.Pack pack =
-				generator.createVanillaPack(true);
-
-		pack.addProvider((op) -> new LazuliDataGenerator(op) {
-			@Override
-			public String getName() {
-				return "test";
-			}
-		});
-
-
-		try {
-			generator.run();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 
 
 }

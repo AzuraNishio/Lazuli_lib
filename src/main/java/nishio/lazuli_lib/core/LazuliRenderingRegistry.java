@@ -50,19 +50,24 @@ public class LazuliRenderingRegistry {
             ms.multiply(camera.getRotation());
             Matrix4f viewProj = ms.peek().getPositionMatrix();
 
+            //Setup user friendly render state
+            LapisRenderer.disableCull();
+            LapisRenderer.enableDepthTest();
+            LapisRenderer.setShaderColor(1f,1f,1f,1f);
+
             //run registered render phases
             for (LazuliRenderEvents.LazuliRenderCallback callback : RENDER_CALLBACKS) {
                 callback.render(new LazuliRenderContext(viewProj, context, tickDelta));
             }
 
             // 6) Restore vanilla render state
-            RenderSystem.disableBlend();
-            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-            RenderSystem.depthMask(true);
-            RenderSystem.setShaderFogShape(FogShape.CYLINDER);
-            RenderSystem.setShaderFogColor(0f, 0f, 0f);
-            RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-            RenderSystem.enableDepthTest();
+            LapisRenderer.disableBlend();
+            LapisRenderer.setShaderColor(1f, 1f, 1f, 1f);
+            LapisRenderer.depthMask(true);
+            LapisRenderer.setShaderFogShape(FogShape.CYLINDER);
+            LapisRenderer.setShaderFogColor(0f, 0f, 0f);
+            LapisRenderer.setShader(GameRenderer::getPositionColorProgram);
+            LapisRenderer.enableDepthTest();
 
             for (LazuliRenderEvents.LazuliPostCallback callback : POST_CALLBACKS) {
                 callback.post(context, customViewProj, tickDelta);

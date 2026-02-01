@@ -7,9 +7,12 @@ import net.minecraft.data.DataOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
 import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.core.LazuliShader;
+import nishio.lazuli_lib.core.LazuliUniform;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -17,52 +20,63 @@ import java.util.concurrent.CompletableFuture;
 
 public abstract class LazuliDataGenerator implements DataProvider {
 
+    protected List<LazuliShader> shaderList;
+
     protected final DataOutput.PathResolver shaderFolderPathResolver;
 
     protected final Map<Identifier, JsonObject> shaderJsons;
 
-    public LazuliDataGenerator(DataOutput output) {
+    public LazuliDataGenerator(DataOutput output, List<LazuliShader> shaderList) {
         this.shaderFolderPathResolver = output.getResolver(DataOutput.OutputType.RESOURCE_PACK, "shaders");
 
         this.shaderJsons = new HashMap<>();
+
+        this.shaderList = shaderList;
 
         generate();
     }
 
     public void generate(){
-        test();
+        for (LazuliShader s : shaderList){
+            registerShader(s);
+            s.register();
+        }
     };
 
-    public void registerShader(Identifier shaderId, Identifier vertexId, Identifier fragmentId, String[] attributes, String[] samplers, Uniform[] uniforms) {
+    public void registerShader(LazuliShader s) {
         JsonObject shaderJson = new JsonObject();
 
         // Adding the vertex and fragment shaders
-        shaderJson.addProperty("vertex", vertexId.toString());
-        shaderJson.addProperty("fragment", fragmentId.toString());
+        shaderJson.addProperty("vertex", s.vertexId().toString());
+        shaderJson.addProperty("fragment", s.fragmentId().toString());
 
         // Adding Attributes
         JsonArray attributesJson = new JsonArray();
-        for (String attribute : attributes) {
+        for (String attribute : s.getVertexAttributesNames()) {
             attributesJson.add(attribute);
         }
+
         shaderJson.add("attributes", attributesJson);
 
         // Adding Samplers
         JsonArray samplersJson = new JsonArray();
-        for (String sampler : samplers) {
-            samplersJson.add(sampler);
+        for (String sampler : s.samplers) {
+            JsonObject samplerJson = new JsonObject();
+
+            samplerJson.addProperty("name", sampler);
+            samplersJson.add(samplerJson);
         }
         shaderJson.add("samplers", samplersJson);
 
         // Adding Uniforms
         JsonArray uniformJson = new JsonArray();
-        for (Uniform uniform : uniforms) {
+        for (LazuliUniform<?> uniform : s.Uniforms.values()) {
             uniformJson.add(uniform.toJsonObject());
         }
         shaderJson.add("uniforms", uniformJson);
 
         // Putting the shader json into the map
-        shaderJsons.put(shaderId, shaderJson);
+        shaderJsons.put(Identifier.of(s.namespace, "core/" + s.jsonPath), shaderJson);
     }
 
     @Override
@@ -77,75 +91,4 @@ public abstract class LazuliDataGenerator implements DataProvider {
                         ).toArray(CompletableFuture[]::new)
         );
     }
-
-    public record Uniform(String name, String uniformType, int count, float[] values) {
-        public static final String FLOAT = "float";
-        public static final String INT = "float";
-        public static final String MATRIX4 = "matrix4x4";
-        public static final String MATRIX3 = "matrix3x3";
-        public static final String VEC4 = "vec4";
-        public static final String VEC3 = "vec3";
-        public static final String VEC2 = "vec2";
-
-        public static Uniform of(String name, String uniformType, float[] values) {
-            return new Uniform(name, uniformType, values.length, values);
-        }
-
-        public static Uniform of(String name, String uniformType, int count) {
-            float[] values = new float[count];
-            Arrays.fill(values, 0.0f);
-            return new Uniform(name, uniformType, count, values);
-        }
-
-        public static Uniform of(String name, String uniformType, int count, float[] values) {
-            return new Uniform(name, uniformType, count, values);
-        }
-
-        public JsonObject toJsonObject() {
-            JsonObject jsonObject = new JsonObject();
-
-            jsonObject.addProperty("name", name);
-            jsonObject.addProperty("type", uniformType);
-            jsonObject.addProperty("count", count);
-
-            JsonArray valuesArray = new JsonArray();
-            for (float value : values) {
-                valuesArray.add(value);
-            }
-            jsonObject.add("values", valuesArray);
-
-            return jsonObject;
-        }
-    }
-
-
-    public void test(){
-            registerShader(
-                    Lazuli_Lib.id("core/dissolve"),
-                    Lazuli_Lib.id("dissolve"),
-                    Lazuli_Lib.id("dissolve"),
-                    new String[]{
-                            "Position",
-                            "Color",
-                            "UV0", "UV1", "UV2",
-                            "Normal"
-                    },
-                    new String[]{"Sampler0", "Sampler1", "Sampler2"},
-                    new Uniform[]{
-                            Uniform.of("ModelViewMat", Uniform.MATRIX4, 16),
-                            Uniform.of("ProjMat", Uniform.MATRIX4, 16),
-                            Uniform.of("IViewRotMat", Uniform.MATRIX3, 9),
-                            Uniform.of("ColorModulator", Uniform.FLOAT, 4),
-                            Uniform.of("Light0_Direction", Uniform.FLOAT, 3),
-                            Uniform.of("Light1_Direction", Uniform.FLOAT, 3),
-                            Uniform.of("FogStart", Uniform.FLOAT, 1),
-                            Uniform.of("FogEnd", Uniform.FLOAT, 1),
-                            Uniform.of("FogColor", Uniform.FLOAT, 1),
-                            Uniform.of("FogShape", Uniform.INT, 1),
-                            Uniform.of("Dissolve", Uniform.FLOAT, 1)
-                    }
-            );
-
-    }
-
 }

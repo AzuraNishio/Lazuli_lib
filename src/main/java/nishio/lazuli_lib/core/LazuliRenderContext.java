@@ -4,21 +4,15 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.render.*;
 import org.joml.Matrix4f;
 
-public class LazuliRenderContext {
+public record LazuliRenderContext(Matrix4f viewProjMatrix, WorldRenderContext context, float tickDelta) {
 
-    public final Matrix4f viewProjMatrix;
-    public final WorldRenderContext context;
-    public final float tickDelta;
-
-    public LazuliRenderContext(Matrix4f vp, WorldRenderContext c, float td) {
-        this.viewProjMatrix = vp;
-        this.context = c;
-        this.tickDelta = td;
+    public Camera camera() {
+        return context.camera();
     }
 
-    public Camera camera() {return context.camera();}
-
-    public Tessellator tessellator() {return Tessellator.getInstance();}
+    public Tessellator tessellator() {
+        return Tessellator.getInstance();
+    }
 
     public LazuliBufferBuilder getLazuliBB(
             VertexFormat.DrawMode drawMode
