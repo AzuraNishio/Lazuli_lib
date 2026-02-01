@@ -1,0 +1,4 @@
+accessWidener v2 named
+
+accessible field net/minecraft/resource/ResourcePackManager providers Ljava/util/Set;
+mutable field net/minecraft/resource/ResourcePackManager providers Ljava/util/Set;

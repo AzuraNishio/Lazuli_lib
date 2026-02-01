@@ -3,11 +3,14 @@ package nishio.lazuli_lib.internals;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataOutput;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.math.Vec3d;
 import nishio.lazuli_lib.core.LazuliRenderingRegistry;
 import nishio.lazuli_lib.core.LazuliShaderRegistry;
@@ -37,7 +40,7 @@ public class Lazuli_Lib_Client implements ClientModInitializer {
 		LazuliRenderingRegistry.registerLazuliRenderPhases();
 		LazuliShaderRegistry.register();
 		LazuliClock.register();
-
+		LazuliShaderDatagenManager.initialize();
 	}
 
 

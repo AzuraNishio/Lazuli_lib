@@ -28,6 +28,9 @@ public class LazuliShaderRegistry {
 
     private static Set<String> namespaces = new HashSet<>();
 
+    private static boolean hasReloaded = false;
+
+
     public static void registerShader(String name, String nameSpace, VertexFormat format) {
         Identifier shaderId = Identifier.of(nameSpace, name);
         boolean dataGenerated = false;
@@ -87,6 +90,9 @@ public class LazuliShaderRegistry {
     }
 
     public static void register(){
+
+
+
         ClientTickEvents.START_CLIENT_TICK.register((t) ->{
 
             Window window = MinecraftClient.getInstance().getWindow();

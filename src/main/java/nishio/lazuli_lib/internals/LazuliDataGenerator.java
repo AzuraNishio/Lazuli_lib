@@ -3,6 +3,7 @@ package nishio.lazuli_lib.internals;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.data.DataOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
@@ -89,6 +90,8 @@ public abstract class LazuliDataGenerator implements DataProvider {
                                         entry.getValue(),
                                         shaderFolderPathResolver.resolve(entry.getKey(), "json"))
                         ).toArray(CompletableFuture[]::new)
+
         );
+
     }
 }
