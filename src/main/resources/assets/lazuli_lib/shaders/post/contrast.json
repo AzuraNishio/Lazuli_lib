@@ -1,20 +1,3 @@
 {
-    "targets": [
-        "swap"
-    ],
-    "passes": [
-        {
-            "name": "contrast",
-            "intarget": "minecraft:main",
-            "outtarget": "swap",
-            "uniforms": [
-
-            ]
-        },
-        {
-            "name": "blit",
-            "intarget": "swap",
-            "outtarget": "minecraft:main"
-        }
-    ]
+    "fragmentShader": "contrast"
 }

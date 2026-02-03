@@ -1,4 +1,4 @@
-package nishio.lazuli_lib.mixin;
+package nishio.lazuli_lib.internals.mixin;
 /** Mixin adjusting FOV when zooming. */
 
 

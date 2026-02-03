@@ -27,33 +27,28 @@ void main() {
 
 
 
-	vec2 texel = 1.0 / InSize;
+	vec2 texel = 2.0 / InSize;
 
 	vec4 c = sampleTex(texCoord);
 
-	float h  = c.r; // current height
-	float h0 = c.g; // previous height
+	float h  = c.r;
+	float h0 = c.g;
 
-	// neighbors (current height)
 	float u = sampleTex(texCoord + vec2(0.0,  texel.y)).r;
 	float d = sampleTex(texCoord + vec2(0.0, -texel.y)).r;
 	float l = sampleTex(texCoord + vec2(-texel.x, 0.0)).r;
 	float r = sampleTex(texCoord + vec2( texel.x, 0.0)).r;
 
-	// laplacian
 	float lap = (u + d + l + r) - 4.0 * h;
 
-	// wave equation (THIS is the missing piece)
 	float newH = (2.0 * h - h0);
 
 	float rand = hash(vec3(texCoord + 10.0, newH) * 0.1);
 
 	newH += lap * (0.25 + (rand * 0.05));
 
-	// damping (kills maxed buffers)
 	newH *= 0.993;
-
-	// inject ripple
+	
 	float dist = length(texCoord - vec2(Pos.x, Pos.y));
 
 	newH += smoothstep(length(texel) * 16.0, 0.0, dist) * 0.8;

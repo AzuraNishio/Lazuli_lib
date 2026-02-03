@@ -1,4 +1,4 @@
-package nishio.lazuli_lib.mixin;
+package nishio.lazuli_lib.internals.mixin;
 /** Mixin hooking post-processing registry into shader loading. */
 
 import net.minecraft.client.MinecraftClient;

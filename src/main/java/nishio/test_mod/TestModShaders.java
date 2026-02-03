@@ -19,16 +19,16 @@ public class TestModShaders {
     public static String RENDER_TYPE_TEST = "rendertype_test";
     public static String RENDER_TYPE_TEST2 = "rendertype_test2";
 
-    public static final String CONTRAST = "shaders/post/contrast.json";
-    public static final String EASY_CONTRAST = "shaders/program/contrast.json";
+    public static final String RIPPLE = "ripple";
     public static LazuliShader testShader;
     public static LazuliShader testShader2;
 
 
 
     public static void registerShaders() {
+        LazuliShaderRegistry.registerPostProcessingShader(RIPPLE, Lazuli_Lib.MOD_ID);
 
-        LazuliShaderRegistry.registerPostProcessingShader(CONTRAST, Lazuli_Lib.MOD_ID);
+
 
         Map<String, LazuliUniform<?>> uniforms = new HashMap<>();
         List<String> samplers = new ArrayList<>();

@@ -2,6 +2,7 @@ package nishio.test_mod;
 /** Renderer utility for the test mod. */
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.render.*;
@@ -12,7 +13,6 @@ import nishio.lazuli_lib.core.world_rendering.LazuliBufferBuilder;
 import nishio.lazuli_lib.core.events.LazuliRenderEvents;
 import nishio.lazuli_lib.core.miscellaneous.LazuliClock;
 import nishio.lazuli_lib.core.world_rendering.LazuliVertex;
-import nishio.lazuli_lib.internals.LazuliPostEffectPass;
 import nishio.lazuli_lib.internals.Lazuli_Lib;
 
 import java.util.Random;
@@ -20,8 +20,8 @@ import java.util.Random;
 public class TestRenderer {
     static Vec3d head = new Vec3d(0, 100, 340);
     static Vec3d dir = new Vec3d(0, 0, 1);
-    static Framebuffer testOut; //= new SimpleFramebuffer(128, 128, false, false);
-    static Framebuffer testLast;// = new SimpleFramebuffer(128, 128, false, false);
+    static Framebuffer testOut;// = new SimpleFramebuffer(2000, 2000, false, false);
+    static Framebuffer testLast;// = new SimpleFramebuffer(2000, 2000, false, false);
     static Framebuffer main;// = new SimpleFramebuffer(128, 128, false, false);
     static boolean beggining = true;
 
@@ -32,6 +32,7 @@ public class TestRenderer {
 
 
         });
+
 
         LazuliRenderEvents.registerRenderCallback((context) -> {
             LazuliBufferBuilder bb = context.getLazuliBB(VertexFormat.DrawMode.QUADS);
@@ -73,12 +74,20 @@ public class TestRenderer {
         });
 
         LazuliRenderEvents.registerPostCallback((context, viewProjMatrix, tickDelta) -> {
-            LazuliPostEffectPass pass = LazuliShaderRegistry.getPostProcessor(TestModShaders.CONTRAST).passes.getFirst();
-            testLast = pass.testLast;
-            testOut = pass.testOut;
-            main = pass.input;
+            if(testOut == null){
+                testOut = new SimpleFramebuffer(2000, 2000, true, true);
+                testLast = new SimpleFramebuffer(2000, 2000, true, true);
+            }
 
-            LazuliShaderRegistry.getPostProcessor(TestModShaders.CONTRAST).render(tickDelta);
+            if(testOut != null) {
+                Framebuffer main = MinecraftClient.getInstance().getFramebuffer();
+                main.endWrite();
+                LazuliShaderRegistry.getPostProcessor(TestModShaders.RIPPLE).render(tickDelta, testLast, testOut);
+                LazuliShaderRegistry.getPostProcessor(TestModShaders.RIPPLE).render(tickDelta, testOut, testLast);
+                main.beginWrite(true);
+            } else {
+                System.out.println("Yep it's nuull everyone");
+            }
         });
     }
 

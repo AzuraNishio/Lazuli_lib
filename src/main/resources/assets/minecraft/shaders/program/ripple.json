@@ -5,7 +5,7 @@
     "dstrgb": "1-srcalpha"
   },
   "vertex": "full_screen",
-  "fragment": "pass",
+  "fragment": "test_mod:ripple",
   "attributes": [ "Position" ],
   "samplers": [
     { "name": "DiffuseSampler" },

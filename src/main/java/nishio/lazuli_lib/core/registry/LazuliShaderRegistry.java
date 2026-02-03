@@ -9,7 +9,7 @@ import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.util.Window;
 import net.minecraft.util.Identifier;
-import nishio.lazuli_lib.core.post_processing.LazuliPostEffectShader;
+import nishio.lazuli_lib.core.framebuffers.LazuliFramebufferShader;
 import nishio.lazuli_lib.core.shaders.LazuliShader;
 import nishio.lazuli_lib.internals.LazuliPostProcessingRegistry;
 import nishio.lazuli_lib.internals.LazuliShaderDatagenManager;
@@ -24,7 +24,7 @@ import java.util.Set;
 public class LazuliShaderRegistry {
 
     private static final Map<String, ShaderProgram> SHADER_MAP = new HashMap<>();
-    private static final Map<String, LazuliPostEffectShader> POST_PROCESSOR_MAP = new HashMap<>();
+    private static final Map<String, LazuliFramebufferShader> POST_PROCESSOR_MAP = new HashMap<>();
 
     private static int resX ;
     private static int resY;
@@ -83,13 +83,7 @@ public class LazuliShaderRegistry {
             Framebuffer framebuffer = client.getFramebuffer();
 
             try {
-                LazuliPostEffectShader processor = new LazuliPostEffectShader(
-                        client.getTextureManager(),
-                        factory,
-                        framebuffer,
-                        shaderId
-                );
-                processor.setupDimensions(client.getWindow().getFramebufferWidth(), client.getWindow().getFramebufferHeight());
+                LazuliFramebufferShader processor = new LazuliFramebufferShader(factory, shaderId);
 
 
                 POST_PROCESSOR_MAP.put(name, processor);
@@ -123,10 +117,10 @@ public class LazuliShaderRegistry {
     }
 
     private static void windowResized(int height, int width) {
-        for (Map.Entry<String, LazuliPostEffectShader> entry : POST_PROCESSOR_MAP.entrySet()) {
-            LazuliPostEffectShader processor = entry.getValue();
+        for (Map.Entry<String, LazuliFramebufferShader> entry : POST_PROCESSOR_MAP.entrySet()) {
+            LazuliFramebufferShader processor = entry.getValue();
             if (processor != null) {
-                processor.setupDimensions(width, height);
+
             }
         }
     }
@@ -137,7 +131,7 @@ public class LazuliShaderRegistry {
         return SHADER_MAP.get(name);
     }
 
-    public static LazuliPostEffectShader getPostProcessor(String name) {
+    public static LazuliFramebufferShader getPostProcessor(String name) {
         return POST_PROCESSOR_MAP.get(name);
     }
 }
