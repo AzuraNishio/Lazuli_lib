@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 //Thanks Nico44YT for the datagen code!
 
-public abstract class LazuliDataGenerator implements DataProvider {
+public abstract class LazuliPostProcessingShaderGenerator implements DataProvider {
 
     protected List<LazuliShader> shaderList;
 
@@ -22,7 +22,7 @@ public abstract class LazuliDataGenerator implements DataProvider {
 
     protected final Map<Identifier, JsonObject> shaderJsons;
 
-    public LazuliDataGenerator(DataOutput output, List<LazuliShader> shaderList) {
+    public LazuliPostProcessingShaderGenerator(DataOutput output, List<LazuliShader> shaderList) {
         this.shaderFolderPathResolver = output.getResolver(DataOutput.OutputType.RESOURCE_PACK, "shaders");
 
         this.shaderJsons = new HashMap<>();

@@ -7,6 +7,8 @@ package nishio.lazuli_lib.internals;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
+
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -16,12 +18,13 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.JsonEffectShaderProgram;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.gl.SimpleFramebuffer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.resource.ResourceFactory;
+import net.minecraft.util.math.Vec3d;
+import nishio.lazuli_lib.core.world_rendering.LapisRenderer;
+import nishio.test_mod.TestModShaders;
 import org.joml.Matrix4f;
 
 @Environment(EnvType.CLIENT)
@@ -35,12 +38,26 @@ public class LazuliPostEffectPass implements AutoCloseable {
     private final List<Integer> samplerHeights = Lists.newArrayList();
     private Matrix4f projectionMatrix;
     private final int texFilter;
+    public Framebuffer testOut; //= new SimpleFramebuffer(128, 128, false, false);
+    public Framebuffer testLast;// = new SimpleFramebuffer(128, 128, false, false);
+    public boolean beggining = false;
+    public int count = 0;
 
     public LazuliPostEffectPass(ResourceFactory resourceFactory, String programName, Framebuffer input, Framebuffer output, boolean linear) throws IOException {
         this.program = new JsonEffectShaderProgram(resourceFactory, programName);
         this.input = input;
         this.output = output;
         this.texFilter = linear ? 9729 : 9728;
+
+        testOut = new SimpleFramebuffer(input.textureWidth, input.textureHeight, true, false);
+        testLast = new SimpleFramebuffer(input.textureWidth, input.textureHeight, true, false);
+
+
+    }
+
+    public void resizeStuff(int w, int h){
+        testOut = new SimpleFramebuffer(w, h, true, false);
+        testLast = new SimpleFramebuffer(w, h, true, false);
     }
 
     public void close() {
@@ -63,31 +80,59 @@ public class LazuliPostEffectPass implements AutoCloseable {
     }
 
     public void render(float time) {
-        this.input.endWrite();
-        float f = (float)this.output.textureWidth;
-        float g = (float)this.output.textureHeight;
+
+        test(testLast, testOut);
+        test(testOut, testLast);
+        //test(testOut, testLast);
+    }
+
+    public void test(Framebuffer a, Framebuffer b){
+
+        a.endWrite();
+        float f = (float)b.textureWidth;
+        float g = (float)b.textureHeight;
         RenderSystem.viewport(0, 0, (int)f, (int)g);
+
         JsonEffectShaderProgram shaderProgram = this.program;
-        Framebuffer inputFrameBuffer = this.input;
-        Objects.requireNonNull(inputFrameBuffer);
-        shaderProgram.bindSampler("DiffuseSampler", inputFrameBuffer::getColorAttachment);
-        shaderProgram.bindSampler("DepthSampler", inputFrameBuffer::getDepthAttachment);
+
+        Objects.requireNonNull(a);
+
+
+        shaderProgram.bindSampler("DiffuseSampler", a::getColorAttachment);
+        shaderProgram.bindSampler("DepthSampler", a::getDepthAttachment);
 
         for(int i = 0; i < this.samplerValues.size(); ++i) {
             this.program.bindSampler((String)this.samplerNames.get(i), (IntSupplier)this.samplerValues.get(i));
             this.program.getUniformByNameOrDummy("AuxSize" + i).set((float)(Integer)this.samplerWidths.get(i), (float)(Integer)this.samplerHeights.get(i));
         }
 
+        if (beggining) {
+            beggining = false;
+            this.program.getUniformByNameOrDummy("state").set(1f, 0f, 0f);
+        } else {
+            this.program.getUniformByNameOrDummy("state").set(0f, 0f, 0f);
+        }
+
         this.program.getUniformByNameOrDummy("ProjMat").set(this.projectionMatrix);
-        this.program.getUniformByNameOrDummy("InSize").set((float)this.input.textureWidth, (float)this.input.textureHeight);
+        this.program.getUniformByNameOrDummy("InSize").set((float)a.textureWidth, (float)a.textureHeight);
         this.program.getUniformByNameOrDummy("OutSize").set(f, g);
-        this.program.getUniformByNameOrDummy("Time").set(time);
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         this.program.getUniformByNameOrDummy("ScreenSize").set((float)minecraftClient.getWindow().getFramebufferWidth(), (float)minecraftClient.getWindow().getFramebufferHeight());
+
+        if (minecraftClient.player != null) {
+            if(minecraftClient.player.getPos().getY() < 100.1) {
+                this.program.getUniformByNameOrDummy("Pos").set((float) minecraftClient.player.getPos().x / 20f, (float) minecraftClient.player.getPos().z / 20f);
+            } else {
+                this.program.getUniformByNameOrDummy("Pos").set((float) 20f, (float) minecraftClient.player.getPos().z / 20f);
+
+            }
+        }
         this.program.enable();
-        this.output.clear(MinecraftClient.IS_SYSTEM_MAC);
-        this.output.beginWrite(false);
+        //b.clear(MinecraftClient.IS_SYSTEM_MAC);
+
         RenderSystem.depthFunc(519);
+        RenderSystem.disableDepthTest();
+        b.beginWrite(false);
         BufferBuilder bufferBuilder = Tessellator.getInstance().begin(DrawMode.QUADS, VertexFormats.POSITION);
         bufferBuilder.vertex(0.0F, 0.0F, 500.0F);
         bufferBuilder.vertex(f, 0.0F, 500.0F);
@@ -96,7 +141,9 @@ public class LazuliPostEffectPass implements AutoCloseable {
         BufferRenderer.draw(bufferBuilder.end());
         RenderSystem.depthFunc(515);
         this.program.disable();
-        this.input.endRead();
+        a.endRead();
+
+
 
         for(Object object : this.samplerValues) {
             if (object instanceof Framebuffer) {
@@ -105,6 +152,7 @@ public class LazuliPostEffectPass implements AutoCloseable {
         }
 
     }
+
 
     public JsonEffectShaderProgram getProgram() {
         return this.program;

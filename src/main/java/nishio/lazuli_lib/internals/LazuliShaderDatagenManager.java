@@ -72,7 +72,7 @@ public class LazuliShaderDatagenManager {
             shaderSets.get(ns).add(s);
         }
 
-        pack.addProvider((op) -> new LazuliDataGenerator(op, shaderSets.get(namespace)) {
+        pack.addProvider((op) -> new LazuliShaderGenerator(op, shaderSets.get(namespace)) {
             @Override
             public String getName() {
                     return namespace;

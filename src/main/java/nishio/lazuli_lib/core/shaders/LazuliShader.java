@@ -103,6 +103,14 @@ public class LazuliShader {
         }
         shaderJson.add("uniforms", uniformJson);
 
+        // Adding blend mode
+        JsonObject blendModeJson = new JsonObject();
+        blendModeJson.addProperty("func", blendMode.equation());
+        blendModeJson.addProperty("srcrgb", blendMode.src());
+        blendModeJson.addProperty("dstrgb", blendMode.dst());
+
+        shaderJson.add("blend", blendModeJson);
+
         return shaderJson;
     }
 }

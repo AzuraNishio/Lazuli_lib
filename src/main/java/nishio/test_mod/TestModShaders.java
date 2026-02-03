@@ -17,10 +17,12 @@ import java.util.Map;
 
 public class TestModShaders {
     public static String RENDER_TYPE_TEST = "rendertype_test";
+    public static String RENDER_TYPE_TEST2 = "rendertype_test2";
 
     public static final String CONTRAST = "shaders/post/contrast.json";
     public static final String EASY_CONTRAST = "shaders/program/contrast.json";
     public static LazuliShader testShader;
+    public static LazuliShader testShader2;
 
 
 
@@ -30,8 +32,7 @@ public class TestModShaders {
 
         Map<String, LazuliUniform<?>> uniforms = new HashMap<>();
         List<String> samplers = new ArrayList<>();
-        uniforms.put("Test", new LazuliUniform<Vec3d>("Test", new Vec3d(2, 0, 0)));
-        uniforms.put("Test2", new LazuliUniform<Vec3d>("Test2", new Vec3d(0, 0.4, 0)));
+        uniforms.put("state", new LazuliUniform<Vec3d>("state", new Vec3d(2, 0, 0)));
         LazulidefaultUniforms.addDefaultUniforms(uniforms);
         samplers.add("Sampler0");
 
@@ -46,6 +47,19 @@ public class TestModShaders {
         );
 
         LazuliShaderRegistry.registerShader(testShader);
+
+        testShader2 = new LazuliShader(
+                Identifier.of(TestModClient.MOD_ID, RENDER_TYPE_TEST2),
+                Identifier.of(TestModClient.MOD_ID, RENDER_TYPE_TEST2),
+                Identifier.of(TestModClient.MOD_ID, "full_screen"),
+                LazuliBlendMode.ADDITIVE,
+                VertexFormats.POSITION_TEXTURE,
+                uniforms,
+                samplers
+        );
+
+        LazuliShaderRegistry.registerShader(testShader2);
+
         LazuliShaderRegistry.close();
 
 

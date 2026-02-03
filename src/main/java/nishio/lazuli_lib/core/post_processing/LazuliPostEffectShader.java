@@ -301,6 +301,7 @@ public class LazuliPostEffectShader implements AutoCloseable {
 
         for(LazuliPostEffectPass postEffectPass : this.passes) {
             postEffectPass.setProjectionMatrix(this.projectionMatrix);
+            postEffectPass.resizeStuff(targetsWidth, targetsHeight);
         }
 
         for(Framebuffer framebuffer : this.defaultSizedTargets) {
