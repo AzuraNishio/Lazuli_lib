@@ -5,6 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import nishio.lazuli_lib.core.events.LazuliRenderEvents;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.miscellaneous.LazuliClock;
+import nishio.lazuli_lib.internals.datagen.LazuliShaderDatagenManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

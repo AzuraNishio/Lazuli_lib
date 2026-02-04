@@ -1,4 +1,4 @@
-package nishio.lazuli_lib.internals;
+package nishio.lazuli_lib.internals.datagen;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
@@ -6,26 +6,23 @@ import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resource.ResourcePackManager;
-import nishio.lazuli_lib.core.shaders.LazuliShader;
+import nishio.lazuli_lib.internals.LazuliResourcePackProvider;
+import nishio.lazuli_lib.internals.LazuliShaderTop;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil.GSON;
 
 public class LazuliShaderDatagenManager {
 
-    private static final List<LazuliShader> shaders = new ArrayList<>();
+    private static final List<LazuliShaderTop<?>> shaders = new ArrayList<>();
 
     public static void initialize(){ //On load create the resource pack and register it in case it is empty
         var loader = FabricLoader.getInstance();
-
-        if (!loader.isDevelopmentEnvironment()) return;
 
         Path projectRoot = FabricLoader.getInstance().getGameDir();
         Path lazuli_gen_path = projectRoot.resolve("lazuli_gen/");
@@ -40,15 +37,13 @@ public class LazuliShaderDatagenManager {
 
     }
 
-    public static void registerShader(LazuliShader s){
+    public static void registerShader(LazuliShaderTop s){
         shaders.add(s);
     }
 
 
-    public static void genNamespace(String namespace){
+    public static void gen(){
         var loader = FabricLoader.getInstance();
-
-        if (!loader.isDevelopmentEnvironment()) return;
 
 
         //Path and stuff setup
@@ -61,21 +56,11 @@ public class LazuliShaderDatagenManager {
         DataGenerator.Pack pack =
                 generator.createVanillaPack(true);
 
-        Map<String, List<LazuliShader>> shaderSets = new HashMap<>();
 
-        //Separate shaders by namespace
-        for (LazuliShader s : shaders){
-            String ns = s.jsonId.getNamespace();
-            if (!shaderSets.containsKey(ns)){
-                shaderSets.put(ns, new ArrayList<>());
-            }
-            shaderSets.get(ns).add(s);
-        }
-
-        pack.addProvider((op) -> new LazuliShaderGenerator(op, shaderSets.get(namespace)) {
+        pack.addProvider((op) -> new LazuliShaderGenerator(op, shaders) {
             @Override
             public String getName() {
-                    return namespace;
+                    return "Lazuli Shader Datagen";
                 }
         });
 

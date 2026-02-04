@@ -37,11 +37,11 @@ public class TestRenderer {
         LazuliRenderEvents.registerRenderCallback((context) -> {
             LazuliBufferBuilder bb = context.getLazuliBB(VertexFormat.DrawMode.QUADS);
 
-            LapisRenderer.setShader(TestModShaders.testShader);
+            LapisRenderer.setShader(TestModShaders.RIPPLES_GEOMETRY_SHADER);
 
 
 
-            TestModShaders.testShader.setSampler("Sampler0", Lazuli_Lib.id("icon.png"));
+            TestModShaders.RIPPLES_GEOMETRY_SHADER.setSampler("Sampler0", Lazuli_Lib.id("icon.png"));
 
 
             if(testOut != null){
@@ -82,8 +82,8 @@ public class TestRenderer {
             if(testOut != null) {
                 Framebuffer main = MinecraftClient.getInstance().getFramebuffer();
                 main.endWrite();
-                LazuliShaderRegistry.getPostProcessor(TestModShaders.RIPPLE).render(tickDelta, testLast, testOut);
-                LazuliShaderRegistry.getPostProcessor(TestModShaders.RIPPLE).render(tickDelta, testOut, testLast);
+                TestModShaders.RIPPLES_FRAMEBUFFER_SHADER.render(tickDelta, testLast, testOut);
+                TestModShaders.RIPPLES_FRAMEBUFFER_SHADER.render(tickDelta, testOut, testLast);
                 main.beginWrite(true);
             } else {
                 System.out.println("Yep it's nuull everyone");

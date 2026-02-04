@@ -1,116 +1,80 @@
 package nishio.lazuli_lib.core.shaders;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.Identifier;
-import nishio.lazuli_lib.core.world_rendering.LapisRenderer;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
+import nishio.lazuli_lib.core.world_rendering.LapisRenderer;
+import nishio.lazuli_lib.internals.LazuliShaderTop;
+import nishio.lazuli_lib.internals.LazulidefaultUniforms;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LazuliShader {
-    public final Identifier vertexId;
-    public final Identifier fragmentId;
-    public final Identifier jsonId;
-    public Map<String, LazuliUniform<?>> Uniforms;
-    public VertexFormat vertexFormat;
-    public LazuliBlendMode blendMode;
-    public List<String> samplers;
+public class LazuliShader extends LazuliShaderTop<LazuliShader> {
 
-    public LazuliShader(String namespace, String jsonPath, String fragmentPath, String vertexPath, LazuliBlendMode blendMode, VertexFormat vertexFormat, Map<String, LazuliUniform<?>> uniforms, List<String> samplers){
-        this.Uniforms = uniforms;
-        this.vertexId = Identifier.of(namespace, vertexPath);
-        this.fragmentId = Identifier.of(namespace, fragmentPath);
-        this.jsonId = Identifier.of(namespace, jsonPath);
-        this.blendMode = blendMode;
-        this.vertexFormat = vertexFormat;
-        this.samplers = samplers;
+    public LazuliShader(String namespace, String jsonPath, String fragmentPath, String vertexPath,
+                        VertexFormat vertexFormat, Map<String, LazuliUniform<?>> uniforms, List<String> samplers) {
+        super(namespace, jsonPath, fragmentPath, vertexPath, vertexFormat, uniforms, samplers);
     }
 
-    public LazuliShader(Identifier jsonPath, Identifier fragmentPath, Identifier vertexPath, LazuliBlendMode blendMode, VertexFormat vertexFormat, Map<String, LazuliUniform<?>> uniforms, List<String> samplers){
-        this.Uniforms = uniforms;
-        this.vertexId = vertexPath;
-        this.fragmentId = fragmentPath;
-        this.jsonId = jsonPath;
-        this.blendMode = blendMode;
-        this.vertexFormat = vertexFormat;
-        this.samplers = samplers;
+    public LazuliShader(Identifier jsonPath, Identifier fragmentPath, Identifier vertexPath,
+                        VertexFormat vertexFormat, Map<String, LazuliUniform<?>> uniforms, List<String> samplers) {
+        super(jsonPath, fragmentPath, vertexPath, vertexFormat, uniforms, samplers);
     }
 
-    public void register(){
+    public LazuliShader(Identifier jsonPath, Identifier fragmentPath, Identifier vertexPath,
+                        VertexFormat vertexFormat) {
+        super(jsonPath, fragmentPath, vertexPath, vertexFormat, new HashMap<>(), new ArrayList<>());
+    }
+
+    public LazuliShader(Identifier jsonPath, Identifier fragmentPath, Identifier vertexPath) {
+        super(jsonPath, fragmentPath, vertexPath, VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, new HashMap<>(), new ArrayList<>());
+    }
+
+    public LazuliShader(Identifier fragmentPath, Identifier vertexPath) {
+        super(fragmentPath, fragmentPath, vertexPath, VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, new HashMap<>(), new ArrayList<>());
+    }
+
+    public LazuliShader(Identifier fragmentPath) {
+        super(fragmentPath, fragmentPath, Identifier.ofVanilla("position_color_tex_lightmap"), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, new HashMap<>(), new ArrayList<>());
+    }
+
+    @Override
+    public LazuliShader addDefaultUniforms() {
+        for(LazuliUniform<?> u : LazulidefaultUniforms.defaultUniforms){
+            uniforms.put(u.name, u);
+        }
+        return this;
+    }
+
+    @Override
+    public void minecraftRegister() {
         LazuliShaderRegistry.registerShader(jsonId, vertexFormat);
     }
 
-    public ShaderProgram getProgram(){
-        return LazuliShaderRegistry.getShaderFromName(jsonId.getPath());
-    };
-
-    public Identifier vertexId(){return vertexId;}
-    public Identifier jsonId(){return jsonId;}
-    public Identifier fragmentId(){return fragmentId;}
-
-    public List<String> getVertexAttributesNames() {
-        return vertexFormat.getAttributeNames();
+    public LazuliShader register(){
+        LazuliShaderRegistry.registerShader(this);
+        return this;
     }
 
-    public LazuliShader setSampler(String sampler, Identifier texture){
+    @Override
+    public String jsonPath(){return "core/";}
+
+    public ShaderProgram getProgram() {
+        return LazuliShaderRegistry.getShaderFromName(jsonId.getPath());
+    }
+
+    public LazuliShader setSampler(String sampler, Identifier texture) {
         LapisRenderer.setShaderTexture(samplers.indexOf(sampler), texture);
         return this;
     }
 
-    public LazuliUniform<?> getUniform(String name) {
-        return Uniforms.get(name);
-    }
-
     public LazuliShader setUniform(String name, Object value) {
-        Uniforms.get(name).setShaderUniformGeneric(this.getProgram(), value);
+        uniforms.get(name).setShaderUniformGeneric(this.getProgram(), value);
         return this;
-    }
-
-
-    public JsonObject toJson() {
-        JsonObject shaderJson = new JsonObject();
-
-        // Adding the vertex and fragment shaders
-        shaderJson.addProperty("vertex", this.vertexId().toString());
-        shaderJson.addProperty("fragment", this.fragmentId().toString());
-
-        // Adding Attributes
-        JsonArray attributesJson = new JsonArray();
-        for (String attribute : this.getVertexAttributesNames()) {
-            attributesJson.add(attribute);
-        }
-
-        shaderJson.add("attributes", attributesJson);
-
-        // Adding Samplers
-        JsonArray samplersJson = new JsonArray();
-        for (String sampler : this.samplers) {
-            JsonObject samplerJson = new JsonObject();
-
-            samplerJson.addProperty("name", sampler);
-            samplersJson.add(samplerJson);
-        }
-        shaderJson.add("samplers", samplersJson);
-
-        // Adding Uniforms
-        JsonArray uniformJson = new JsonArray();
-        for (LazuliUniform<?> uniform : this.Uniforms.values()) {
-            uniformJson.add(uniform.toJsonObject());
-        }
-        shaderJson.add("uniforms", uniformJson);
-
-        // Adding blend mode
-        JsonObject blendModeJson = new JsonObject();
-        blendModeJson.addProperty("func", blendMode.equation());
-        blendModeJson.addProperty("srcrgb", blendMode.src());
-        blendModeJson.addProperty("dstrgb", blendMode.dst());
-
-        shaderJson.add("blend", blendModeJson);
-
-        return shaderJson;
     }
 }

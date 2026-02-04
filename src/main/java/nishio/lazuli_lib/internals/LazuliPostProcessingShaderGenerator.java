@@ -35,7 +35,7 @@ public abstract class LazuliPostProcessingShaderGenerator implements DataProvide
     public void generate(){
         for (LazuliShader s : shaderList){
             registerShader(s);
-            s.register();
+            s.minecraftRegister();
         }
     };
 

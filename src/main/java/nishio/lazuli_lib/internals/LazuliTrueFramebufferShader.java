@@ -1,4 +1,4 @@
-package nishio.lazuli_lib.core.framebuffers;
+package nishio.lazuli_lib.internals;
 
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 import org.joml.Matrix4f;
 
 @Environment(EnvType.CLIENT)
-public class LazuliFramebufferShader implements AutoCloseable {
+public class LazuliTrueFramebufferShader implements AutoCloseable {
     public final ResourceFactory resourceFactory;
     public final String name;
     public float time;
@@ -25,12 +25,11 @@ public class LazuliFramebufferShader implements AutoCloseable {
     private final int texFilter;
 
 
-    public LazuliFramebufferShader(ResourceFactory resourceFactory, Identifier id) throws IOException, JsonSyntaxException {
+    public LazuliTrueFramebufferShader(ResourceFactory resourceFactory, Identifier id) throws IOException, JsonSyntaxException {
         this.resourceFactory = resourceFactory;
         this.time = 0.0F;
         this.lastTickDelta = 0.0F;
         this.name = id.toString();
-
         this.program = new JsonEffectShaderProgram(resourceFactory, id.getPath());
         this.texFilter = 9728;
 
@@ -52,7 +51,7 @@ public class LazuliFramebufferShader implements AutoCloseable {
         i = j;
 
         this.projectionMatrix = (new Matrix4f()).setOrtho(0.0F, (float)outBuffer.textureWidth, 0.0F, (float)outBuffer.textureHeight, 0.1F, 1000.0F);
-        test(inBuffer, outBuffer);
+        apply(inBuffer, outBuffer);
 
 
         inBuffer.setTexFilter(9728);
@@ -63,7 +62,7 @@ public class LazuliFramebufferShader implements AutoCloseable {
         this.program.close();
     }
 
-    public void test(Framebuffer in, Framebuffer out){
+    public void apply(Framebuffer in, Framebuffer out){
         in.endWrite();
         float f = (float)out.textureWidth;
         float g = (float)out.textureHeight;
@@ -74,8 +73,8 @@ public class LazuliFramebufferShader implements AutoCloseable {
         Objects.requireNonNull(in);
 
 
-        shaderProgram.bindSampler("DiffuseSampler", in::getColorAttachment);
-        shaderProgram.bindSampler("DepthSampler", in::getDepthAttachment);
+        shaderProgram.bindSampler("InputColor", in::getColorAttachment);
+        shaderProgram.bindSampler("InputDepth", in::getDepthAttachment);
 
         this.program.getUniformByNameOrDummy("ProjMat").set(this.projectionMatrix);
         this.program.getUniformByNameOrDummy("InSize").set((float)in.textureWidth, (float)in.textureHeight);

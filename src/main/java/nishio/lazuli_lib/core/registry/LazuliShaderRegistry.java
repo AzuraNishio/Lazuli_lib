@@ -1,6 +1,7 @@
 package nishio.lazuli_lib.core.registry;
-/** Handles registration of shaders and post processors. */
+/* Handles registration of shaders and post processors. */
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
@@ -9,35 +10,28 @@ import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.util.Window;
 import net.minecraft.util.Identifier;
-import nishio.lazuli_lib.core.framebuffers.LazuliFramebufferShader;
-import nishio.lazuli_lib.core.shaders.LazuliShader;
+import nishio.lazuli_lib.internals.LazuliShaderTop;
+import nishio.lazuli_lib.internals.LazuliTrueFramebufferShader;
 import nishio.lazuli_lib.internals.LazuliPostProcessingRegistry;
-import nishio.lazuli_lib.internals.LazuliShaderDatagenManager;
+import nishio.lazuli_lib.internals.datagen.LazuliShaderDatagenManager;
 import nishio.lazuli_lib.internals.Lazuli_Lib_Client;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class LazuliShaderRegistry {
 
     private static final Map<String, ShaderProgram> SHADER_MAP = new HashMap<>();
-    private static final Map<String, LazuliFramebufferShader> POST_PROCESSOR_MAP = new HashMap<>();
+    private static final Map<String, LazuliTrueFramebufferShader> POST_PROCESSOR_MAP = new HashMap<>();
 
     private static int resX ;
     private static int resY;
-
-    private static Set<String> namespaces = new HashSet<>();
-
-    private static boolean hasReloaded = false;
 
 
     public static void registerShader(String name, String nameSpace, VertexFormat format) {
         Identifier shaderId = Identifier.of(nameSpace, name);
         boolean dataGenerated = false;
-        namespaces.add(nameSpace);
 
         CoreShaderRegistrationCallback.EVENT.register(ctx -> {
             ctx.register(shaderId, format, shaderProgram -> {
@@ -49,7 +43,6 @@ public class LazuliShaderRegistry {
 
     public static void registerShader(Identifier jsonPath, VertexFormat format) {
         boolean dataGenerated = false;
-        namespaces.add(jsonPath.getNamespace());
 
         CoreShaderRegistrationCallback.EVENT.register(ctx -> {
             ctx.register(jsonPath, format, shaderProgram -> {
@@ -59,16 +52,12 @@ public class LazuliShaderRegistry {
         });
     }
 
-    public static void registerShader(LazuliShader shader) {
+    public static void registerShader(LazuliShaderTop shader) {
         LazuliShaderDatagenManager.registerShader(shader);
-        namespaces.add(shader.jsonId.getNamespace());
     }
 
     public static void close(){
-        for(String n : namespaces){
-            LazuliShaderDatagenManager.genNamespace(n);
-        }
-        namespaces.clear();
+        LazuliShaderDatagenManager.gen();
     }
 
     /**
@@ -83,7 +72,7 @@ public class LazuliShaderRegistry {
             Framebuffer framebuffer = client.getFramebuffer();
 
             try {
-                LazuliFramebufferShader processor = new LazuliFramebufferShader(factory, shaderId);
+                LazuliTrueFramebufferShader processor = new LazuliTrueFramebufferShader(factory, shaderId);
 
 
                 POST_PROCESSOR_MAP.put(name, processor);
@@ -99,8 +88,9 @@ public class LazuliShaderRegistry {
     }
 
     public static void register(){
-
-
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            //close();
+        });
 
         ClientTickEvents.START_CLIENT_TICK.register((t) ->{
 
@@ -117,8 +107,8 @@ public class LazuliShaderRegistry {
     }
 
     private static void windowResized(int height, int width) {
-        for (Map.Entry<String, LazuliFramebufferShader> entry : POST_PROCESSOR_MAP.entrySet()) {
-            LazuliFramebufferShader processor = entry.getValue();
+        for (Map.Entry<String, LazuliTrueFramebufferShader> entry : POST_PROCESSOR_MAP.entrySet()) {
+            LazuliTrueFramebufferShader processor = entry.getValue();
             if (processor != null) {
 
             }
@@ -131,7 +121,7 @@ public class LazuliShaderRegistry {
         return SHADER_MAP.get(name);
     }
 
-    public static LazuliFramebufferShader getPostProcessor(String name) {
+    public static LazuliTrueFramebufferShader getPostProcessor(String name) {
         return POST_PROCESSOR_MAP.get(name);
     }
 }

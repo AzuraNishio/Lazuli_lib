@@ -11,7 +11,7 @@ public class LazuliResourcePackProvider implements ResourcePackProvider {
     
     private final Path lazuliGenPath;
     
-    LazuliResourcePackProvider(Path lazuliGenPath) {
+    public LazuliResourcePackProvider(Path lazuliGenPath) {
         this.lazuliGenPath = lazuliGenPath;
     }
     

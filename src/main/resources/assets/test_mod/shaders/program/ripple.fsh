@@ -1,6 +1,6 @@
 #version 150
 
-uniform sampler2D DiffuseSampler;
+uniform sampler2D InputColor;
 
 in vec2 texCoord;
 
@@ -20,13 +20,10 @@ float hash(vec3 p)
 
 
 vec4 sampleTex(vec2 uv) {
-	return texture(DiffuseSampler, uv);
+	return texture(InputColor, uv);
 }
 
 void main() {
-
-
-
 	vec2 texel = 2.0 / InSize;
 
 	vec4 c = sampleTex(texCoord);
@@ -48,7 +45,7 @@ void main() {
 	newH += lap * (0.25 + (rand * 0.05));
 
 	newH *= 0.993;
-	
+
 	float dist = length(texCoord - vec2(Pos.x, Pos.y));
 
 	newH += smoothstep(length(texel) * 16.0, 0.0, dist) * 0.8;
