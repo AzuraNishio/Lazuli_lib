@@ -14,7 +14,7 @@ public class TestModShaders {
 
     public static void registerShaders() {
         RIPPLES_GEOMETRY_SHADER = new LazuliShader(
-                Identifier.of(TestModClient.MOD_ID, "rendertype_test")
+                Identifier.of(TestModClient.MOD_ID, "ripple_geometry")
         ).addSampler("Sampler0").addDefaultUniforms().register();
 
 

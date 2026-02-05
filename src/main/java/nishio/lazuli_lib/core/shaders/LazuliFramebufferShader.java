@@ -1,9 +1,12 @@
 package nishio.lazuli_lib.core.shaders;
 
 import com.google.gson.JsonObject;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.gl.Uniform;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.core.framebuffers.LazuliFramebufferUtills;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.world_rendering.LapisRenderer;
 import nishio.lazuli_lib.internals.LazuliShaderTop;
@@ -17,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferShader> {
-    private final LazuliBlendMode blendMode;
+    private LazuliBlendMode blendMode;
 
     public LazuliFramebufferShader(Identifier fragmentPath, Identifier vertexPath, LazuliBlendMode blendMode,
                                    Map<String, LazuliUniform<?>> uniforms, List<String> samplers) {
@@ -77,8 +80,23 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
         return LazuliShaderRegistry.getPostProcessor(fragmentId.getPath());
     }
 
-    public void render(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer) {
+    public LazuliFramebufferShader setBlendMode(LazuliBlendMode mode){
+        this.blendMode = mode;
+        return this;
+    }
+
+    public Uniform getUniformByNameOrDummy(String name){
+        return getProgram().getProgram().getUniformByNameOrDummy(name);
+    }
+
+    public void renderToFramebuffer(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer) {
         getProgram().render(tickDelta, inBuffer, outBuffer);
+    }
+
+    public void renderToScreen(float tickDelta) {
+        Framebuffer main = MinecraftClient.getInstance().getFramebuffer();
+        LazuliFramebufferUtills.copyToSwap(main);
+        getProgram().render(tickDelta, LazuliFramebufferUtills.getSwapBuffer(), main);
     }
 
     public LazuliFramebufferShader setSampler(String sampler, Identifier texture) {
@@ -91,7 +109,6 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
     public JsonObject toJson() {
         JsonObject shaderJson = super.toJson();
 
-        // Adding blend mode (only for framebuffer shaders)
         JsonObject blendModeJson = new JsonObject();
         blendModeJson.addProperty("func", blendMode.equation());
         blendModeJson.addProperty("srcrgb", blendMode.src());

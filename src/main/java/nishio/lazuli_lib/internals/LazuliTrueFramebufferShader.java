@@ -82,14 +82,6 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         this.program.getUniformByNameOrDummy("ScreenSize").set((float)minecraftClient.getWindow().getFramebufferWidth(), (float)minecraftClient.getWindow().getFramebufferHeight());
 
-        if (minecraftClient.player != null) {
-            if(minecraftClient.player.getPos().getY() < 100.1) {
-                this.program.getUniformByNameOrDummy("Pos").set((float) minecraftClient.player.getPos().x / 20f, (float) minecraftClient.player.getPos().z / 20f);
-            } else {
-                this.program.getUniformByNameOrDummy("Pos").set((float) 20f, (float) minecraftClient.player.getPos().z / 20f);
-
-            }
-        }
         this.program.enable();
         out.clear(MinecraftClient.IS_SYSTEM_MAC);
 

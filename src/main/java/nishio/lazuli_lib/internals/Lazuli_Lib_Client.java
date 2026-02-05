@@ -3,6 +3,7 @@ package nishio.lazuli_lib.internals;
 
 import net.fabricmc.api.ClientModInitializer;
 import nishio.lazuli_lib.core.events.LazuliRenderEvents;
+import nishio.lazuli_lib.core.framebuffers.LazuliFramebufferUtills;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.miscellaneous.LazuliClock;
 import nishio.lazuli_lib.internals.datagen.LazuliShaderDatagenManager;
@@ -27,6 +28,7 @@ public class Lazuli_Lib_Client implements ClientModInitializer {
 		LazuliShaderRegistry.register();
 		LazuliClock.register();
 		LazuliShaderDatagenManager.initialize();
+		LazuliFramebufferUtills.register();
 	}
 
 

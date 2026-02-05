@@ -3,10 +3,7 @@ package nishio.lazuli_lib.internals;
 import net.minecraft.client.gl.Uniform;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix2f;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
+import org.joml.*;
 
 import java.awt.*;
 
@@ -152,6 +149,20 @@ public enum LazuliUniformType {
         public float[] toFloatArray(Object v) {
             Vector2f t = (Vector2f) v;
             return new float[]{ t.x, t.y };
+        }
+    },
+
+    VEC4FJ(Vector4f.class, "float", 4) {
+        @Override
+        public void apply(Uniform u, Object v) {
+            Vector4f t = (Vector4f) v;
+            u.set(t.x, t.y, t.z, t.w);
+        }
+
+        @Override
+        public float[] toFloatArray(Object v) {
+            Vector4f t = (Vector4f) v;
+            return new float[]{ t.x, t.y, t.z, t.w };
         }
     },
 

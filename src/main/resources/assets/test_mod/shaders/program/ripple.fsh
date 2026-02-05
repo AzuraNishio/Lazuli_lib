@@ -44,12 +44,14 @@ void main() {
 
 	newH += lap * (0.25 + (rand * 0.05));
 
-	newH *= 0.993;
+	newH *= 0.96;
 
 	float dist = length(texCoord - vec2(Pos.x, Pos.y));
 
-	newH += smoothstep(length(texel) * 16.0, 0.0, dist) * 0.8;
+	newH += smoothstep(length(texel) * 4.0, 0.0, dist) * 0.8;
+
+	float p = smoothstep(length(texel) * 8.0, length(texel) * 5.0, dist) * 0.2;
 
 
-	fragColor = vec4(newH, h, 0.0, 1.0);
+	fragColor = vec4(newH, h, (c.b * 0.9) + p, 1.0);
 }
