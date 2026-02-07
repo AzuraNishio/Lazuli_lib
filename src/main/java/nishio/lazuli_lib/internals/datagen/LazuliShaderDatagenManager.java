@@ -88,9 +88,11 @@ public class LazuliShaderDatagenManager {
         Files.writeString(metaPath, GSON.toJson(meta));
 
         Path logoPath = path.resolve("pack.png");
-        if(!Files.exists(logoPath)){
-            Path logo = path.getParent().getParent().resolve("src/main/resources/assets/lazuli_lib/icon.png");
-            Files.copy(logo, logoPath);
+        try (var logoStream = LazuliShaderDatagenManager.class
+                .getResourceAsStream("/assets/lazuli_lib/icon.png")) {
+            if (logoStream != null) {
+                Files.copy(logoStream, logoPath);
+            }
         }
 
     }
