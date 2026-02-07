@@ -12,6 +12,7 @@ import nishio.lazuli_lib.internals.LazuliShaderTop;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +81,7 @@ public class LazuliShaderDatagenManager {
 
         JsonObject meta = new JsonObject();
         JsonObject packmetadata = new JsonObject();
-        packmetadata.addProperty("pack_format", 34);
+        packmetadata.addProperty("pack_format", 15);
         packmetadata.addProperty("description", "Lazuli resources uwu");
         meta.add("pack", packmetadata);
 
@@ -91,7 +92,7 @@ public class LazuliShaderDatagenManager {
         try (var logoStream = LazuliShaderDatagenManager.class
                 .getResourceAsStream("/assets/lazuli_lib/icon.png")) {
             if (logoStream != null) {
-                Files.copy(logoStream, logoPath);
+                Files.copy(logoStream, logoPath, StandardCopyOption.REPLACE_EXISTING);
             }
         }
 
