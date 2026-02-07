@@ -1,6 +1,7 @@
 package nishio.lazuli_lib.core.events;
 /** Main entry for hooking render callbacks. */
 
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.FogShape;
@@ -12,6 +13,7 @@ import nishio.lazuli_lib.core.world_rendering.LazuliRenderContext;
 import org.joml.Matrix4d;
 import org.joml.Matrix4f;
 
+import java.awt.image.renderable.RenderContext;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,50 +27,64 @@ public class LazuliRenderEvents {
     public static final AtomicReference<Float> time = new AtomicReference<>(0f);
     private static boolean wasZooming = false;
     private static Matrix4f matrix4f;
+    public static WorldRenderContext context;
+    private static boolean first = true;
 
 
     public static void registerLazuliRenderPhases() {
+        WorldRenderEvents.AFTER_SETUP.register(context -> {
+            LazuliRenderEvents.context = context;
+            first = true;
+        });
+
         WorldRenderEvents.LAST.register(context -> {
-            camera = context.camera();
-            matrix4f = context.positionMatrix();
-            if (camera == null || matrix4f == null) return;
-
-            float tickDelta = context.tickCounter().getTickDelta(true);
-
-            Tessellator tessellator = Tessellator.getInstance();
-            time.updateAndGet(v -> v + tickDelta);
-
-            //Matrix transformations! Yayyyyyyyyyyyyyyyyyyyyyy
-            MatrixStack ms = new MatrixStack();
-            ms.multiplyPositionMatrix(matrix4f);
-            ms.push();
-            ms.multiply(camera.getRotation());
-            Matrix4f viewProj = ms.peek().getPositionMatrix();
-
-            //Setup user friendly render state
-            LapisRenderer.disableCull();
-            LapisRenderer.enableDepthTest();
-            LapisRenderer.setShaderColor(1f,1f,1f,1f);
-
-            //run registered render phases
-            for (nishio.lazuli_lib.internals.LazuliRenderEvents.LazuliRenderCallback callback : RENDER_CALLBACKS) {
-                callback.render(new LazuliRenderContext(viewProj, context, tickDelta));
-            }
-
-            // 6) Restore vanilla render state
-            LapisRenderer.disableBlend();
-            LapisRenderer.setShaderColor(1f, 1f, 1f, 1f);
-            LapisRenderer.depthMask(true);
-            LapisRenderer.setShaderFogShape(FogShape.CYLINDER);
-            LapisRenderer.setShaderFogColor(0f, 0f, 0f);
-            LapisRenderer.setShader(GameRenderer::getPositionColorProgram);
-            LapisRenderer.enableDepthTest();
-
             for (nishio.lazuli_lib.internals.LazuliRenderEvents.LazuliPostCallback callback : POST_CALLBACKS) {
-                callback.post(context, customViewProj, tickDelta);
+                callback.post(context, customViewProj, context.tickDelta());
             }
         });
     }
+
+    public static void run(){
+        if ( !first ) { return; }
+        first = false;
+        camera = context.camera();
+        matrix4f = context.matrixStack().peek().getPositionMatrix();
+        if (camera == null || matrix4f == null) return;
+
+        float tickDelta = context.tickDelta();
+
+        Tessellator tessellator = Tessellator.getInstance();
+        time.updateAndGet(v -> v + tickDelta);
+
+        //Matrix transformations! Yayyyyyyyyyyyyyyyyyyyyyy
+        MatrixStack ms = new MatrixStack();
+        ms.multiplyPositionMatrix(matrix4f);
+        ms.push();
+        ms.multiply(camera.getRotation());
+        Matrix4f viewProj = ms.peek().getPositionMatrix();
+
+        //Setup user friendly render state
+        LapisRenderer.disableCull();
+        LapisRenderer.enableDepthTest();
+        LapisRenderer.setShaderColor(1f,1f,1f,1f);
+
+        //run registered render phases
+        for (nishio.lazuli_lib.internals.LazuliRenderEvents.LazuliRenderCallback callback : RENDER_CALLBACKS) {
+            callback.render(new LazuliRenderContext(viewProj, context, tickDelta));
+        }
+
+        // 6) Restore vanilla render state
+        LapisRenderer.disableBlend();
+        LapisRenderer.setShaderColor(1f, 1f, 1f, 1f);
+        LapisRenderer.depthMask(true);
+        LapisRenderer.setShaderFogShape(FogShape.CYLINDER);
+        LapisRenderer.setShaderFogColor(0f, 0f, 0f);
+        LapisRenderer.setShader(GameRenderer::getPositionColorProgram);
+        LapisRenderer.enableDepthTest();
+
+
+    }
+
 
     /** Register a custom geometry rendering callback */
     public static void registerRenderCallback(nishio.lazuli_lib.internals.LazuliRenderEvents.LazuliRenderCallback callback) {

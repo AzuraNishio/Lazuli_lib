@@ -11,6 +11,7 @@ import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.JsonEffectShaderProgram;
 import net.minecraft.client.render.*;
 import net.minecraft.resource.ResourceFactory;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import org.joml.Matrix4f;
 
@@ -25,12 +26,12 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
     private final int texFilter;
 
 
-    public LazuliTrueFramebufferShader(ResourceFactory resourceFactory, Identifier id) throws IOException, JsonSyntaxException {
-        this.resourceFactory = resourceFactory;
+    public LazuliTrueFramebufferShader(ResourceManager resourceManager, Identifier id) throws IOException, JsonSyntaxException {
+        this.resourceFactory = resourceManager;
         this.time = 0.0F;
         this.lastTickDelta = 0.0F;
         this.name = id.toString();
-        this.program = new JsonEffectShaderProgram(resourceFactory, id.getPath());
+        this.program = new JsonEffectShaderProgram(resourceManager, id.getPath());
         this.texFilter = 9728;
 
     }
@@ -88,11 +89,12 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
         RenderSystem.depthFunc(519);
         RenderSystem.disableDepthTest();
         out.beginWrite(false);
-        BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-        bufferBuilder.vertex(0.0F, 0.0F, 500.0F);
-        bufferBuilder.vertex(f, 0.0F, 500.0F);
-        bufferBuilder.vertex(f, g, 500.0F);
-        bufferBuilder.vertex(0.0F, g, 500.0F);
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+        bufferBuilder.vertex(0.0F, 0.0F, 500.0F).next();
+        bufferBuilder.vertex(f, 0.0F, 500.0F).next();
+        bufferBuilder.vertex(f, g, 500.0F).next();
+        bufferBuilder.vertex(0.0F, g, 500.0F).next();
         BufferRenderer.draw(bufferBuilder.end());
         RenderSystem.depthFunc(515);
         this.program.disable();

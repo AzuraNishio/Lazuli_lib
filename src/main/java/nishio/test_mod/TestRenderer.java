@@ -30,16 +30,13 @@ public class TestRenderer {
     private static final Random RANDOM   = new Random();
     public static void register(){
         LazuliClock.Cronometer cronometer = LazuliClock.newCronometer();
-        LazuliRenderEvents.registerRenderCallback((context) -> {
-
-
-        });
-
 
         LazuliRenderEvents.registerRenderCallback((context) -> {
-            LazuliBufferBuilder bb = context.getLazuliBB(VertexFormat.DrawMode.QUADS);
+            LazuliBufferBuilder bb =  context.getLazuliBB(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
+            bb.setCamera(context.camera());
 
             LapisRenderer.setShader(TestModShaders.RIPPLES_GEOMETRY_SHADER);
+            //LapisRenderer.setShader(GameRenderer.getPositionColorProgram());
 
 
 
@@ -81,8 +78,8 @@ public class TestRenderer {
 
         LazuliRenderEvents.registerPostCallback((context, viewProjMatrix, tickDelta) -> {
             if(BUFFER_1 == null){
-                BUFFER_1 = new SimpleFramebuffer(3200, 3200, true, true);
-                BUFFER_2 = new SimpleFramebuffer(3200, 3200, true, true);
+                BUFFER_1 = new SimpleFramebuffer(320, 320, true, true);
+                BUFFER_2 = new SimpleFramebuffer(320, 320, true, true);
             }
 
             if(BUFFER_1 != null) {
@@ -97,7 +94,7 @@ public class TestRenderer {
                         TestModShaders.RIPPLES_FRAMEBUFFER_SHADER.getUniformByNameOrDummy("Pos").set((float) 20f, 20f);
                     }
                 }
-                cicle += context.tickCounter().getTickDelta(false);
+                cicle += context.tickDelta();
                 if (cicle > 1/24f) {
                     cicle = 0;
                     main.endWrite();
@@ -108,13 +105,17 @@ public class TestRenderer {
                     }
                     activeBuffer = !activeBuffer;
 
-
                     main.beginWrite(true);
+
+                    //TestModShaders.RIPPLES_FRAMEBUFFER_SHADER.renderToScreen(0);
                 }
 
             } else {
                 System.out.println("Yep it's nuull everyone");
             }
+
+
+
         });
     }
 

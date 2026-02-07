@@ -13,7 +13,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
-import static net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil.GSON;
+import static net.minecraft.datafixer.fix.BlockEntitySignTextStrictJsonFix.GSON;
+
 
 public class LazuliEasyFileAcess {
     public static InputStream getVanillaPath(String path) throws IOException {

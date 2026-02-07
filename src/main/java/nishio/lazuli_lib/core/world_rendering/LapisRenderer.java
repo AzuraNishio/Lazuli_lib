@@ -72,9 +72,11 @@ public class LapisRenderer {
     public static void setShader(LazuliShader shader) {RenderSystem.setShader(shader::getProgram);}
 
     public static BufferBuilder drawAndReset(BufferBuilder buffer, Tessellator tessellator) {
-        BuiltBuffer builtBuffer =  buffer.end();
+        BufferBuilder.BuiltBuffer builtBuffer =  buffer.end();
         BufferRenderer.drawWithGlobalProgram(builtBuffer);
-        return tessellator.begin(builtBuffer.getDrawParameters().mode(), builtBuffer.getDrawParameters().format());
+        buffer = tessellator.getBuffer();
+        buffer.begin(builtBuffer.getParameters().mode(), builtBuffer.getParameters().format());
+        return buffer;
     }
 
 

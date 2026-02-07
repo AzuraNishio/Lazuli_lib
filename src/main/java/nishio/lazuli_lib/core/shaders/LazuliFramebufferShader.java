@@ -74,7 +74,7 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
     public String jsonPath(){return "program/";}
 
     @Override
-    public Identifier jsonId(){return Identifier.ofVanilla(fragmentId.getPath());}
+    public Identifier jsonId(){return Identifier.of("minecraft", fragmentId.getPath());}
 
     public LazuliTrueFramebufferShader getProgram() {
         return LazuliShaderRegistry.getPostProcessor(fragmentId.getPath());

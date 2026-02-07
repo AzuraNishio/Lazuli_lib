@@ -72,7 +72,7 @@ public class LazuliShaderRegistry {
             Framebuffer framebuffer = client.getFramebuffer();
 
             try {
-                LazuliTrueFramebufferShader processor = new LazuliTrueFramebufferShader(factory, shaderId);
+                LazuliTrueFramebufferShader processor = new LazuliTrueFramebufferShader(MinecraftClient.getInstance().getResourceManager(), shaderId);
 
 
                 POST_PROCESSOR_MAP.put(name, processor);

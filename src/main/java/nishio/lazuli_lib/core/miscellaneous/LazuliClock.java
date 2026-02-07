@@ -39,7 +39,7 @@ public class LazuliClock {
      * Partial ticks supplied by the renderer (value in [0, 1) inside a frame).
      */
     private static float tickDelta() {
-        return MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(true);
+        return MinecraftClient.getInstance().getTickDelta();
     }
 
     /**

@@ -8,7 +8,6 @@ import org.joml.Vector3f;
 
 public class LazuliBufferBuilder {
     private BufferBuilder buffer;
-    private final Matrix4f matrix4f;
     private Transform3D renderSpace;
     private final boolean useCamera;
     private Camera camera = null;
@@ -26,86 +25,90 @@ public class LazuliBufferBuilder {
     //===========================================[Bunch of overloaded builder methods]===========================================
     public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix, Transform3D renderSpace) {
         this.tessellator = tessellator;
-        this.buffer = tessellator.begin(drawMode, vertexFormat);
-        this.matrix4f = matrix;
+        this.buffer = tessellator.getBuffer();
+        this.buffer.begin(drawMode, vertexFormat);
         this.renderSpace = renderSpace;
         this.useCamera = false;
 
     }
-    public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix) {
+
+    public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat) {
         this.tessellator = tessellator;
-        this.buffer = tessellator.begin(drawMode, vertexFormat);
-        this.matrix4f = matrix;
+        this.buffer = tessellator.getBuffer();
+        this.buffer.begin(drawMode, vertexFormat);
         this.renderSpace = Transform3D.ZERO;
         this.useCamera = false;
 
     }
-    public LazuliBufferBuilder(VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix, Transform3D renderSpace) {
+    public LazuliBufferBuilder(VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Transform3D renderSpace) {
         this.tessellator = Tessellator.getInstance();
-        this.buffer = this.tessellator.begin(drawMode, vertexFormat);
-        this.matrix4f = matrix;
+        this.buffer = this.tessellator.getBuffer();
+        this.buffer.begin(drawMode, vertexFormat);
         this.renderSpace = renderSpace;
         this.useCamera = false;
     }
-    public LazuliBufferBuilder(VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix) {
+    public LazuliBufferBuilder(VertexFormat.DrawMode drawMode, VertexFormat vertexFormat) {
         this.tessellator = Tessellator.getInstance();
-        this.buffer = this.tessellator.begin(drawMode, vertexFormat);
-        this.matrix4f = matrix;
+        this.buffer = this.tessellator.getBuffer();
+        this.buffer.begin(drawMode, vertexFormat);
         this.renderSpace = Transform3D.ZERO;
         this.useCamera = false;
     }
     //Now those with camera!
-    public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix, Transform3D renderSpace, Camera camera) {
+    public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Transform3D renderSpace, Camera camera) {
         this.tessellator = tessellator;
-        this.buffer = tessellator.begin(drawMode, vertexFormat);
-        this.matrix4f = matrix;
+        this.buffer = tessellator.getBuffer();
+        this.buffer.begin(drawMode, vertexFormat);
         this.renderSpace = renderSpace;
         this.useCamera = true;
         this.camera = camera;
     }
-    public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix, Camera camera) {
+    public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Camera camera) {
         this.tessellator = tessellator;
-        this.buffer = tessellator.begin(drawMode, vertexFormat);
-        this.matrix4f = matrix;
+        this.buffer = tessellator.getBuffer();
+        this.buffer.begin(drawMode, vertexFormat);
         this.renderSpace = Transform3D.ZERO;
         this.useCamera = true;
         this.camera = camera;
     }
-    public LazuliBufferBuilder(VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix, Transform3D renderSpace, Camera camera) {
+    public LazuliBufferBuilder(VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Transform3D renderSpace, Camera camera) {
         this.tessellator = Tessellator.getInstance();
-        this.buffer = this.tessellator.begin(drawMode, vertexFormat);
-        this.matrix4f = matrix;
+        this.buffer = this.tessellator.getBuffer();
+        this.buffer.begin(drawMode, vertexFormat);
         this.renderSpace = renderSpace;
         this.useCamera = true;
         this.camera = camera;
     }
-    public LazuliBufferBuilder(VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix, Camera camera) {
+    public LazuliBufferBuilder(VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Camera camera) {
         this.tessellator = Tessellator.getInstance();
-        this.buffer = this.tessellator.begin(drawMode, vertexFormat);
-        this.matrix4f = matrix;
+        this.buffer = this.tessellator.getBuffer();
+        this.buffer.begin(drawMode, vertexFormat);
         this.renderSpace = Transform3D.ZERO;
         this.useCamera = true;
         this.camera = camera;
     }
-    public LazuliBufferBuilder(BufferBuilder buffer, Matrix4f matrix, Transform3D renderSpace, Camera camera) {
+    public LazuliBufferBuilder(BufferBuilder buffer, Transform3D renderSpace, Camera camera) {
         this.tessellator = Tessellator.getInstance();
         this.buffer = buffer;
-        this.matrix4f = matrix;
         this.renderSpace = Transform3D.ZERO;
         this.useCamera = true;
         this.camera = camera;
     }
-    public LazuliBufferBuilder(BufferBuilder buffer, Matrix4f matrix, Transform3D renderSpace) {
+    public LazuliBufferBuilder(BufferBuilder buffer, Transform3D renderSpace) {
         this.tessellator = Tessellator.getInstance();
         this.buffer = buffer;
-        this.matrix4f = matrix;
         this.renderSpace = renderSpace;
         this.useCamera = false;
     }
-    public LazuliBufferBuilder(BufferBuilder buffer, Matrix4f matrix) {
+    public LazuliBufferBuilder(BufferBuilder buffer) {
         this.tessellator = Tessellator.getInstance();
         this.buffer = buffer;
-        this.matrix4f = matrix;
+        this.renderSpace = Transform3D.ZERO;
+        this.useCamera = false;
+    }
+
+    public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Transform3D zero) {
+        this.tessellator = Tessellator.getInstance();
         this.renderSpace = Transform3D.ZERO;
         this.useCamera = false;
     }
@@ -118,17 +121,16 @@ public class LazuliBufferBuilder {
 
     public void drawAndReset() {
         if (!isEmpty) {
-            BuiltBuffer builtBuffer = buffer.end();
-            BufferRenderer.drawWithGlobalProgram(builtBuffer);
+            this.buffer = LapisRenderer.drawAndReset(this.buffer, this.tessellator);
             this.isEmpty = true;
-            this.buffer = this.tessellator.begin(builtBuffer.getDrawParameters().mode(), builtBuffer.getDrawParameters().format());
             vertexCount = 0;
         }
     }
 
     public void draw(){
         if (!isEmpty) {
-            BufferRenderer.drawWithGlobalProgram(buffer.end());
+            BufferBuilder.BuiltBuffer builtBuffer = buffer.end();
+            BufferRenderer.drawWithGlobalProgram(builtBuffer);
             this.isEmpty = true;
             vertexCount = 0;
         }
@@ -154,7 +156,7 @@ public class LazuliBufferBuilder {
 
         vertexCount++;
 
-        buffer.vertex(matrix4f, (float) transformed.x, (float) transformed.y, (float) transformed.z);
+        buffer.vertex((float) transformed.x, (float) transformed.y, (float) transformed.z);
         return this;
     }
 
@@ -248,6 +250,8 @@ public class LazuliBufferBuilder {
         Vector3f normal = new Vector3f(lastNormalX, lastNormalY, lastNormalZ);
         normal.rotate(renderSpace.rotation);
         normal(normal.x, normal.y, normal.z);
+
+        this.buffer.next();
 
         return this;
     }

@@ -15,7 +15,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil.GSON;
+import static net.minecraft.datafixer.fix.BlockEntitySignTextStrictJsonFix.GSON;
 
 public class LazuliShaderDatagenManager {
 

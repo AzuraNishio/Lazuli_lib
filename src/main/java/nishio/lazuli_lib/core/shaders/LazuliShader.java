@@ -1,5 +1,6 @@
 package nishio.lazuli_lib.core.shaders;
 
+import com.google.gson.JsonObject;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
@@ -15,6 +16,12 @@ import java.util.List;
 import java.util.Map;
 
 public class LazuliShader extends LazuliShaderTop<LazuliShader> {
+    private LazuliBlendMode blendMode;
+
+    public LazuliShader setBlendMode(LazuliBlendMode blendMode) {
+        this.blendMode = blendMode;
+        return this;
+    }
 
     public LazuliShader(String namespace, String jsonPath, String fragmentPath, String vertexPath,
                         VertexFormat vertexFormat, Map<String, LazuliUniform<?>> uniforms, List<String> samplers) {
@@ -40,7 +47,7 @@ public class LazuliShader extends LazuliShaderTop<LazuliShader> {
     }
 
     public LazuliShader(Identifier fragmentPath) {
-        super(fragmentPath, fragmentPath, Identifier.ofVanilla("position_color_tex_lightmap"), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, new HashMap<>(), new ArrayList<>());
+        super(fragmentPath, fragmentPath, Identifier.of("minecraft", "position_color_tex_lightmap"), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, new HashMap<>(), new ArrayList<>());
     }
 
     @Override
@@ -76,5 +83,19 @@ public class LazuliShader extends LazuliShaderTop<LazuliShader> {
     public LazuliShader setUniform(String name, Object value) {
         uniforms.get(name).setShaderUniformGeneric(this.getProgram(), value);
         return this;
+    }
+
+    @Override
+    public JsonObject toJson() {
+        JsonObject shaderJson = super.toJson();
+
+        JsonObject blendModeJson = new JsonObject();
+        blendModeJson.addProperty("func", blendMode.equation());
+        blendModeJson.addProperty("srcrgb", blendMode.src());
+        blendModeJson.addProperty("dstrgb", blendMode.dst());
+
+        shaderJson.add("blend", blendModeJson);
+
+        return shaderJson;
     }
 }

@@ -2,6 +2,7 @@ package nishio.test_mod;
 
 import net.minecraft.util.Identifier;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
+import nishio.lazuli_lib.core.shaders.LazuliBlendMode;
 import nishio.lazuli_lib.core.shaders.LazuliFramebufferShader;
 import nishio.lazuli_lib.core.shaders.LazuliShader;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;
@@ -15,7 +16,7 @@ public class TestModShaders {
     public static void registerShaders() {
         RIPPLES_GEOMETRY_SHADER = new LazuliShader(
                 Identifier.of(TestModClient.MOD_ID, "ripple_geometry")
-        ).addSampler("Sampler0").addDefaultUniforms().register();
+        ).addSampler("Sampler0").addDefaultUniforms().setBlendMode(LazuliBlendMode.ADDITIVE).register();
 
 
         RIPPLES_FRAMEBUFFER_SHADER = new LazuliFramebufferShader(

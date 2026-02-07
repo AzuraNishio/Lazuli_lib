@@ -21,7 +21,6 @@ public record LazuliRenderContext(Matrix4f viewProjMatrix, WorldRenderContext co
                 tessellator(),
                 drawMode,
                 VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
-                viewProjMatrix,
                 Transform3D.ZERO,
                 camera()
         );
@@ -35,7 +34,6 @@ public record LazuliRenderContext(Matrix4f viewProjMatrix, WorldRenderContext co
                 tessellator(),
                 drawMode,
                 vertexFormat,
-                viewProjMatrix,
                 Transform3D.ZERO,
                 camera()
         );
@@ -50,7 +48,6 @@ public record LazuliRenderContext(Matrix4f viewProjMatrix, WorldRenderContext co
                 tessellator(),
                 drawMode,
                 vertexFormat,
-                viewProjMatrix,
                 renderSpace,
                 camera()
         );
@@ -64,7 +61,6 @@ public record LazuliRenderContext(Matrix4f viewProjMatrix, WorldRenderContext co
                 tessellator(),
                 drawMode,
                 vertexFormat,
-                viewProjMatrix,
                 Transform3D.ZERO
         );
     }
@@ -78,7 +74,6 @@ public record LazuliRenderContext(Matrix4f viewProjMatrix, WorldRenderContext co
                 tessellator(),
                 drawMode,
                 vertexFormat,
-                viewProjMatrix,
                 renderSpace
         );
     }
@@ -88,7 +83,6 @@ public record LazuliRenderContext(Matrix4f viewProjMatrix, WorldRenderContext co
     ) {
         return new LazuliBufferBuilder(
                 buffer,
-                viewProjMatrix,
                 Transform3D.ZERO,
                 camera()
         );
@@ -100,7 +94,6 @@ public record LazuliRenderContext(Matrix4f viewProjMatrix, WorldRenderContext co
     ) {
         return new LazuliBufferBuilder(
                 buffer,
-                viewProjMatrix,
                 renderSpace,
                 camera()
         );
@@ -112,7 +105,6 @@ public record LazuliRenderContext(Matrix4f viewProjMatrix, WorldRenderContext co
     ) {
         return new LazuliBufferBuilder(
                 buffer,
-                viewProjMatrix,
                 renderSpace
         );
     }
