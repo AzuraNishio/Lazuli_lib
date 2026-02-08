@@ -19,24 +19,18 @@ public class LazuliMathUtils {
     }
 
     public static Vec2f Vec2fFromAngle(float angle){
-      return new Vec2f((float) sin(angle), (float) cos(angle));
-    }
-
-    public static Vec2f[] Square2dFromCenter(Vec2f c, float side, float angle){
-        return new Vec2f[]{
-                Vec2fFromAngle(angle).multiply(side/2f).add(c),
-                Vec2fFromAngle((float) (angle + (Math.PI * 0.5))).multiply(side/2f).add(c),
-                Vec2fFromAngle((float) (angle + (Math.PI))).multiply(side/2f).add(c),
-                Vec2fFromAngle((float) (angle + (Math.PI * 1.5))).multiply(side/2f).add(c)
-        };
+      return new Vec2f((float) cos(angle), (float) sin(angle));
     }
 
     public static Vec2f[] Rectangle2dFromCenter(Vec2f c, float side1, float side2, float angle){
+        Vec2f right = Vec2fFromAngle(angle).multiply(side1/2f);
+        Vec2f up = Vec2fFromAngle((float) (angle + (Math.PI * 0.5))).multiply(side2/2f);
+
         return new Vec2f[]{
-                Vec2fFromAngle(angle).multiply(side1/2f).add(c),
-                Vec2fFromAngle((float) (angle + (Math.PI * 0.5))).multiply(side2/2f).add(c),
-                Vec2fFromAngle((float) (angle + (Math.PI))).multiply(side1/2f).add(c),
-                Vec2fFromAngle((float) (angle + (Math.PI * 1.5))).multiply(side2/2f).add(c)
+                c.add(right).add(up),
+                c.add(right.negate()).add(up),
+                c.add(right.negate()).add(up.negate()),
+                c.add(right).add(up.negate())
         };
     }
 
