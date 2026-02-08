@@ -13,6 +13,7 @@ import net.minecraft.client.render.*;
 import net.minecraft.resource.ResourceFactory;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec2f;
 import org.joml.Matrix4f;
 
 @Environment(EnvType.CLIENT)
@@ -37,8 +38,23 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
     }
 
 
-    public void render(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer) {
+    public void render(float tickDelta, Framebuffer outBuffer) {
+        this.render(tickDelta, outBuffer, outBuffer, new Vec2f(0,0), new Vec2f(1, 0), new Vec2f(1, 1), new Vec2f(0, 1), false);
+    }
 
+    public void render(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer) {
+        this.render(tickDelta, inBuffer, outBuffer, new Vec2f(0,0), new Vec2f(1, 0), new Vec2f(1, 1), new Vec2f(0, 1), true);
+    }
+
+    public void render(float tickDelta, Framebuffer outBuffer,  Vec2f A, Vec2f B, Vec2f C, Vec2f D) {
+        this.render(tickDelta, outBuffer, outBuffer, A, B, C, D, false);
+    }
+
+    public void render(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer,  Vec2f A, Vec2f B, Vec2f C, Vec2f D) {
+        this.render(tickDelta, inBuffer, outBuffer, A, B, C, D, true);
+    }
+
+    public void render(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer,  Vec2f A, Vec2f B, Vec2f C, Vec2f D, boolean useDefaultInput) {
         this.time += tickDelta;
         if(this.time > 20.0F) {
             this.time -= 20.0F;
@@ -49,56 +65,61 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
         int j = this.getTexFilter();
         inBuffer.setTexFilter(j);
         outBuffer.setTexFilter(j);
-        i = j;
 
         this.projectionMatrix = (new Matrix4f()).setOrtho(0.0F, (float)outBuffer.textureWidth, 0.0F, (float)outBuffer.textureHeight, 0.1F, 1000.0F);
-        apply(inBuffer, outBuffer);
+        apply(inBuffer, outBuffer, A, B, C, D, false, useDefaultInput);
 
 
         inBuffer.setTexFilter(9728);
         outBuffer.setTexFilter(9728);
     }
 
+
     public void close() {
         this.program.close();
     }
 
-    public void apply(Framebuffer in, Framebuffer out){
-        in.endWrite();
-        float f = (float)out.textureWidth;
-        float g = (float)out.textureHeight;
-        RenderSystem.viewport(0, 0, (int)f, (int)g);
+    public void apply(Framebuffer in, Framebuffer out, Vec2f A, Vec2f B, Vec2f C, Vec2f D, boolean clear, boolean useIn){
+        float W = (float)out.textureWidth;
+        float H = (float)out.textureHeight;
+        RenderSystem.viewport(0, 0, (int)W, (int)H);
 
         JsonEffectShaderProgram shaderProgram = this.program;
 
         Objects.requireNonNull(in);
 
-
-        shaderProgram.bindSampler("InputColor", in::getColorAttachment);
-        shaderProgram.bindSampler("InputDepth", in::getDepthAttachment);
+        if (useIn) {
+            in.endWrite();
+            shaderProgram.bindSampler("InputColor", in::getColorAttachment);
+            shaderProgram.bindSampler("InputDepth", in::getDepthAttachment);
+        }
 
         this.program.getUniformByNameOrDummy("ProjMat").set(this.projectionMatrix);
         this.program.getUniformByNameOrDummy("InSize").set((float)in.textureWidth, (float)in.textureHeight);
-        this.program.getUniformByNameOrDummy("OutSize").set(f, g);
+        this.program.getUniformByNameOrDummy("OutSize").set(W, H);
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         this.program.getUniformByNameOrDummy("ScreenSize").set((float)minecraftClient.getWindow().getFramebufferWidth(), (float)minecraftClient.getWindow().getFramebufferHeight());
 
         this.program.enable();
-        out.clear(MinecraftClient.IS_SYSTEM_MAC);
-
+        if (clear) {
+            out.clear(MinecraftClient.IS_SYSTEM_MAC);
+        }
         RenderSystem.depthFunc(519);
         RenderSystem.disableDepthTest();
         out.beginWrite(false);
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-        bufferBuilder.vertex(0.0F, 0.0F, 500.0F).next();
-        bufferBuilder.vertex(f, 0.0F, 500.0F).next();
-        bufferBuilder.vertex(f, g, 500.0F).next();
-        bufferBuilder.vertex(0.0F, g, 500.0F).next();
+        bufferBuilder.vertex(A.x * W, A.y * H, 500.0F).next();
+        bufferBuilder.vertex(B.x * W, B.y * H, 500.0F).next();
+        bufferBuilder.vertex(C.x * W, C.y * H, 500.0F).next();
+        bufferBuilder.vertex(D.x * W, C.y * H, 500.0F).next();
         BufferRenderer.draw(bufferBuilder.end());
         RenderSystem.depthFunc(515);
         this.program.disable();
-        in.endRead();
+
+        if (useIn) {
+            in.endRead();
+        }
     }
 
 

@@ -12,6 +12,7 @@ import org.joml.Vector2f;
 public class TestModShaders {
     public static LazuliShader RIPPLES_GEOMETRY_SHADER;
     public static LazuliFramebufferShader RIPPLES_FRAMEBUFFER_SHADER;
+    public static LazuliFramebufferShader WHITE_SHADER;
 
     public static void registerShaders() {
         RIPPLES_GEOMETRY_SHADER = new LazuliShader(
@@ -21,7 +22,11 @@ public class TestModShaders {
 
         RIPPLES_FRAMEBUFFER_SHADER = new LazuliFramebufferShader(
                 Identifier.of(TestModClient.MOD_ID, "ripple")
-        ).addUniform(new LazuliUniform<Vector2f>("Pos", new Vector2f(0,0))).addDefaultUniforms().addSampler("Sampler0").register();
+        ).addDefaultUniforms().register();
+
+        WHITE_SHADER = new LazuliFramebufferShader(
+                Identifier.of(TestModClient.MOD_ID, "white")
+        ).addDefaultUniforms().register();
 
         LazuliShaderRegistry.close();
     }
