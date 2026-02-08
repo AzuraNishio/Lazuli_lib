@@ -78,8 +78,8 @@ public class TestRenderer {
 
         LazuliRenderEvents.registerPostCallback((context, viewProjMatrix, tickDelta) -> {
             if(BUFFER_1 == null){
-                BUFFER_1 = new SimpleFramebuffer(320, 320, true, true);
-                BUFFER_2 = new SimpleFramebuffer(320, 320, true, true);
+                BUFFER_1 = new SimpleFramebuffer(320, 320, false, true);
+                BUFFER_2 = new SimpleFramebuffer(320, 320, false, true);
             }
 
             if(BUFFER_1 != null) {
@@ -91,25 +91,23 @@ public class TestRenderer {
                     outB = BUFFER_1;
                 }
 
-
-
-                Framebuffer main = MinecraftClient.getInstance().getFramebuffer();
-
                 MinecraftClient minecraftClient = MinecraftClient.getInstance();
+                Framebuffer main = minecraftClient.getFramebuffer();
 
-                if (minecraftClient.player != null) {
-                    if(minecraftClient.player.getPos().getY() < 100.1) {
-                        Vec2f pos = new Vec2f((float) (minecraftClient.player.getPos().x / 20f), (float) minecraftClient.player.getPos().z / 20f);
-                        Vec2f[] base = LazuliMathUtils.Rectangle2dFromCenter(pos, 0.05f, 0.1f, minecraftClient.player.bodyYaw);
-                        TestModShaders.WHITE_SHADER.renderToFramebuffer(0, BUFFER_1, base[0], base[1], base[2], base[3]);
-                    }
-                }
                 cicle += context.tickDelta();
                 if (cicle > 1/24f) {
                     cicle = 0;
                     main.endWrite();
 
                     TestModShaders.RIPPLES_FRAMEBUFFER_SHADER.renderToFramebuffer(tickDelta, outB, mainB);
+
+                    if (minecraftClient.player != null) {
+                        if(minecraftClient.player.getPos().getY() < 100.1) {
+                            Vec2f pos = new Vec2f((float) (minecraftClient.player.getPos().x / 20f), (float) minecraftClient.player.getPos().z / 20f);
+                            Vec2f[] base = LazuliMathUtils.Rectangle2dFromCenter(pos, 0.02f, 0.02f, (float) Math.PI * minecraftClient.player.bodyYaw / 180f);
+                            TestModShaders.WHITE_SHADER.renderToFramebuffer(0, mainB, base[0], base[1], base[2], base[3]);
+                        }
+                    }
 
                     activeBuffer = !activeBuffer;
 
