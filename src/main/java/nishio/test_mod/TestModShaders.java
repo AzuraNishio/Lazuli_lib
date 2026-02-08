@@ -1,5 +1,6 @@
 package nishio.test_mod;
 
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.Identifier;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.shaders.LazuliFramebufferShader;
@@ -21,11 +22,11 @@ public class TestModShaders {
 
         RIPPLES_FRAMEBUFFER_SHADER = new LazuliFramebufferShader(
                 Identifier.of(TestModClient.MOD_ID, "ripple")
-        ).addDefaultUniforms().register();
+        ).addDefaultUniforms().setBlendMode(LazuliBlendMode.ADDITIVE).register();
 
         WHITE_SHADER = new LazuliFramebufferShader(
                 Identifier.of(TestModClient.MOD_ID, "white")
-        ).addDefaultUniforms().register();
+        ).addDefaultUniforms().setBlendMode(LazuliBlendMode.ADDITIVE).register();
 
         LazuliShaderRegistry.close();
     }
