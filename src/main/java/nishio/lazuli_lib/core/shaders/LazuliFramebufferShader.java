@@ -6,6 +6,7 @@ import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.Uniform;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec2f;
 import nishio.lazuli_lib.core.framebuffers.LazuliFramebufferUtills;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.world_rendering.LapisRenderer;
@@ -91,6 +92,18 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
 
     public void renderToFramebuffer(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer) {
         getProgram().render(tickDelta, inBuffer, outBuffer);
+    }
+
+    public void renderToFramebuffer(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer, Vec2f A, Vec2f B, Vec2f C, Vec2f D) {
+        getProgram().render(tickDelta, inBuffer, outBuffer, A, B, C, D);
+    }
+
+    public void renderToFramebuffer(float tickDelta, Framebuffer outBuffer) {
+        getProgram().render(tickDelta, outBuffer);
+    }
+
+    public void renderToFramebuffer(float tickDelta, Framebuffer outBuffer, Vec2f A, Vec2f B, Vec2f C, Vec2f D) {
+        getProgram().render(tickDelta, outBuffer, A, B, C, D);
     }
 
     public void renderToScreen(float tickDelta) {

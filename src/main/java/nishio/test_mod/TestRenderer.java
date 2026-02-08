@@ -6,8 +6,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.render.*;
+import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import nishio.lazuli_lib.core.framebuffers.LazuliFramebufferUtills;
+import nishio.lazuli_lib.core.miscellaneous.LazuliMathUtils;
 import nishio.lazuli_lib.core.world_rendering.LapisRenderer;
 import nishio.lazuli_lib.core.world_rendering.LazuliBufferBuilder;
 import nishio.lazuli_lib.core.events.LazuliRenderEvents;
@@ -26,6 +28,8 @@ public class TestRenderer {
     static Framebuffer main;// = new SimpleFramebuffer(128, 128, false, false);
     static boolean beggining = true;
     static float cicle = 0;
+    static Framebuffer mainB;
+    static Framebuffer outB;
 
     private static final Random RANDOM   = new Random();
     public static void register(){
@@ -47,12 +51,8 @@ public class TestRenderer {
 
 
             if(BUFFER_1 != null){
-                BUFFER_1.beginRead();
-                if (activeBuffer) {
-                    RenderSystem.setShaderTexture(0, BUFFER_1.getColorAttachment());
-                } else{
-                    RenderSystem.setShaderTexture(0, BUFFER_2.getColorAttachment());
-                }
+                mainB.beginRead();
+                RenderSystem.setShaderTexture(0, mainB.getColorAttachment());
             }
 
             //TestModShaders.testShader.setUniform("Test2", new Vec3d(0,1,Math.sin(cronometer.readLerpedSeconds())));
@@ -74,7 +74,7 @@ public class TestRenderer {
             bb.draw();
 
             if(BUFFER_1 != null) {
-                BUFFER_1.endRead();
+                mainB.endRead();
             }
 
         });
@@ -86,26 +86,34 @@ public class TestRenderer {
             }
 
             if(BUFFER_1 != null) {
+                if (activeBuffer) {
+                    mainB = BUFFER_1;
+                    outB = BUFFER_2;
+                } else {
+                    mainB = BUFFER_2;
+                    outB = BUFFER_1;
+                }
+
+
+
                 Framebuffer main = MinecraftClient.getInstance().getFramebuffer();
 
                 MinecraftClient minecraftClient = MinecraftClient.getInstance();
 
                 if (minecraftClient.player != null) {
                     if(minecraftClient.player.getPos().getY() < 100.1) {
-                        TestModShaders.RIPPLES_FRAMEBUFFER_SHADER.getUniformByNameOrDummy("Pos").set((float) minecraftClient.player.getPos().x / 20f, (float) minecraftClient.player.getPos().z / 20f);
-                    } else {
-                        TestModShaders.RIPPLES_FRAMEBUFFER_SHADER.getUniformByNameOrDummy("Pos").set((float) 20f, 20f);
+                        Vec2f pos = new Vec2f((float) (minecraftClient.player.getPos().x / 20f), (float) minecraftClient.player.getPos().z / 20f);
+                        Vec2f[] base = LazuliMathUtils.Rectangle2dFromCenter(pos, 0.05f, 0.1f, minecraftClient.player.bodyYaw);
+                        TestModShaders.WHITE_SHADER.renderToFramebuffer(0, BUFFER_1, base[0], base[1], base[2], base[3]);
                     }
                 }
                 cicle += context.tickCounter().getTickDelta(false);
                 if (cicle > 1/24f) {
                     cicle = 0;
                     main.endWrite();
-                    if (activeBuffer) {
-                        TestModShaders.RIPPLES_FRAMEBUFFER_SHADER.renderToFramebuffer(tickDelta, BUFFER_2, BUFFER_1);
-                    } else {
-                        TestModShaders.RIPPLES_FRAMEBUFFER_SHADER.renderToFramebuffer(tickDelta, BUFFER_1, BUFFER_2);
-                    }
+
+                    TestModShaders.RIPPLES_FRAMEBUFFER_SHADER.renderToFramebuffer(tickDelta, outB, mainB);
+
                     activeBuffer = !activeBuffer;
 
 
