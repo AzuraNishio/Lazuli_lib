@@ -3,6 +3,7 @@ package nishio.test_mod;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.Identifier;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
+import nishio.lazuli_lib.core.shaders.LazuliBlendMode;
 import nishio.lazuli_lib.core.shaders.LazuliFramebufferShader;
 import nishio.lazuli_lib.core.shaders.LazuliShader;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;

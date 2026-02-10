@@ -107,14 +107,14 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
         RenderSystem.depthFunc(519);
         RenderSystem.disableDepthTest();
         out.beginWrite(false);
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-        bufferBuilder.vertex(A.x * W, A.y * H, 500.0F).next();
-        bufferBuilder.vertex(B.x * W, B.y * H, 500.0F).next();
-        bufferBuilder.vertex(C.x * W, C.y * H, 500.0F).next();
-        bufferBuilder.vertex(D.x * W, C.y * H, 500.0F).next();
+        BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+        bufferBuilder.vertex(A.x * W, A.y * H, 500.0F);
+        bufferBuilder.vertex(B.x * W, B.y * H, 500.0F);
+        bufferBuilder.vertex(C.x * W, C.y * H, 500.0F);
+        bufferBuilder.vertex(D.x * W, C.y * H, 500.0F);
         BufferRenderer.draw(bufferBuilder.end());
         RenderSystem.depthFunc(515);
+        in.endRead();
         this.program.disable();
 
         if (useIn) {
