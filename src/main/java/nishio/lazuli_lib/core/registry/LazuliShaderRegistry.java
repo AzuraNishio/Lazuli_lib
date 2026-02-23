@@ -10,11 +10,9 @@ import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.util.Window;
 import net.minecraft.util.Identifier;
-import nishio.lazuli_lib.internals.LazuliShaderTop;
-import nishio.lazuli_lib.internals.LazuliTrueFramebufferShader;
-import nishio.lazuli_lib.internals.LazuliPostProcessingRegistry;
+import nishio.lazuli_lib.internals.*;
 import nishio.lazuli_lib.internals.datagen.LazuliShaderDatagenManager;
-import nishio.lazuli_lib.internals.Lazuli_Lib_Client;
+import nishio.lazuli_lib.internals.datagen.LazuliWarpManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,7 +34,7 @@ public class LazuliShaderRegistry {
         CoreShaderRegistrationCallback.EVENT.register(ctx -> {
             ctx.register(shaderId, format, shaderProgram -> {
                 SHADER_MAP.put(name, shaderProgram);
-                Lazuli_Lib_Client.LOGGER.info("Shader '{}' registered!", name);
+                LazuliLog.Shaders.info("Shader '{}' registered!", name);
             });
         });
     }
@@ -47,7 +45,7 @@ public class LazuliShaderRegistry {
         CoreShaderRegistrationCallback.EVENT.register(ctx -> {
             ctx.register(jsonPath, format, shaderProgram -> {
                 SHADER_MAP.put(jsonPath.getPath(), shaderProgram);
-                Lazuli_Lib_Client.LOGGER.info("Shader '{}' registered!", jsonPath.getPath());
+                LazuliLog.Shaders.info("Shader '{}' registered!", jsonPath.getPath());
             });
         });
     }
@@ -57,6 +55,7 @@ public class LazuliShaderRegistry {
     }
 
     public static void close(){
+        LazuliWarpManager.generate();
         LazuliShaderDatagenManager.gen();
     }
 
@@ -66,7 +65,7 @@ public class LazuliShaderRegistry {
      */
     public static void registerPostProcessingShader(String name, String nameSpace) {
 
-        Lazuli_Lib_Client.LOGGER.info("Trying to register {}", name);
+        LazuliLog.Shaders.info("Trying to register {}", name);
         LazuliPostProcessingRegistry.register((client, factory) -> {
             Identifier shaderId = Identifier.of(nameSpace, name);
             Framebuffer framebuffer = client.getFramebuffer();
@@ -76,13 +75,13 @@ public class LazuliShaderRegistry {
 
 
                 POST_PROCESSOR_MAP.put(name, processor);
-                Lazuli_Lib_Client.LOGGER.info("Post-processing shader '{}' registered in callback.", name);
+                LazuliLog.Shaders.info("Post-processing shader '{}' registered in callback.", name);
 
             } catch (IOException e) {
-                Lazuli_Lib_Client.LOGGER.error("Failed to load post-processing shader: {} <============================================================================================", name);
-                Lazuli_Lib_Client.LOGGER.error("================================================[stack trace]================================================");
+                LazuliLog.Shaders.error("Failed to load post-processing shader: {} <============================================================================================", name);
+                LazuliLog.Shaders.error("================================================[stack trace]================================================");
                 e.printStackTrace();
-                Lazuli_Lib_Client.LOGGER.error("================================================[  closing  ]================================================");
+                LazuliLog.Shaders.error("================================================[  closing  ]================================================");
             }
         });
     }

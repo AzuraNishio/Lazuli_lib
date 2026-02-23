@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,26 +18,22 @@ import static net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil.GSON;
 
 public class LazuliEasyFileAcess {
     public static InputStream getVanillaPath(String path) throws IOException {
-        try (InputStream stream = MinecraftClient.class
+        InputStream stream = MinecraftClient.class
                 .getClassLoader()
-                .getResourceAsStream(path)) {
+                .getResourceAsStream(path);
 
-            if (stream == null) {
-                throw new IOException("File not found: " + path);
-            }
-
-            return stream;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
+        if (stream == null) {
+            throw new IOException("File not found: " + path);
         }
+
+        return stream;
     }
 
-    public JsonElement getVanillaPathJson(String path) throws IOException {
+    public static JsonElement getVanillaPathJson(String path) throws IOException {
         return JsonParser.parseString(getVanillaPathString(path));
     }
 
-    private String getVanillaPathString(String path) throws IOException {
+    public static String getVanillaPathString(String path) throws IOException {
         InputStream stream = getVanillaPath(path);
         return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
     }

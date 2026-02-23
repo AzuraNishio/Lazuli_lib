@@ -1,5 +1,7 @@
 package nishio.lazuli_lib.core.shaders;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
@@ -41,6 +43,10 @@ public class LazuliShader extends LazuliShaderTop<LazuliShader> {
 
     public LazuliShader(Identifier fragmentPath) {
         super(fragmentPath, fragmentPath, Identifier.ofVanilla("position_color_tex_lightmap"), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, new HashMap<>(), new ArrayList<>());
+    }
+
+    public LazuliShader(JsonObject shaderJson, Identifier jsonPath) {
+        super(shaderJson, jsonPath);
     }
 
     @Override

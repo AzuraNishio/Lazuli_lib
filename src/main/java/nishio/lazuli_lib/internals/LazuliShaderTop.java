@@ -1,18 +1,23 @@
 package nishio.lazuli_lib.internals;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.Identifier;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;
+import nishio.lazuli_lib.core.world_rendering.LazuliVertex;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class LazuliShaderTop<T extends LazuliShaderTop<T>> {
-    protected final Identifier vertexId;
-    protected final Identifier fragmentId;
+    public Identifier vertexId;
+    public Identifier fragmentId;
     protected final Identifier jsonId;
     protected final Map<String, LazuliUniform<?>> uniforms;
     protected final VertexFormat vertexFormat;
@@ -36,6 +41,32 @@ public abstract class LazuliShaderTop<T extends LazuliShaderTop<T>> {
         this.jsonId = jsonPath;
         this.vertexFormat = vertexFormat;
         this.samplers = samplers;
+    }
+
+    protected LazuliShaderTop(JsonObject shaderJson, Identifier jsonPath) {
+        this.vertexId = Identifier.tryParse(shaderJson.get("vertex").getAsString());
+        this.fragmentId = Identifier.of(shaderJson.get("fragment").getAsString());
+        this.jsonId = jsonPath;
+        this.vertexFormat = VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL;
+        this.samplers = new ArrayList<>();
+        this.uniforms = new HashMap<>();
+        for (JsonElement samplerElement :shaderJson.get("samplers").getAsJsonArray().asList()){
+            this.samplers.add(samplerElement.getAsJsonObject().get("name").getAsString());
+        }
+
+        for (JsonElement uniformElement : shaderJson.get("uniforms").getAsJsonArray().asList()) {
+            JsonObject uniformObject = uniformElement.getAsJsonObject();
+            String name = uniformObject.get("name").getAsString();
+            String type = uniformObject.get("type").getAsString();
+            int count = uniformObject.get("count").getAsInt();
+            float[] values = new float[count];
+            List<JsonElement> valueList = uniformObject.get("values").getAsJsonArray().asList();
+            for (int i = 0; i < valueList.size(); i++) {
+                values[i] = valueList.get(i).getAsFloat();
+            }
+            LazuliUniform<?> uniform = new LazuliUniform<>(name, type, count, values);
+            this.uniforms.put(name, uniform);
+        }
     }
 
     @SuppressWarnings("unchecked")

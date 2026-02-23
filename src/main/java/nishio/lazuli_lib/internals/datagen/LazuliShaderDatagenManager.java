@@ -14,14 +14,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil.GSON;
 
 public class LazuliShaderDatagenManager {
 
     private static final List<LazuliShaderTop<?>> shaders = new ArrayList<>();
-
+    private static final Map<String, String> files = new HashMap<>();
     public static void initialize(){ //On load create the resource pack and register it in case it is empty
         var loader = FabricLoader.getInstance();
 
@@ -69,6 +71,7 @@ public class LazuliShaderDatagenManager {
         try {
             generator.run();
             createMetadataAndLogo(lazuli_gen_path); //create metadata again if generator ran
+            LazuliWarpManager.WriteWarpShaders(lazuli_gen_path);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -89,8 +92,7 @@ public class LazuliShaderDatagenManager {
         Files.writeString(metaPath, GSON.toJson(meta));
 
         Path logoPath = path.resolve("pack.png");
-        try (var logoStream = LazuliShaderDatagenManager.class
-                .getResourceAsStream("/assets/lazuli_lib/icon.png")) {
+        try (var logoStream = LazuliShaderDatagenManager.class.getResourceAsStream("/assets/lazuli_lib/icon.png")) {
             if (logoStream != null) {
                 Files.copy(logoStream, logoPath, StandardCopyOption.REPLACE_EXISTING);
             }

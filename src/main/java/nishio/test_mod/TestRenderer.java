@@ -57,6 +57,7 @@ public class TestRenderer {
 
             //TestModShaders.testShader.setUniform("Test2", new Vec3d(0,1,Math.sin(cronometer.readLerpedSeconds())));
             //TestModShaders.testShader.setUniform("Test", new Vec3d(Math.sin(cronometer.readLerpedSeconds() * 1.4),1,1));
+
             RenderSystem.enableBlend();
             float n = 0.2f;
 

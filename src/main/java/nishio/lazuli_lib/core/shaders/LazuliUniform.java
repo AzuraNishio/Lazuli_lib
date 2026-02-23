@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.Uniform;
 import nishio.lazuli_lib.internals.LazuliLog;
-import nishio.lazuli_lib.internals.LazuliUniformType;
+import nishio.lazuli_lib.internals.stuff.LazuliUniformType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,12 +24,22 @@ public class LazuliUniform<T> {
     public T value;
     public final LazuliUniformType type;
     public final String name;
+    public String freeType = null;
+    public int freeCount = -1;
     public boolean dirty = true;
 
     public LazuliUniform(String name, T initialValue){
         this.name = name;
         this.value = initialValue;
         this.type = UNIFORM_TYPE_FROM_CLASS.getOrDefault(value.getClass(), LazuliUniformType.INVALID);
+    }
+
+    public LazuliUniform(String name, String type, int count, T initialValue){
+        this.name = name;
+        this.value = initialValue;
+        this.type = LazuliUniformType.FREE;
+        this.freeType = type;
+        this.freeCount = count;
     }
 
     public void setShaderUniform(ShaderProgram shader){
@@ -57,12 +67,17 @@ public class LazuliUniform<T> {
 
     public JsonObject toJsonObject() {
         JsonObject jsonObject = new JsonObject();
-
         jsonObject.addProperty("name", name);
-        jsonObject.addProperty("type", type.jsonType);
-        jsonObject.addProperty("count", type.count);
 
-        JsonArray valuesArray = new JsonArray();
+        if (type == LazuliUniformType.FREE) {
+            jsonObject.addProperty("type", freeType);
+            jsonObject.addProperty("count", freeCount);
+        } else {
+            jsonObject.addProperty("type", type.jsonType);
+            jsonObject.addProperty("count", type.toFloatArray(value).length);
+        }
+
+            JsonArray valuesArray = new JsonArray();
         for (float value : type.toFloatArray(value)) {
             valuesArray.add(value);
         }

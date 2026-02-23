@@ -5,8 +5,6 @@ import net.fabricmc.api.ClientModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class TestModClient implements ClientModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("Really Cool Mod");
 	public static final String MOD_ID = "test_mod";
@@ -16,6 +14,5 @@ public class TestModClient implements ClientModInitializer {
 		LOGGER.info("Really cool mod loading");
 		TestRenderer.register();
         TestModShaders.registerShaders();
-
     }
 }
