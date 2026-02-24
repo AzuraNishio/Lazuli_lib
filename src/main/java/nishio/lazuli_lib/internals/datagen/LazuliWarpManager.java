@@ -43,7 +43,11 @@ public class LazuliWarpManager {
                     JsonElement shaderJson = LazuliEasyFileAcess.getVanillaPathJson("assets/%s/shaders/core/%s.json".formatted(target.getNamespace(), target.getPath()));
 
                     JsonObject json = shaderJson.getAsJsonObject();
-                    LazuliShader shader = new LazuliShader(json, target).addUniform(new LazuliUniform<>("Test", new Vec3d(0,0,0))).register();
+                    LazuliShader shader = new LazuliShader(json, target).register();
+
+                    for (LazuliUniform uni : warp.uniform){
+                        shader.addUniform(uni);
+                    }
 
                     String shaderFragment = LazuliEasyFileAcess.getVanillaPathString("assets/%s/shaders/core/%s.fsh".formatted(shader.fragmentId.getNamespace(), shader.fragmentId.getPath()));
                     shader.fragmentId = Identifier.of("warp_shaders", shader.fragmentId.getPath());

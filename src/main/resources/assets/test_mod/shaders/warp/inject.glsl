@@ -6,8 +6,18 @@ uniform vec3 epicenter;
 //wrapping inside a fuction or just brackets {} wont change anything but allows for glsl sintax highlighting
 
 //WARP_FRAGMENT(XfragColor =)
-void waves(vec3 pos, vec3 epicenter){
-    color.rgb += vec3(0.5, 0.0, 0.0);
+void waves(vec3 vertPos, vec3 epicenter){
+    color.rgb *= 1.0 + sin(length(epicenter - vertPos));
+}//BREAK  <= inclide a break comment at the end
+
+//WARP_VERTEX(vec3 pos = Position + ChunkOffset;X)
+void waves(vec3 vertPos, vec3 epicenter){
+    vertPos = pos;
+}//BREAK  <= inclide a break comment at the end
+
+//WARP_VERTEX(vec3 pos = Position + ChunkOffset;X)
+void waves(vec3 vertPos, vec3 epicenter){
+    vertPos = pos;
 }//BREAK  <= inclide a break comment at the end
 
 //this effectivelly injects after the first line, usefull for adding ins/outs

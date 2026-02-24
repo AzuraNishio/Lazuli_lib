@@ -70,7 +70,20 @@ public class LazuliUniform<T> {
         jsonObject.addProperty("name", name);
 
         if (type == LazuliUniformType.FREE) {
-            jsonObject.addProperty("type", freeType);
+            String type;
+            switch (freeType){
+                case "float", "vec2", "vec3", "Vec4":
+                    type = "float";
+                    break;
+                case "mat4":
+                    type = "matrix4x4";
+                    break;
+                default:
+                    type = freeType;
+                    break;
+            }
+
+            jsonObject.addProperty("type", type);
             jsonObject.addProperty("count", freeCount);
         } else {
             jsonObject.addProperty("type", type.jsonType);

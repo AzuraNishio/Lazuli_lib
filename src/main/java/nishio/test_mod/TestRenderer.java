@@ -16,6 +16,7 @@ import nishio.lazuli_lib.core.events.LazuliRenderEvents;
 import nishio.lazuli_lib.core.miscellaneous.LazuliClock;
 import nishio.lazuli_lib.core.world_rendering.LazuliVertex;
 import nishio.lazuli_lib.internals.Lazuli_Lib;
+import nishio.lazuli_lib.internals.stuff.LazuliMinecraftShaderGetter;
 
 import java.util.Random;
 
@@ -35,7 +36,7 @@ public class TestRenderer {
     public static void register(){
         LazuliClock.Cronometer cronometer = LazuliClock.newCronometer();
         LazuliRenderEvents.registerRenderCallback((context) -> {
-
+            LazuliMinecraftShaderGetter.setVanillaShaderUniforms("epicenter", new Vec3d(0, 100, 0).subtract(context.camera().getPos()));
 
         });
 
