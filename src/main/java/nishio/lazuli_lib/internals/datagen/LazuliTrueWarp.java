@@ -136,8 +136,27 @@ public class LazuliTrueWarp {
 
             for (Injection inj : injections) {
                 if(inj.type == "FRAGMENT") {
-                    String replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
                     String target = inj.target.replace("X", "");
+                    String replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
+
+                    boolean REPLACE = target.contains("<REPLACE>");
+                    boolean NOT_WRAP = target.contains("<NOT_WRAP>");
+                    target = target.replace("<REPLACE>", "");
+                    target = target.replace("<NOT_WRAP>", "");
+
+                    if(NOT_WRAP) {
+                        if (REPLACE) {
+                            replacement = inj.content;
+                        } else {
+                            replacement = inj.target.replace("X", inj.content);
+                        }
+                    } else {
+                        if (REPLACE) {
+                            replacement = "\n".concat(inj.content).concat("\n");
+                        } else {
+                            replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
+                        }
+                    }
 
 
                     content = content.replace(target, replacement);
@@ -165,9 +184,28 @@ public class LazuliTrueWarp {
 
             for (Injection inj : injections) {
                 if(inj.type == "VERTEX") {
-                    String replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
-                    String target = inj.target.replace("X", "");
 
+                    String target = inj.target.replace("X", "");
+                    String replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
+
+                    boolean REPLACE = target.contains("<REPLACE>");
+                    boolean NOT_WRAP = target.contains("<NOT_WRAP>");
+                    target = target.replace("<REPLACE>", "");
+                    target = target.replace("<NOT_WRAP>", "");
+
+                    if(NOT_WRAP) {
+                        if (REPLACE) {
+                            replacement = inj.content;
+                        } else {
+                            replacement = inj.target.replace("X", inj.content);
+                        }
+                    } else {
+                        if (REPLACE) {
+                            replacement = "\n".concat(inj.content).concat("\n");
+                        } else {
+                            replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
+                        }
+                    }
 
                     content = content.replace(target, replacement);
                 }
