@@ -14,6 +14,7 @@ import nishio.lazuli_lib.internals.stuff.LazuliMinecraftShaderGetter;
 public class TestModShaders {
     public static LazuliShader RIPPLES_GEOMETRY_SHADER;
     public static LazuliFramebufferShader RIPPLES_FRAMEBUFFER_SHADER;
+    public static LazuliFramebufferShader RED_FRAMEBUFFER_SHADER;
     public static LazuliFramebufferShader WHITE_SHADER;
 
     public static void registerShaders() {
@@ -23,6 +24,10 @@ public class TestModShaders {
 
 
         RIPPLES_FRAMEBUFFER_SHADER = new LazuliFramebufferShader(
+                Identifier.of(TestModClient.MOD_ID, "red")
+        ).addDefaultUniforms().setBlendMode(LazuliBlendMode.DEFAULT).register();
+
+        RED_FRAMEBUFFER_SHADER = new LazuliFramebufferShader(
                 Identifier.of(TestModClient.MOD_ID, "ripple")
         ).addDefaultUniforms().setBlendMode(LazuliBlendMode.ADDITIVE).register();
 

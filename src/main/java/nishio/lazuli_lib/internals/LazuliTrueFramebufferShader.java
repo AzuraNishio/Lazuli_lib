@@ -39,22 +39,26 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
 
 
     public void render(float tickDelta, Framebuffer outBuffer) {
-        this.render(tickDelta, outBuffer, outBuffer, new Vec2f(0,0), new Vec2f(1, 0), new Vec2f(1, 1), new Vec2f(0, 1), false);
+        this.render(tickDelta, outBuffer, outBuffer, new Vec2f(0,0), new Vec2f(1, 0), new Vec2f(1, 1), new Vec2f(0, 1), false, false);
     }
 
     public void render(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer) {
-        this.render(tickDelta, inBuffer, outBuffer, new Vec2f(0,0), new Vec2f(1, 0), new Vec2f(1, 1), new Vec2f(0, 1), true);
+        this.render(tickDelta, inBuffer, outBuffer, new Vec2f(0,0), new Vec2f(1, 0), new Vec2f(1, 1), new Vec2f(0, 1), true, false);
+    }
+
+    public void render(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer, boolean viewport) {
+        this.render(tickDelta, inBuffer, outBuffer, new Vec2f(0,0), new Vec2f(1, 0), new Vec2f(1, 1), new Vec2f(0, 1), true, viewport);
     }
 
     public void render(float tickDelta, Framebuffer outBuffer,  Vec2f A, Vec2f B, Vec2f C, Vec2f D) {
-        this.render(tickDelta, outBuffer, outBuffer, A, B, C, D, false);
+        this.render(tickDelta, outBuffer, outBuffer, A, B, C, D, false, false);
     }
 
     public void render(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer,  Vec2f A, Vec2f B, Vec2f C, Vec2f D) {
-        this.render(tickDelta, inBuffer, outBuffer, A, B, C, D, true);
+        this.render(tickDelta, inBuffer, outBuffer, A, B, C, D, true, false);
     }
 
-    public void render(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer,  Vec2f A, Vec2f B, Vec2f C, Vec2f D, boolean useDefaultInput) {
+    public void render(float tickDelta, Framebuffer inBuffer, Framebuffer outBuffer,  Vec2f A, Vec2f B, Vec2f C, Vec2f D, boolean useDefaultInput, boolean viewport) {
         this.time += tickDelta;
         if(this.time > 20.0F) {
             this.time -= 20.0F;
@@ -67,7 +71,7 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
         outBuffer.setTexFilter(j);
 
         this.projectionMatrix = (new Matrix4f()).setOrtho(0.0F, (float)outBuffer.textureWidth, 0.0F, (float)outBuffer.textureHeight, 0.1F, 1000.0F);
-        apply(inBuffer, outBuffer, A, B, C, D, false, useDefaultInput);
+        apply(inBuffer, outBuffer, A, B, C, D, false, useDefaultInput, viewport);
 
 
         inBuffer.setTexFilter(9728);
@@ -79,7 +83,7 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
         this.program.close();
     }
 
-    public void apply(Framebuffer in, Framebuffer out, Vec2f A, Vec2f B, Vec2f C, Vec2f D, boolean clear, boolean useIn){
+    public void apply(Framebuffer in, Framebuffer out, Vec2f A, Vec2f B, Vec2f C, Vec2f D, boolean clear, boolean useIn, boolean viewport){
         float W = (float)out.textureWidth;
         float H = (float)out.textureHeight;
         RenderSystem.viewport(0, 0, (int)W, (int)H);
@@ -106,7 +110,7 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
         }
         RenderSystem.depthFunc(519);
         RenderSystem.disableDepthTest();
-        out.beginWrite(false);
+        out.beginWrite(viewport);
         BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
         bufferBuilder.vertex(A.x * W, A.y * H, 500.0F);
         bufferBuilder.vertex(B.x * W, B.y * H, 500.0F);

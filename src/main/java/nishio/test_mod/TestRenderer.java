@@ -40,6 +40,10 @@ public class TestRenderer {
 
         });
 
+        LazuliRenderEvents.registerPostCallback((context, viewProjectionMatrix, tickDelta) -> {
+            TestModShaders.RED_FRAMEBUFFER_SHADER.renderToScreen(0);
+        });
+
 
         LazuliRenderEvents.registerRenderCallback((context) -> {
             LazuliBufferBuilder bb = context.getLazuliBB(VertexFormat.DrawMode.QUADS);
