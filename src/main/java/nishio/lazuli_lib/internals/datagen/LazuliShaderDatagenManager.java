@@ -8,6 +8,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.resource.ResourcePackManager;
 import nishio.lazuli_lib.internals.LazuliResourcePackProvider;
 import nishio.lazuli_lib.internals.LazuliShaderTop;
+import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,6 +33,7 @@ public class LazuliShaderDatagenManager {
         ResourcePackManager manager = MinecraftClient.getInstance().getResourcePackManager();
 
         try {
+            FileUtils.deleteDirectory(lazuli_gen_path.toFile());
             createMetadataAndLogo(lazuli_gen_path);
             manager.providers.add(new LazuliResourcePackProvider(lazuli_gen_path));
         } catch (IOException e) {

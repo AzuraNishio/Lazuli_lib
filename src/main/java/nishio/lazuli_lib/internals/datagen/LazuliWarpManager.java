@@ -38,7 +38,7 @@ public class LazuliWarpManager {
 
         for (LazuliTrueWarp warp : warps) {
             for (Identifier target : warp.targets) {
-                LazuliLog.Warp.info("assets/%s/shaders/core/%s.json".formatted(target.getNamespace(), target.getPath()));
+                //LazuliLog.Warp.info("assets/%s/shaders/core/%s.json".formatted(target.getNamespace(), target.getPath()));
                 try {
                     JsonElement shaderJson = LazuliEasyFileAcess.getVanillaPathJson("assets/%s/shaders/core/%s.json".formatted(target.getNamespace(), target.getPath()));
 
@@ -74,7 +74,7 @@ public class LazuliWarpManager {
                     String content = reader.lines().collect(Collectors.joining("\n"));
 
                     LazuliWarpParser.parse(warp, content);
-                    warp.print();
+                    //warp.print();
                 } catch (IOException e) {
                     LazuliLog.Warp.error("Failed to read warp file %s".formatted(warp.id.toString()));
                 }
