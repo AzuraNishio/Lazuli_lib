@@ -70,8 +70,6 @@ public class LazuliFramebufferUtills {
                 Identifier.of(Lazuli_Lib.MOD_ID, "raw_copy")
         ).addDefaultUniforms().register();
 
-        LazuliShaderRegistry.close();
-
         ClientTickEvents.START_CLIENT_TICK.register((t) ->{
 
             Framebuffer main = MinecraftClient.getInstance().getFramebuffer();
