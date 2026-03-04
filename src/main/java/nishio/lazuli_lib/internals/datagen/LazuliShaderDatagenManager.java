@@ -33,7 +33,6 @@ public class LazuliShaderDatagenManager {
         ResourcePackManager manager = MinecraftClient.getInstance().getResourcePackManager();
 
         try {
-            FileUtils.deleteDirectory(lazuli_gen_path.toFile());
             createMetadataAndLogo(lazuli_gen_path);
             manager.providers.add(new LazuliResourcePackProvider(lazuli_gen_path));
         } catch (IOException e) {
@@ -54,6 +53,12 @@ public class LazuliShaderDatagenManager {
         //Path and stuff setup
         Path projectRoot = FabricLoader.getInstance().getGameDir();
         Path lazuli_gen_path = projectRoot.resolve("lazuli_gen/");
+        try {
+            FileUtils.deleteDirectory(lazuli_gen_path.toFile());
+        } catch (IOException ignored) {
+
+        }
+       
 
         DataGenerator generator =
                 new DataGenerator(lazuli_gen_path, SharedConstants.getGameVersion(), true);
