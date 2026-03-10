@@ -27,6 +27,7 @@ public class Lazuli_Lib_Client implements ClientModInitializer {
 
 		//Calling all parts of the lib:
 		LazuliShaderDatagenManager.initialize();
+		LazuliShaderDatagenManager.gen();
 		LazuliRenderEvents.registerLazuliRenderPhases();
 		LazuliShaderRegistry.register();
 		LazuliClock.register();

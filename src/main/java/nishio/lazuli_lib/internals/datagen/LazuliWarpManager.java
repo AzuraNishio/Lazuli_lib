@@ -2,18 +2,22 @@ package nishio.lazuli_lib.internals.datagen;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import nishio.lazuli_lib.core.shaders.LazuliShader;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;
 import nishio.lazuli_lib.internals.LazuliLog;
 import nishio.test_mod.TestModClient;
+import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -67,8 +71,25 @@ public class LazuliWarpManager {
 
     private static void parseWarps(){
         for (LazuliTrueWarp warp : warps){
-            InputStream stream = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream("assets/".concat(warp.id.getNamespace()).concat("/shaders/warp/").concat(warp.id.getPath()).concat(".glsl"));
+            InputStream stream = null;
+            String path = "assets/".concat(warp.id.getNamespace()).concat("/shaders/warp/").concat(warp.id.getPath()).concat(".glsl");
+
+            if (FabricLoader.getInstance().isDevelopmentEnvironment()){
+                Path PATH = FabricLoader.getInstance().getGameDir().getParent().resolve("src/main/resources/assets/".concat(warp.id.getNamespace()).concat("/shaders/warp/").concat(warp.id.getPath()).concat(".glsl"));
+                LazuliLog.Warp.info("trying to load directly ".concat(PATH.toString()));
+                try {
+                    stream = Files.newInputStream(PATH);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    LazuliLog.Warp.info("Could not directly load ".concat(path));
+                    stream = Thread.currentThread().getContextClassLoader()
+                            .getResourceAsStream(path);
+                }
+            } else {
+                stream = Thread.currentThread().getContextClassLoader()
+                        .getResourceAsStream(path);
+            }
+
 
                 try (var reader = new BufferedReader(new InputStreamReader(stream))) {
                     String content = reader.lines().collect(Collectors.joining("\n"));
@@ -85,6 +106,7 @@ public class LazuliWarpManager {
     public static void WriteWarpShaders(Path path) {
         Path basePath = path.resolve("assets/warp_shaders/shaders/core");
         try {
+            FileUtils.deleteDirectory(basePath.toFile());
             Files.createDirectories(basePath);
             for (LazuliTrueWarp warp: warps){
                 Map<String, String> files = warp.generateFiles();

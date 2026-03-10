@@ -7,7 +7,7 @@ uniform vec3 epicenter;
 
 //WARP_FRAGMENT(XfragColor =)
 void waves(vec3 vertPos, vec3 epicenter){
-    color.rgb *= 1.0 + sin(length(epicenter - vertPos));
+    color.rb *= 1.0 + sin( 2.0 * length(epicenter - vertPos));
 }//BREAK  <= inclide a break comment at the end
 
 //WARP_VERTEX(vec3 pos = Position + ChunkOffset;X)

@@ -55,7 +55,6 @@ public class LazuliShaderRegistry {
     }
 
     public static void close(){
-        LazuliWarpManager.generate();
         LazuliShaderDatagenManager.gen();
     }
 

@@ -6,7 +6,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resource.ResourcePackManager;
-import nishio.lazuli_lib.internals.LazuliResourcePackProvider;
+import nishio.lazuli_lib.internals.LazuliLog;
 import nishio.lazuli_lib.internals.LazuliShaderTop;
 import org.apache.commons.io.FileUtils;
 
@@ -25,21 +25,26 @@ public class LazuliShaderDatagenManager {
 
     private static final List<LazuliShaderTop<?>> shaders = new ArrayList<>();
     private static final Map<String, String> files = new HashMap<>();
-    public static void initialize(){ //On load create the resource pack and register it in case it is empty
+
+    public static void reload(){ //Regenerate everything if needed
+        gen();
+        MinecraftClient.getInstance().reloadResourcesConcurrently();
+        MinecraftClient.getInstance().setOverlay(null);
+    }
+    public static void initialize(){ //Register the new resources supplier
         var loader = FabricLoader.getInstance();
 
         Path projectRoot = FabricLoader.getInstance().getGameDir();
         Path lazuli_gen_path = projectRoot.resolve("lazuli_gen/");
+        try {
+            FileUtils.delete(lazuli_gen_path.toFile());
+            Files.createDirectory(lazuli_gen_path);
+            createMetadataAndLogo(lazuli_gen_path);
+        } catch (IOException ignored) { }
+
         ResourcePackManager manager = MinecraftClient.getInstance().getResourcePackManager();
 
-        try {
-            FileUtils.deleteDirectory(lazuli_gen_path.toFile());
-            createMetadataAndLogo(lazuli_gen_path);
-            manager.providers.add(new LazuliResourcePackProvider(lazuli_gen_path));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        manager.providers.add(new LazuliResourcePackProvider(lazuli_gen_path));
     }
 
     public static void registerShader(LazuliShaderTop s){
@@ -50,12 +55,12 @@ public class LazuliShaderDatagenManager {
     public static void gen(){
         var loader = FabricLoader.getInstance();
 
-
         //Path and stuff setup
         Path projectRoot = FabricLoader.getInstance().getGameDir();
         Path lazuli_gen_path = projectRoot.resolve("lazuli_gen/");
         try {
             FileUtils.deleteDirectory(lazuli_gen_path.toFile());
+            LazuliWarpManager.generate();
         } catch (IOException ignored) {
 
         }

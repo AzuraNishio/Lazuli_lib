@@ -6,6 +6,12 @@ import java.util.regex.Matcher;
 
 public class LazuliWarpParser {
     public static LazuliTrueWarp parse(LazuliTrueWarp warp, String warpString){
+        warp.fragments.clear();
+        warp.vertexes.clear();
+        warp.injections.clear();
+        warp.samplers.clear();
+        warp.uniform.clear();
+        
         Matcher fragmentMatcher = LazuliRegexPatterns.WARP_FRAGMENT_REGEX.matcher(warpString);
 
         while (fragmentMatcher.find()){

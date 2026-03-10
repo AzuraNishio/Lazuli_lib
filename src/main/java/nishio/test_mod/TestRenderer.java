@@ -41,7 +41,7 @@ public class TestRenderer {
         });
 
         LazuliRenderEvents.registerPostCallback((context, viewProjectionMatrix, tickDelta) -> {
-            TestModShaders.RED_FRAMEBUFFER_SHADER.renderToScreen(0);
+            //TestModShaders.RED_FRAMEBUFFER_SHADER.renderToScreen(0);
         });
 
 
