@@ -9,6 +9,7 @@ import net.minecraft.util.math.Vec3d;
 import nishio.lazuli_lib.core.shaders.LazuliShader;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;
 import nishio.lazuli_lib.internals.LazuliLog;
+import nishio.lazuli_lib.internals.LazuliShaderTop;
 import nishio.test_mod.TestModClient;
 import org.apache.commons.io.FileUtils;
 
@@ -16,11 +17,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.annotation.Target;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,28 +42,45 @@ public class LazuliWarpManager {
                 Identifier.of(TestModClient.MOD_ID, "ripple_geometry2")
         ).addSampler("Sampler1").addDefaultUniforms().register();
 
+        Map<String, LazuliShader> uniqueTargets = new HashMap<>();
 
         for (LazuliTrueWarp warp : warps) {
             for (Identifier target : warp.targets) {
                 //LazuliLog.Warp.info("assets/%s/shaders/core/%s.json".formatted(target.getNamespace(), target.getPath()));
                 try {
-                    JsonElement shaderJson = LazuliEasyFileAcess.getVanillaPathJson("assets/%s/shaders/core/%s.json".formatted(target.getNamespace(), target.getPath()));
+                    LazuliShader shader = null;
+                    if (!uniqueTargets.containsKey(target.toString())) { //Create shader if it's a new target
+                        JsonElement shaderJson = LazuliEasyFileAcess.getVanillaPathJson("assets/%s/shaders/core/%s.json".formatted(target.getNamespace(), target.getPath()));
+                        JsonObject json = shaderJson.getAsJsonObject();
 
-                    JsonObject json = shaderJson.getAsJsonObject();
-                    LazuliShader shader = new LazuliShader(json, target).register();
-                    shader.doFastReloading = false;
+                        shader = new LazuliShader(json, target).register();
+
+                        shader.vertexId = Identifier.of("warp_shaders", shader.vertexId.getPath());
+                        shader.fragmentId = Identifier.of("warp_shaders", shader.fragmentId.getPath());
+
+                        shader.doFastReloading = false;
+
+                        uniqueTargets.put(target.toString(), shader);
+
+                    } else { //Else just add the new uniforms
+                        shader = uniqueTargets.get(target.toString());
+                    }
 
                     for (LazuliUniform uni : warp.uniform){
                         shader.addUniform(uni);
                     }
 
-                    String shaderFragment = LazuliEasyFileAcess.getVanillaPathString("assets/%s/shaders/core/%s.fsh".formatted(shader.fragmentId.getNamespace(), shader.fragmentId.getPath()));
-                    shader.fragmentId = Identifier.of("warp_shaders", shader.fragmentId.getPath());
+                    String shaderFragment = LazuliEasyFileAcess.getVanillaPathString("assets/%s/shaders/core/%s.fsh".formatted(target.getNamespace(), shader.fragmentId.getPath()));
                     warp.fragments.put("%s.fsh".formatted(shader.fragmentId().getPath()), shaderFragment);
 
-                    String shaderVertex = LazuliEasyFileAcess.getVanillaPathString("assets/%s/shaders/core/%s.vsh".formatted(shader.vertexId.getNamespace(), shader.vertexId.getPath()));
-                    shader.vertexId = Identifier.of("warp_shaders", shader.vertexId.getPath());
+                    String shaderVertex = LazuliEasyFileAcess.getVanillaPathString("assets/%s/shaders/core/%s.vsh".formatted(target.getNamespace(), shader.vertexId.getPath()));
                     warp.vertexes.put("%s.vsh".formatted(shader.vertexId.getPath()), shaderVertex);
+
+
+
+
+
+
 
                 } catch (IOException e) {
                     LazuliLog.Warp.warn("Failed to read %s!".formatted(target.getPath()));
@@ -109,16 +129,27 @@ public class LazuliWarpManager {
         try {
             FileUtils.deleteDirectory(basePath.toFile());
             Files.createDirectories(basePath);
+
+            Map<String, String> modifiedFiles = new HashMap<>();
+
             for (LazuliTrueWarp warp: warps){
-                Map<String, String> files = warp.generateFiles();
-                for (String pathString : files.keySet()) {
-                    String content = files.get(pathString);
+                for (String name : modifiedFiles.keySet()) {
+                    if (warp.fragments.containsKey(name)) {
+                        warp.fragments.replace(name, modifiedFiles.get(name));
+                    }
+                    if (warp.vertexes.containsKey(name)) {
+                        warp.vertexes.replace(name, modifiedFiles.get(name));
+                    }
+                }
+
+                Map<String, String> generatedFiles = warp.generateFiles();
+
+                modifiedFiles.putAll(generatedFiles);
+                for (String pathString : generatedFiles.keySet()) {
+                    String content = generatedFiles.get(pathString);
                     Files.writeString(basePath.resolve(pathString), content, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
                 }
             }
-
-
-
 
         } catch (IOException e){
             LazuliLog.Warp.error("Failed");

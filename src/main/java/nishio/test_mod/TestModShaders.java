@@ -38,6 +38,7 @@ public class TestModShaders {
         ).addDefaultUniforms().setBlendMode(LazuliBlendMode.ADDITIVE).register();
 
         LazuliWarp waves = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
+        LazuliWarp waves2 = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject2")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
 
         LazuliShaderRegistry.close();
     }

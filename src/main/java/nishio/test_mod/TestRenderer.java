@@ -37,11 +37,12 @@ public class TestRenderer {
         LazuliClock.Cronometer cronometer = LazuliClock.newCronometer();
         LazuliRenderEvents.registerRenderCallback((context) -> {
             LazuliMinecraftShaderGetter.setVanillaShaderUniforms("epicenter", new Vec3d(0, 100, 0).subtract(context.camera().getPos()));
+            LazuliMinecraftShaderGetter.setVanillaShaderUniforms("epicenter2", new Vec3d(20, 100, 0).subtract(context.camera().getPos()));
 
         });
 
         LazuliRenderEvents.registerPostCallback((context, viewProjectionMatrix, tickDelta) -> {
-            TestModShaders.RED_FRAMEBUFFER_SHADER.renderToScreen();
+            //TestModShaders.RED_FRAMEBUFFER_SHADER.renderToScreen();
         });
 
 
