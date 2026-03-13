@@ -18,6 +18,8 @@ import java.util.Map;
 public abstract class LazuliShaderTop<T extends LazuliShaderTop<T>> {
     public Identifier vertexId;
     public Identifier fragmentId;
+
+    public Boolean doFastReloading = true;
     protected final Identifier jsonId;
     protected final Map<String, LazuliUniform<?>> uniforms;
     protected final VertexFormat vertexFormat;
@@ -93,6 +95,8 @@ public abstract class LazuliShaderTop<T extends LazuliShaderTop<T>> {
     public Identifier fragmentId() { return fragmentId; }
 
     public abstract String jsonPath();
+
+    public abstract String basePath();
 
     public List<String> getVertexAttributesNames() {
         return vertexFormat.getAttributeNames();

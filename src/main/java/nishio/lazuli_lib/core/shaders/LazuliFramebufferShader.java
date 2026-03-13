@@ -75,6 +75,11 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
     public String jsonPath(){return "program/";}
 
     @Override
+    public String basePath() {
+        return "/shaders/program/";
+    }
+
+    @Override
     public Identifier jsonId(){return Identifier.ofVanilla(fragmentId.getPath());}
 
     public LazuliTrueFramebufferShader getProgram() {

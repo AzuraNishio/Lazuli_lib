@@ -45,7 +45,6 @@ public class LazuliShaderRegistry {
         CoreShaderRegistrationCallback.EVENT.register(ctx -> {
             ctx.register(jsonPath, format, shaderProgram -> {
                 SHADER_MAP.put(jsonPath.getPath(), shaderProgram);
-                LazuliLog.Shaders.info("Shader '{}' registered!", jsonPath.getPath());
             });
         });
     }
@@ -64,7 +63,6 @@ public class LazuliShaderRegistry {
      */
     public static void registerPostProcessingShader(String name, String nameSpace) {
 
-        LazuliLog.Shaders.info("Trying to register {}", name);
         LazuliPostProcessingRegistry.register((client, factory) -> {
             Identifier shaderId = Identifier.of(nameSpace, name);
             Framebuffer framebuffer = client.getFramebuffer();
@@ -86,10 +84,6 @@ public class LazuliShaderRegistry {
     }
 
     public static void register(){
-        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            //close();
-        });
-
         ClientTickEvents.START_CLIENT_TICK.register((t) ->{
 
             Window window = MinecraftClient.getInstance().getWindow();

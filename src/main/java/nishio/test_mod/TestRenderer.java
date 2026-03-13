@@ -41,7 +41,7 @@ public class TestRenderer {
         });
 
         LazuliRenderEvents.registerPostCallback((context, viewProjectionMatrix, tickDelta) -> {
-            //TestModShaders.RED_FRAMEBUFFER_SHADER.renderToScreen(0);
+            TestModShaders.RED_FRAMEBUFFER_SHADER.renderToScreen();
         });
 
 
@@ -87,8 +87,8 @@ public class TestRenderer {
 
         LazuliRenderEvents.registerPostCallback((context, viewProjMatrix, tickDelta) -> {
             if(BUFFER_1 == null){
-                BUFFER_1 = new SimpleFramebuffer(3200, 3200, true, true);
-                BUFFER_2 = new SimpleFramebuffer(3200, 3200, true, true);
+                BUFFER_1 = new SimpleFramebuffer(320, 320, true, true);
+                BUFFER_2 = new SimpleFramebuffer(320, 320, true, true);
             }
 
             if(BUFFER_1 != null) {

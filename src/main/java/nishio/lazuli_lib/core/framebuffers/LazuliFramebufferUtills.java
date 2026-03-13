@@ -10,6 +10,7 @@ import net.minecraft.util.math.Vec3d;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.shaders.LazuliBlendMode;
 import nishio.lazuli_lib.core.shaders.LazuliFramebufferShader;
+import nishio.lazuli_lib.core.shaders.LazuliShader;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;
 import nishio.lazuli_lib.internals.Lazuli_Lib;
 import org.joml.Vector4f;
@@ -69,6 +70,10 @@ public class LazuliFramebufferUtills {
         copy = new LazuliFramebufferShader(
                 Identifier.of(Lazuli_Lib.MOD_ID, "raw_copy")
         ).addDefaultUniforms().register();
+
+        copy.doFastReloading = false;
+
+        LazuliShaderRegistry.close();
 
         ClientTickEvents.START_CLIENT_TICK.register((t) ->{
 

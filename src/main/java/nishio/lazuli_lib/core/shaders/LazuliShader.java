@@ -70,6 +70,11 @@ public class LazuliShader extends LazuliShaderTop<LazuliShader> {
     @Override
     public String jsonPath(){return "core/";}
 
+    @Override
+    public String basePath() {
+        return "/shaders/core/";
+    }
+
     public ShaderProgram getProgram() {
         return LazuliShaderRegistry.getShaderFromName(jsonId.getPath());
     }

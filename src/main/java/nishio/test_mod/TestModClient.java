@@ -2,11 +2,10 @@ package nishio.test_mod;
 /** Client entry point for the test mod. */
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import nishio.lazuli_lib.internals.datagen.LazuliShaderDatagenManager;
+import nishio.lazuli_lib.core.tools.LazuliShaderDevTools;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +27,6 @@ public class TestModClient implements ClientModInitializer {
 		TestRenderer.register();
         TestModShaders.registerShaders();
 
-		ClientTickEvents.END_CLIENT_TICK.register(t -> {
-			if (TEST.wasPressed()) {
-				LazuliShaderDatagenManager.reload();
-			}
-		});
+		LazuliShaderDevTools.enableFastShaderReloading();
     }
 }

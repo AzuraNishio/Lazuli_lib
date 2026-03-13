@@ -48,6 +48,7 @@ public class LazuliWarpManager {
 
                     JsonObject json = shaderJson.getAsJsonObject();
                     LazuliShader shader = new LazuliShader(json, target).register();
+                    shader.doFastReloading = false;
 
                     for (LazuliUniform uni : warp.uniform){
                         shader.addUniform(uni);
