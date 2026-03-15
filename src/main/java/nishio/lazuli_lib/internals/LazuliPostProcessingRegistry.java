@@ -20,6 +20,9 @@ public class LazuliPostProcessingRegistry {
         CALLBACKS.add(callback);
     }
 
+    public static void clear() {
+        CALLBACKS.clear();
+    }
     public static void runCallbacks(MinecraftClient client, ResourceFactory factory) {
         for (LazuliPostProcessingCallback callback : CALLBACKS) {
             callback.register(client, factory);

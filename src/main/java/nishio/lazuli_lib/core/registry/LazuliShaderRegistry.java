@@ -4,11 +4,15 @@ package nishio.lazuli_lib.core.registry;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.util.Window;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import nishio.lazuli_lib.internals.*;
 import nishio.lazuli_lib.internals.datagen.LazuliShaderDatagenManager;
@@ -18,10 +22,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static net.fabricmc.fabric.api.resource.ResourceManagerHelper.*;
+
 public class LazuliShaderRegistry {
 
     private static final Map<String, ShaderProgram> SHADER_MAP = new HashMap<>();
-    private static final Map<String, LazuliTrueFramebufferShader> POST_PROCESSOR_MAP = new HashMap<>();
+    private static final Map<Identifier, LazuliTrueFramebufferShader> POST_PROCESSOR_MAP = new HashMap<>();
 
     private static int resX ;
     private static int resY;
@@ -53,6 +59,27 @@ public class LazuliShaderRegistry {
         LazuliShaderDatagenManager.registerShader(shader);
     }
 
+
+    public static void reloadPostProcessors() {
+        LazuliPostProcessingRegistry.clear();
+
+        POST_PROCESSOR_MAP.values().forEach(LazuliTrueFramebufferShader::close);
+
+        for (Identifier shaderId : POST_PROCESSOR_MAP.keySet()) {
+            try {
+                LazuliTrueFramebufferShader old = POST_PROCESSOR_MAP.get(shaderId);
+                old.close();
+
+                LazuliTrueFramebufferShader fresh = new LazuliTrueFramebufferShader(
+                        MinecraftClient.getInstance().getResourceManager(), shaderId
+                );
+                POST_PROCESSOR_MAP.put(shaderId, fresh);
+            } catch (IOException e) {
+                LazuliLog.Shaders.error("Fast reload failed for '{}'", shaderId.getPath());
+                e.printStackTrace();
+            }
+        }
+    }
     public static void close(){
         LazuliShaderDatagenManager.gen();
     }
@@ -71,7 +98,7 @@ public class LazuliShaderRegistry {
                 LazuliTrueFramebufferShader processor = new LazuliTrueFramebufferShader(MinecraftClient.getInstance().getResourceManager(), shaderId);
 
 
-                POST_PROCESSOR_MAP.put(name, processor);
+                POST_PROCESSOR_MAP.put(shaderId, processor);
                 LazuliLog.Shaders.info("Post-processing shader '{}' registered in callback.", name);
 
             } catch (IOException e) {
@@ -84,27 +111,18 @@ public class LazuliShaderRegistry {
     }
 
     public static void register(){
-        ClientTickEvents.START_CLIENT_TICK.register((t) ->{
+        get(ResourceType.CLIENT_RESOURCES)
+                .registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+                    @Override
+                    public Identifier getFabricId() {
+                        return Identifier.of("lazuli_lib", "post_processor_reload");
+                    }
+                    @Override
+                    public void reload(ResourceManager manager) {
+                        reloadPostProcessors();
+                    }
+                });
 
-            Window window = MinecraftClient.getInstance().getWindow();
-
-            if (resX != window.getFramebufferWidth() || resY != window.getFramebufferHeight()) {
-                windowResized(window.getFramebufferHeight(), window.getFramebufferWidth());
-            }
-            resX = window.getFramebufferWidth();
-            resY = window.getFramebufferHeight();
-
-        });
-
-    }
-
-    private static void windowResized(int height, int width) {
-        for (Map.Entry<String, LazuliTrueFramebufferShader> entry : POST_PROCESSOR_MAP.entrySet()) {
-            LazuliTrueFramebufferShader processor = entry.getValue();
-            if (processor != null) {
-
-            }
-        }
     }
 
 
@@ -113,7 +131,7 @@ public class LazuliShaderRegistry {
         return SHADER_MAP.get(name);
     }
 
-    public static LazuliTrueFramebufferShader getPostProcessor(String name) {
-        return POST_PROCESSOR_MAP.get(name);
+    public static LazuliTrueFramebufferShader getPostProcessor(Identifier id) {
+        return POST_PROCESSOR_MAP.get(id);
     }
 }

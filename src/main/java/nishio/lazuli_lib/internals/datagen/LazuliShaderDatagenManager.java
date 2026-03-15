@@ -8,6 +8,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.tools.LazuliShaderDevTools;
 import nishio.lazuli_lib.internals.LazuliLog;
 import nishio.lazuli_lib.internals.LazuliShaderTop;

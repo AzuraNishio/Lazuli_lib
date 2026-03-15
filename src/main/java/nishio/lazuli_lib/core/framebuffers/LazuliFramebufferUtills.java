@@ -14,6 +14,7 @@ import nishio.lazuli_lib.core.shaders.LazuliShader;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;
 import nishio.lazuli_lib.internals.Lazuli_Lib;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL30;
 
 public class LazuliFramebufferUtills {
     private static Framebuffer swap;
@@ -39,10 +40,7 @@ public class LazuliFramebufferUtills {
     }
 
     public static Framebuffer copyToSwap(Framebuffer in){
-        getSwapBuffer().clear(false);
-        getSwapBuffer().beginWrite(false);
-        in.beginRead();
-        copy.renderToFramebuffer(0, in, getSwapBuffer());
+        copyFromAtoB(in, getSwapBuffer());
         return getSwapBuffer();
     }
 
@@ -54,16 +52,25 @@ public class LazuliFramebufferUtills {
         return getSwapBuffer2();
     }
 
+
     public static Framebuffer copyFromSwap(Framebuffer out){
-        out.beginWrite(false);
-        copy.renderToFramebuffer(0, getSwapBuffer(), out);
-        return getSwapBuffer();
+        copyFromAtoB(getSwapBuffer(), out);
+        return out;
     }
 
-    public static Framebuffer copyFromSwap(Framebuffer out, boolean viewport){
-        out.beginWrite(viewport);
-        copy.renderToFramebuffer(0, getSwapBuffer(), out);
-        return getSwapBuffer();
+    public static void copyFromAtoB(Framebuffer A, Framebuffer B){
+        // bind source framebuffer to READ
+        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, A.fbo);
+        // bind dest framebuffer to DRAW
+        GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, B.fbo);
+
+        GL30.glBlitFramebuffer(
+                0, 0, A.textureWidth, A.textureHeight,
+                0, 0, B.textureWidth, B.textureHeight,
+                GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT, // copy both at once
+                GL30.GL_NEAREST
+        );
+        MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
     }
 
     public static void register() {

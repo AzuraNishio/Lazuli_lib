@@ -83,7 +83,7 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
     public Identifier jsonId(){return Identifier.ofVanilla(fragmentId.getPath());}
 
     public LazuliTrueFramebufferShader getProgram() {
-        return LazuliShaderRegistry.getPostProcessor(fragmentId.getPath());
+        return LazuliShaderRegistry.getPostProcessor(fragmentId);
     }
 
     public LazuliFramebufferShader setBlendMode(LazuliBlendMode mode){

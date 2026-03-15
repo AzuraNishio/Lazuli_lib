@@ -80,7 +80,9 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
 
 
     public void close() {
-        this.program.close();
+        if (program != null) {
+            program.close();
+        }
     }
 
     public void apply(Framebuffer in, Framebuffer out, Vec2f A, Vec2f B, Vec2f C, Vec2f D, boolean clear, boolean useIn, boolean viewport){
