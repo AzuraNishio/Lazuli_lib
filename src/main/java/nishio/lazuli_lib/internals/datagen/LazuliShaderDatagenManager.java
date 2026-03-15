@@ -92,9 +92,6 @@ public class LazuliShaderDatagenManager {
     }
     public static void reload(){ //Regenerate everything if needed
         gen();
-        for (LazuliShaderTop<?> s : shaders){
-            s.reload(MinecraftClient.getInstance().getResourceManager());
-        }
         MinecraftClient.getInstance().reloadResourcesConcurrently();
         MinecraftClient.getInstance().setOverlay(null);
         MinecraftClient.getInstance().player.sendMessage(Text.of("§d Reloaded shaders!"), true);

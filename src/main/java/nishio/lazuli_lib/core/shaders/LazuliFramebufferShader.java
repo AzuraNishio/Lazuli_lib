@@ -5,7 +5,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.Uniform;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 import nishio.lazuli_lib.core.framebuffers.LazuliFramebufferUtills;
@@ -60,11 +59,6 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
             uniforms.put(u.name, u);
         }
         return this;
-    }
-
-    @Override
-    public void reload(ResourceManager resourceManager){
-        this.getProgram().reload(resourceManager);
     }
 
     @Override

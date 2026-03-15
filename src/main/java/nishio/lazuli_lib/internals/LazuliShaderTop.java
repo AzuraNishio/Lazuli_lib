@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;
@@ -106,8 +105,6 @@ public abstract class LazuliShaderTop<T extends LazuliShaderTop<T>> {
     public LazuliUniform<?> getUniform(String name) {
         return uniforms.get(name);
     }
-
-    public void reload(ResourceManager resourceManager) { }
 
 
     public JsonObject toJson() {
