@@ -2,3 +2,5 @@ accessWidener v2 named
 
 accessible field net/minecraft/resource/ResourcePackManager providers Ljava/util/Set;
 mutable field net/minecraft/resource/ResourcePackManager providers Ljava/util/Set;
+accessible field net/minecraft/client/gl/JsonEffectShaderProgram uniformData Ljava/util/List;
+accessible method net/minecraft/client/gl/ShaderStage getGlRef ()I

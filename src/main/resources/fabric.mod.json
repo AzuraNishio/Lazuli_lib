@@ -17,6 +17,7 @@
 	"accessWidener": "lazuli_lib.accesswidener",
 	"entrypoints": {
 		"client": [
+			"nishio.test_mod.TestModClient",
 			"nishio.lazuli_lib.internals.Lazuli_Lib_Client"
 		],
 		"main": [

@@ -26,7 +26,7 @@ import static net.fabricmc.fabric.api.resource.ResourceManagerHelper.*;
 
 public class LazuliShaderRegistry {
 
-    private static final Map<String, ShaderProgram> SHADER_MAP = new HashMap<>();
+    private static final Map<String, ShaderProgram> SHADER_MAP = new HashMap<>(); //TODO replace the map for Identifier map
     private static final Map<Identifier, LazuliTrueFramebufferShader> POST_PROCESSOR_MAP = new HashMap<>();
 
     private static int resX ;
@@ -62,8 +62,6 @@ public class LazuliShaderRegistry {
 
     public static void reloadPostProcessors() {
         LazuliPostProcessingRegistry.clear();
-
-        POST_PROCESSOR_MAP.values().forEach(LazuliTrueFramebufferShader::close);
 
         for (Identifier shaderId : POST_PROCESSOR_MAP.keySet()) {
             try {

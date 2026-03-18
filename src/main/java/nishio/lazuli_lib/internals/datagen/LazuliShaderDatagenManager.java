@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import static net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil.GSON;
 
 public class LazuliShaderDatagenManager {
-
+    //TODO break in more classes (too big of a class)
     private static final List<LazuliShaderTop<?>> shaders = new ArrayList<>();
     private static final Map<String, String> files = new HashMap<>();
 

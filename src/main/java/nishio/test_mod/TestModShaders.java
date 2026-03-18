@@ -30,15 +30,15 @@ public class TestModShaders {
 
         RED_FRAMEBUFFER_SHADER = new LazuliFramebufferShader(
                 Identifier.of(TestModClient.MOD_ID, "red")
-        ).addDefaultUniforms().setBlendMode(LazuliBlendMode.ADDITIVE).register();
+        ).addDefaultUniforms().setBlendMode(LazuliBlendMode.DEFAULT).register();
 
 
         WHITE_SHADER = new LazuliFramebufferShader(
                 Identifier.of(TestModClient.MOD_ID, "white")
         ).addDefaultUniforms().setBlendMode(LazuliBlendMode.ADDITIVE).register();
 
-        LazuliWarp waves = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
-        LazuliWarp waves2 = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject2")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
+        //LazuliWarp waves = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
+        //LazuliWarp waves2 = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject2")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
 
         LazuliShaderRegistry.close();
     }

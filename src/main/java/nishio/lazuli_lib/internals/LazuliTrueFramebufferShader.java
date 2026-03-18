@@ -1,13 +1,18 @@
 package nishio.lazuli_lib.internals;
 
 import com.google.gson.JsonSyntaxException;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+
+import java.awt.image.renderable.RenderContext;
 import java.io.IOException;
 import java.util.Objects;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.gl.GlProgramManager;
+import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.JsonEffectShaderProgram;
 import net.minecraft.client.render.*;
 import net.minecraft.resource.ResourceFactory;
@@ -15,6 +20,8 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 @Environment(EnvType.CLIENT)
 public class LazuliTrueFramebufferShader implements AutoCloseable {
@@ -80,9 +87,22 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
 
 
     public void close() {
-        if (program != null) {
-            program.close();
+        for (GlUniform glUniform : program.uniformData) {
+            glUniform.close();
         }
+
+        int progRef = program.getGlRef();
+
+        RenderSystem.assertOnRenderThread();
+
+        //Idk why it need to be twice but it works!
+        program.getFragmentShader().release();
+        program.getVertexShader()  .release();
+        program.getFragmentShader().release();
+        program.getVertexShader()  .release();
+
+
+        GL20.glDeleteProgram(program.getGlRef());
     }
 
     public void apply(Framebuffer in, Framebuffer out, Vec2f A, Vec2f B, Vec2f C, Vec2f D, boolean clear, boolean useIn, boolean viewport){
@@ -94,13 +114,17 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
 
         Objects.requireNonNull(in);
 
+
+
         if (useIn) {
             in.endWrite();
             shaderProgram.bindSampler("InputColor", in::getColorAttachment);
             shaderProgram.bindSampler("InputDepth", in::getDepthAttachment);
         }
 
+        float fov = (float) Math.toRadians(MinecraftClient.getInstance().options.getFov().getValue());
         this.program.getUniformByNameOrDummy("ProjMat").set(this.projectionMatrix);
+        this.program.getUniformByNameOrDummy("FOV").set(fov);
         this.program.getUniformByNameOrDummy("InSize").set((float)in.textureWidth, (float)in.textureHeight);
         this.program.getUniformByNameOrDummy("OutSize").set(W, H);
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
