@@ -8,7 +8,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.tools.LazuliShaderDevTools;
 import nishio.lazuli_lib.internals.LazuliLog;
 import nishio.lazuli_lib.internals.LazuliShaderTop;
@@ -34,31 +33,19 @@ public class LazuliShaderDatagenManager {
 
     private static void copyResourceToGenerated(Identifier id, String pathString, String extension, Path lazuliGen){
         InputStream stream = null;
+
         String path = "assets/".concat(id.getNamespace()).concat(pathString).concat(id.getPath()).concat(extension);
 
-
-
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()){
-            Path PATH = FabricLoader.getInstance().getGameDir().getParent().resolve("src/main/resources/assets/".concat(id.getNamespace()).concat(pathString).concat(id.getPath()).concat(extension));
-            LazuliLog.Warp.info("Copying file for fast reloading: ".concat(PATH.toString()));
-            try {
-                stream = Files.newInputStream(PATH);
-            } catch (Exception e) {
-                e.printStackTrace();
-                LazuliLog.Warp.info("Could not directly load ".concat(path));
-                stream = Thread.currentThread().getContextClassLoader()
-                        .getResourceAsStream(path);
-            }
+        if (FabricLoader.getInstance().isDevelopmentEnvironment() && LazuliShaderDevTools.doFastReload){
+            stream = LazuliEasyFileAcess.getDirectOrPackagePath(id, extension, pathString);
         } else {
-            stream = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream(path);
+            stream =  LazuliEasyFileAcess.getDirectOrPackagePath(id, extension, pathString);
         }
-
 
         try (var reader = new BufferedReader(new InputStreamReader(stream))) {
             String content = reader.lines().collect(Collectors.joining("\n"));
             FileUtils.createParentDirectories(lazuliGen.resolve(path).toFile());
-            Files.writeString(lazuliGen.resolve(path), content, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.writeString(lazuliGen.resolve(path), LazuliLibShaderLanguageParser.parseToGLSL(content), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
         } catch (IOException e) {
             LazuliLog.Warp.error("Failed to copy file %s".formatted(id.toString()));
@@ -66,9 +53,10 @@ public class LazuliShaderDatagenManager {
         }
     }
 
-    public static void copyFastReloadShaders(Path lazuliGen){
+    public static void copyShadersToLazuliGenerated(Path lazuliGen){
         Set<Identifier> alreadyCopiedFragment = new HashSet<>();
         Set<Identifier> alreadyCopiedVertex = new HashSet<>();
+
         for (LazuliShaderTop<?> shader : shaders){
             if(shader.doFastReloading) {
                 if (shader.fragmentId.getNamespace() == "minecraft" || shader.fragmentId.getNamespace() == "lazuli_lib"){
@@ -92,6 +80,7 @@ public class LazuliShaderDatagenManager {
         }
     }
     public static void reload(){ //Regenerate everything if needed
+        LazuliLibShaderLanguageParser.clearCache();
         gen();
         MinecraftClient.getInstance().reloadResourcesConcurrently();
         MinecraftClient.getInstance().setOverlay(null);
@@ -152,9 +141,7 @@ public class LazuliShaderDatagenManager {
             generator.run();
             createMetadataAndLogo(lazuli_gen_path); //create metadata again if generator ran
 
-            if (LazuliShaderDevTools.doFastReload){
-                copyFastReloadShaders(lazuli_gen_path);
-            }
+            copyShadersToLazuliGenerated(lazuli_gen_path);
 
             LazuliWarpManager.WriteWarpShaders(lazuli_gen_path);
 

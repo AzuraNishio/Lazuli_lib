@@ -147,7 +147,7 @@ public class LazuliWarpManager {
                 modifiedFiles.putAll(generatedFiles);
                 for (String pathString : generatedFiles.keySet()) {
                     String content = generatedFiles.get(pathString);
-                    Files.writeString(basePath.resolve(pathString), content, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                    Files.writeString(basePath.resolve(pathString), LazuliLibShaderLanguageParser.parseToGLSL(content), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
                 }
             }
 

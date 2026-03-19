@@ -4,7 +4,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.minecraft.client.MinecraftClient;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.core.tools.LazuliShaderDevTools;
+import nishio.lazuli_lib.internals.LazuliLog;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +28,40 @@ public class LazuliEasyFileAcess {
         if (stream == null) {
             throw new IOException("File not found: " + path);
         }
+
+        return stream;
+    }
+
+    public static InputStream getDirectOrPackagePath(Identifier id, String extension, String folder){
+
+        InputStream stream = null;
+
+        String path = "assets/".concat(id.getNamespace()).concat(folder).concat(id.getPath()).concat(extension);
+
+        if(FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            try {
+                Path PATH = FabricLoader.getInstance().getGameDir().getParent().resolve("src/main/resources/assets/".concat(id.getNamespace()).concat(folder).concat(id.getPath()).concat(extension));
+                stream = Files.newInputStream(PATH);
+            } catch (Exception e) {
+                e.printStackTrace();
+                LazuliLog.Warp.info("Could not directly load ".concat(path));
+                stream = Thread.currentThread().getContextClassLoader()
+                        .getResourceAsStream(path);
+            }
+        } else {
+            stream = Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream(path);
+        }
+        return stream;
+    }
+
+    public static InputStream getPackagePath(Identifier id, String extension, String folder){
+
+        InputStream stream = null;
+
+        String path = "assets/".concat(id.getNamespace()).concat(folder).concat(id.getPath()).concat(extension);
+
+        stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
 
         return stream;
     }

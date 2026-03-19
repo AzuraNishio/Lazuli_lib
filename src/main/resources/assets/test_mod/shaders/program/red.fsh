@@ -1,4 +1,9 @@
 #version 150
+/*
+import lazuli_lib.test;
+enable autoSemicolon;
+enable SugarSugar;
+*/
 
 uniform sampler2D InputColor;
 uniform sampler2D InputDepth;
@@ -8,28 +13,22 @@ uniform float FOV;
 in vec2 texCoord;
 out vec4 fragColor;
 
-float linearDepth(float d) {
-    float near = 0.05;
-    float far = 1000.0;
-    return (2.0 * near * far) / (far + near - (d * 2.0 - 1.0) * (far - near));
-}
+
 
 float dd(float x, float y){
     vec2 texel = 1.0 / InSize;
-    return linearDepth(texture(InputDepth, texCoord + (vec2(x, y) * texel)).r);
+    return linearDepth(InputDepth.texture(texCoord + (vec2(x, y) * texel)).u);
 }
-
-
 
 void main() {
     vec2 nPix = (texCoord * InSize) - (0.5 * InSize);
 
-    vec4 color = texture(InputColor, texCoord);
-    float depth = dd(0.0, 0.0);
-    float depthLeft = dd(1.0, 0.0);
-    float depthRight = dd(-1.0, 0.0);
-    float depthUp = dd(0.0, 1.0);
-    float depthDown = dd(0.0, -1.0);
+    vec4 color = InputColor.texture(texCoord);
+    float depth      = dd( 0.0,  0.0);
+    float depthLeft  = dd( 1.0,  0.0);
+    float depthRight = dd(-1.0,  0.0);
+    float depthUp    = dd( 0.0,  1.0);
+    float depthDown  = dd( 0.0, -1.0);
 
     vec2 derivative1 = vec2(depth - depthLeft, depth - depthDown);
     vec2 derivative2 = vec2(depthRight - depth, depthUp - depth);
@@ -38,7 +37,7 @@ void main() {
 
     vec2 derivative = (smaller * derivative1) + ((1.0 - smaller) * derivative2);
 
-    vec3 normal = normalize(vec3(derivative, 0.001 + depth * tan(FOV * 0.5) / InSize.x));
+    vec3 normal = normalize(vec3(derivative, 0.001 + depth * tan(FOV * 0.5) / InSize.u));
 
     float radius = 500.0 * depth;
 

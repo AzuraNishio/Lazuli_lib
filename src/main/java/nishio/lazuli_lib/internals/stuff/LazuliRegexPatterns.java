@@ -20,4 +20,19 @@ public class LazuliRegexPatterns {
             "(?<=uniform sampler2D )(\\w+)",
             Pattern.MULTILINE
     );
+
+    public static Pattern LLSL_IMPORT_REGEX = Pattern.compile(
+            "^\\s*import\\s+([\\w.]+)\\s*;",
+            Pattern.MULTILINE
+    );
+
+    public static Pattern LLSL_ENABLE_REGEX = Pattern.compile(
+            "^\\s*enable\\s+([\\w.]+)\\s*;",
+            Pattern.MULTILINE
+    );
+
+    public static Pattern LLSL_TEXTURE_SUGAR_REGEX = Pattern.compile(
+            "([\\w.]+)\\[([^,|^\\]]+)+\\];",
+            Pattern.MULTILINE
+    );
 }
