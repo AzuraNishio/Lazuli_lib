@@ -46,5 +46,6 @@ void main() {
 
     fragColor.rgb = tint * hueShiftMatrix((6.0 * (texCoord0.x + texCoord0.y)) + ((0.8 - color.r) * 3.0));
     fragColor.a = tint.r;
+    //fragColor += 1.0;
 
 }

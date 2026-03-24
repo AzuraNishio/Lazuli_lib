@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LazuliShader extends LazuliShaderTop<LazuliShader> {
-    private LazuliBlendMode blendMode;
+    private LazuliBlendMode blendMode = LazuliBlendMode.DEFAULT;
 
     public LazuliShader setBlendMode(LazuliBlendMode blendMode) {
         this.blendMode = blendMode;

@@ -94,7 +94,7 @@ public class LazuliMinecraftShaderGetter {
             case "rendertype_armor_cutout_no_cull" -> GameRenderer.getRenderTypeArmorCutoutNoCullProgram();
             case "rendertype_armor_entity_glint" -> GameRenderer.getRenderTypeArmorEntityGlintProgram();
             case "rendertype_beacon_beam" -> GameRenderer.getRenderTypeBeaconBeamProgram();
-            case "rendertype_clouds" -> GameRenderer.getRenderTypeCloudsProgram();
+            //case "rendertype_clouds" -> GameRenderer.getRenderTypeCloudsProgram();
             case "rendertype_crumbling" -> GameRenderer.getRenderTypeCrumblingProgram();
             case "rendertype_end_gateway" -> GameRenderer.getRenderTypeEndGatewayProgram();
             case "rendertype_end_portal" -> GameRenderer.getRenderTypeEndPortalProgram();
@@ -133,7 +133,7 @@ public class LazuliMinecraftShaderGetter {
             case "rendertype_text_intensity_see_through" -> GameRenderer.getRenderTypeTextIntensitySeeThroughProgram();
             case "rendertype_text_see_through" -> GameRenderer.getRenderTypeTextSeeThroughProgram();
             case "rendertype_water_mask" -> GameRenderer.getRenderTypeWaterMaskProgram();
-            case "rendertype_breeze_wind" -> GameRenderer.getRenderTypeBreezeWindProgram();
+            //case "rendertype_breeze_wind" -> GameRenderer.getRenderTypeBreezeWindProgram();
             default -> {
 
                 yield null;

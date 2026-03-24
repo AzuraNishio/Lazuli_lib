@@ -108,7 +108,6 @@ public class TestRenderer {
                 Framebuffer main = MinecraftClient.getInstance().getFramebuffer();
 
                 MinecraftClient minecraftClient = MinecraftClient.getInstance();
-                Framebuffer main = minecraftClient.getFramebuffer();
 
                 if (minecraftClient.player != null) {
                     if(minecraftClient.player.getPos().getY() < 100.1) {
@@ -117,7 +116,7 @@ public class TestRenderer {
                         TestModShaders.WHITE_SHADER.renderToFramebuffer(0, BUFFER_1, base[0], base[1], base[2], base[3]);
                     }
                 }
-                cicle += context.tickCounter().getTickDelta(false);
+                cicle += context.tickDelta();
                 if (cicle > 1/24f) {
                     cicle = 0;
                     main.endWrite();

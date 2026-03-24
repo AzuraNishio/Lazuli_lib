@@ -19,7 +19,6 @@ import java.util.Map;
 public abstract class LazuliShaderTop<T extends LazuliShaderTop<T>> {
     public Identifier vertexId;
     public Identifier fragmentId;
-
     public Boolean doFastReloading = true;
     protected final Identifier jsonId;
     protected final Map<String, LazuliUniform<?>> uniforms;
@@ -48,7 +47,7 @@ public abstract class LazuliShaderTop<T extends LazuliShaderTop<T>> {
 
     protected LazuliShaderTop(JsonObject shaderJson, Identifier jsonPath) {
         this.vertexId = Identifier.tryParse(shaderJson.get("vertex").getAsString());
-        this.fragmentId = Identifier.of(shaderJson.get("fragment").getAsString());
+        this.fragmentId = Identifier.tryParse(shaderJson.get("fragment").getAsString());
         this.jsonId = jsonPath;
         this.vertexFormat = VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL;
         this.samplers = new ArrayList<>();
