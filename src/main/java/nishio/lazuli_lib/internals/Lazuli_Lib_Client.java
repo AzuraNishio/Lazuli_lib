@@ -7,6 +7,7 @@ import nishio.lazuli_lib.core.framebuffers.LazuliFramebufferUtills;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.miscellaneous.LazuliClock;
 import nishio.lazuli_lib.internals.datagen.LazuliShaderDatagenManager;
+import nishio.lazuli_lib.internals.datagen.LazuliWarpManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +24,16 @@ public class Lazuli_Lib_Client implements ClientModInitializer {
 				===========================================================================
 			""");
 
+
 		//Calling all parts of the lib:
+		LazuliShaderDatagenManager.initialize();
+		LazuliShaderDatagenManager.gen();
 		LazuliRenderEvents.registerLazuliRenderPhases();
 		LazuliShaderRegistry.register();
 		LazuliClock.register();
-		LazuliShaderDatagenManager.initialize();
 		LazuliFramebufferUtills.register();
+
+
 	}
 
 

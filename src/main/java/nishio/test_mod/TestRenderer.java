@@ -16,6 +16,7 @@ import nishio.lazuli_lib.core.events.LazuliRenderEvents;
 import nishio.lazuli_lib.core.miscellaneous.LazuliClock;
 import nishio.lazuli_lib.core.world_rendering.LazuliVertex;
 import nishio.lazuli_lib.internals.Lazuli_Lib;
+import nishio.lazuli_lib.internals.stuff.LazuliMinecraftShaderGetter;
 
 import java.util.Random;
 
@@ -34,6 +35,16 @@ public class TestRenderer {
     private static final Random RANDOM   = new Random();
     public static void register(){
         LazuliClock.Cronometer cronometer = LazuliClock.newCronometer();
+        LazuliRenderEvents.registerRenderCallback((context) -> {
+            LazuliMinecraftShaderGetter.setVanillaShaderUniforms("epicenter", new Vec3d(0, 100, 0).subtract(context.camera().getPos()));
+            LazuliMinecraftShaderGetter.setVanillaShaderUniforms("epicenter2", new Vec3d(20, 100, 0).subtract(context.camera().getPos()));
+
+        });
+
+        LazuliRenderEvents.registerPostCallback((context, viewProjectionMatrix, tickDelta) -> {
+            TestModShaders.RED_FRAMEBUFFER_SHADER.renderToScreen();
+        });
+
 
         LazuliRenderEvents.registerRenderCallback((context) -> {
             LazuliBufferBuilder bb =  context.getLazuliBB(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
@@ -54,6 +65,7 @@ public class TestRenderer {
 
             //TestModShaders.testShader.setUniform("Test2", new Vec3d(0,1,Math.sin(cronometer.readLerpedSeconds())));
             //TestModShaders.testShader.setUniform("Test", new Vec3d(Math.sin(cronometer.readLerpedSeconds() * 1.4),1,1));
+
             RenderSystem.enableBlend();
             float n = 0.2f;
 
@@ -78,8 +90,8 @@ public class TestRenderer {
 
         LazuliRenderEvents.registerPostCallback((context, viewProjMatrix, tickDelta) -> {
             if(BUFFER_1 == null){
-                BUFFER_1 = new SimpleFramebuffer(320, 320, false, true);
-                BUFFER_2 = new SimpleFramebuffer(320, 320, false, true);
+                BUFFER_1 = new SimpleFramebuffer(320, 320, true, true);
+                BUFFER_2 = new SimpleFramebuffer(320, 320, true, true);
             }
 
             if(BUFFER_1 != null) {
@@ -91,23 +103,26 @@ public class TestRenderer {
                     outB = BUFFER_1;
                 }
 
+
+
+                Framebuffer main = MinecraftClient.getInstance().getFramebuffer();
+
                 MinecraftClient minecraftClient = MinecraftClient.getInstance();
                 Framebuffer main = minecraftClient.getFramebuffer();
 
-                cicle += context.tickDelta();
+                if (minecraftClient.player != null) {
+                    if(minecraftClient.player.getPos().getY() < 100.1) {
+                        Vec2f pos = new Vec2f((float) (minecraftClient.player.getPos().x / 20f), (float) minecraftClient.player.getPos().z / 20f);
+                        Vec2f[] base = LazuliMathUtils.Rectangle2dFromCenter(pos, 0.05f, 0.1f, minecraftClient.player.bodyYaw);
+                        TestModShaders.WHITE_SHADER.renderToFramebuffer(0, BUFFER_1, base[0], base[1], base[2], base[3]);
+                    }
+                }
+                cicle += context.tickCounter().getTickDelta(false);
                 if (cicle > 1/24f) {
                     cicle = 0;
                     main.endWrite();
 
                     TestModShaders.RIPPLES_FRAMEBUFFER_SHADER.renderToFramebuffer(tickDelta, outB, mainB);
-
-                    if (minecraftClient.player != null) {
-                        if(minecraftClient.player.getPos().getY() < 100.1) {
-                            Vec2f pos = new Vec2f((float) (minecraftClient.player.getPos().x / 20f), (float) minecraftClient.player.getPos().z / 20f);
-                            Vec2f[] base = LazuliMathUtils.Rectangle2dFromCenter(pos, 0.02f, 0.02f, (float) Math.PI * minecraftClient.player.bodyYaw / 180f);
-                            TestModShaders.WHITE_SHADER.renderToFramebuffer(0, mainB, base[0], base[1], base[2], base[3]);
-                        }
-                    }
 
                     activeBuffer = !activeBuffer;
 

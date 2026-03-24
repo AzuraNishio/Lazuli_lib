@@ -1,8 +1,8 @@
-package nishio.lazuli_lib.internals;
+package nishio.lazuli_lib.internals.datagen;
 
 import net.minecraft.resource.*;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.internals.Lazuli_Lib_Client;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;

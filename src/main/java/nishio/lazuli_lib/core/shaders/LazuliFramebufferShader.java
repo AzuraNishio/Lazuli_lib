@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.Uniform;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 import nishio.lazuli_lib.core.framebuffers.LazuliFramebufferUtills;
@@ -62,6 +63,11 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
     }
 
     @Override
+    public void reload(ResourceManager resourceManager){
+        this.getProgram().reload(resourceManager);
+    }
+
+    @Override
     public void minecraftRegister() {
         LazuliShaderRegistry.registerPostProcessingShader(fragmentId.getPath(), fragmentId.getNamespace());
     }
@@ -75,7 +81,12 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
     public String jsonPath(){return "program/";}
 
     @Override
-    public Identifier jsonId(){return Identifier.of("minecraft", fragmentId.getPath());}
+    public String basePath() {
+        return "/shaders/program/";
+    }
+
+    @Override
+    public Identifier jsonId(){return Identifier.ofVanilla(fragmentId.getPath());}
 
     public LazuliTrueFramebufferShader getProgram() {
         return LazuliShaderRegistry.getPostProcessor(fragmentId.getPath());
@@ -109,7 +120,13 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
     public void renderToScreen(float tickDelta) {
         Framebuffer main = MinecraftClient.getInstance().getFramebuffer();
         LazuliFramebufferUtills.copyToSwap(main);
-        getProgram().render(tickDelta, LazuliFramebufferUtills.getSwapBuffer(), main);
+        getProgram().render(tickDelta, LazuliFramebufferUtills.getSwapBuffer(), main, true);
+    }
+
+    public void renderToScreen() {
+        Framebuffer main = MinecraftClient.getInstance().getFramebuffer();
+        LazuliFramebufferUtills.copyToSwap(main);
+        getProgram().render(0, LazuliFramebufferUtills.getSwapBuffer(), main, true);
     }
 
     public LazuliFramebufferShader setSampler(String sampler, Identifier texture) {

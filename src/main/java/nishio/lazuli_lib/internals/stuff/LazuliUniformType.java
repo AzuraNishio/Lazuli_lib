@@ -1,8 +1,9 @@
-package nishio.lazuli_lib.internals;
+package nishio.lazuli_lib.internals.stuff;
 
 import net.minecraft.client.gl.Uniform;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import nishio.lazuli_lib.internals.LazuliLog;
 import org.joml.*;
 
 import java.awt.*;
@@ -21,7 +22,7 @@ public enum LazuliUniformType {
         }
     },
 
-    FLOAT_ARRAY(float[].class, "float[]", -1) {
+    FLOAT_ARRAY(float[].class, "float", -1) {
         @Override
         public void apply(Uniform u, Object v) {
             u.set((float[]) v);
@@ -233,6 +234,18 @@ public enum LazuliUniformType {
             float[] f = new float[9];
             ((Matrix3f) v).get(f);
             return f;
+        }
+    },
+
+    FREE(Object.class, "free", -1) {
+        @Override
+        public void apply(Uniform u, Object v) {
+
+        }
+
+        @Override
+        public float[] toFloatArray(Object v) {
+            return (float[]) v;
         }
     },
 

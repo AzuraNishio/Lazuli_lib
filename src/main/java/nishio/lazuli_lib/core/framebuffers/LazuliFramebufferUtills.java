@@ -10,6 +10,7 @@ import net.minecraft.util.math.Vec3d;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.shaders.LazuliBlendMode;
 import nishio.lazuli_lib.core.shaders.LazuliFramebufferShader;
+import nishio.lazuli_lib.core.shaders.LazuliShader;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;
 import nishio.lazuli_lib.internals.Lazuli_Lib;
 import org.joml.Vector4f;
@@ -39,17 +40,28 @@ public class LazuliFramebufferUtills {
 
     public static Framebuffer copyToSwap(Framebuffer in){
         getSwapBuffer().clear(false);
+        getSwapBuffer().beginWrite(false);
+        in.beginRead();
         copy.renderToFramebuffer(0, in, getSwapBuffer());
         return getSwapBuffer();
     }
 
     public static Framebuffer copyToSwap2(Framebuffer in){
         getSwapBuffer().clear(false);
+        getSwapBuffer2().beginWrite(false);
+        in.beginRead();
         copy.renderToFramebuffer(0, in, getSwapBuffer2());
         return getSwapBuffer2();
     }
 
     public static Framebuffer copyFromSwap(Framebuffer out){
+        out.beginWrite(false);
+        copy.renderToFramebuffer(0, getSwapBuffer(), out);
+        return getSwapBuffer();
+    }
+
+    public static Framebuffer copyFromSwap(Framebuffer out, boolean viewport){
+        out.beginWrite(viewport);
         copy.renderToFramebuffer(0, getSwapBuffer(), out);
         return getSwapBuffer();
     }
@@ -58,6 +70,8 @@ public class LazuliFramebufferUtills {
         copy = new LazuliFramebufferShader(
                 Identifier.of(Lazuli_Lib.MOD_ID, "raw_copy")
         ).addDefaultUniforms().register();
+
+        copy.doFastReloading = false;
 
         LazuliShaderRegistry.close();
 
@@ -70,6 +84,9 @@ public class LazuliFramebufferUtills {
                 resY = main.viewportHeight;
                 if (swap != null){
                     swap.resize(resX, resY, false);
+                }
+
+                if (swap2 != null){
                     swap2.resize(resX, resY, false);
                 }
             }

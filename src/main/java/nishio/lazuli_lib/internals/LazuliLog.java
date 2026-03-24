@@ -5,4 +5,5 @@ import org.slf4j.LoggerFactory;
 
 public class LazuliLog {
     public static Logger Shaders = LoggerFactory.getLogger("Lazuli shaders");
+    public static Logger Warp = LoggerFactory.getLogger("Lazuli Warp");
 }
