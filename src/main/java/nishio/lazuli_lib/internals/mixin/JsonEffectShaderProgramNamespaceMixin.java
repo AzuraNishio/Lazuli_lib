@@ -46,13 +46,6 @@ public class JsonEffectShaderProgramNamespaceMixin {
 
     //okay I wanted to say this for anyone who reads this code but genuinely the fabric discord was so helpful to me on this -matscalle
 
-        Lazuli_Lib_Client.LOGGER.info(type.getFileExtension());
-        Lazuli_Lib_Client.LOGGER.info("BELOW IS AN IMPORTANT LIST TO SEE WHATS GOING ON");
-        Lazuli_Lib_Client.LOGGER.info(name);
-        Lazuli_Lib_Client.LOGGER.info(type.getName());
-        Lazuli_Lib_Client.LOGGER.info(type.toString());
-        Lazuli_Lib_Client.LOGGER.info(path.replace("lazuli_lib:", ""));
-
         if (name.contains(":")) {
             Identifier parsedId = Identifier.of(name);
             if (!OPT_IN_MODS.contains(parsedId.getNamespace())) {
