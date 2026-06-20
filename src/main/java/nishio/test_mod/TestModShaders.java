@@ -2,6 +2,7 @@ package nishio.test_mod;
 
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.core.events.LazuliRenderEvents;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.shaders.LazuliBlendMode;
 import nishio.lazuli_lib.core.shaders.LazuliFramebufferShader;
@@ -33,13 +34,17 @@ public class TestModShaders {
                 Identifier.of(TestModClient.MOD_ID, "red")
         ).addDefaultUniforms().setBlendMode(LazuliBlendMode.ADDITIVE).register();
 
+        LazuliRenderEvents.registerPostCallback((context, viewProjectionMatrix, tickDelta) -> {
+            RED_FRAMEBUFFER_SHADER.renderToScreen();
+        });
+
 
         WHITE_SHADER = new LazuliFramebufferShader(
                 Identifier.of(TestModClient.MOD_ID, "white")
         ).addDefaultUniforms().setBlendMode(LazuliBlendMode.ADDITIVE).register();
 
-        LazuliWarp waves = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
-        LazuliWarp waves2 = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject2")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
+        //LazuliWarp waves = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
+        //LazuliWarp waves2 = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject2")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
 
         LazuliShaderRegistry.close();
     }
