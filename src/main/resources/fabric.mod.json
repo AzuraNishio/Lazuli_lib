@@ -3,10 +3,10 @@
 	"id": "lazuli_lib",
 	"version": "${version}",
 	"name": "Lazuli_Lib",
-	"description": "Cool visuals make people go OHHHHHHH",
+	"description": "Cool visuals make people go OoooOohhh! ",
 	"authors": [
-		"Mee! (Azura Nishio!)",
-		"Megastevian: Fixing a mixin Yay!!!"
+		"Azura Nishio",
+		"Architetury compat fix by Megastevian"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
@@ -18,7 +18,8 @@
 	"accessWidener": "lazuli_lib.accesswidener",
 	"entrypoints": {
 		"client": [
-			"nishio.lazuli_lib.internals.Lazuli_Lib_Client"
+			"nishio.lazuli_lib.internals.Lazuli_Lib_Client",
+			"nishio.test_mod.TestModClient"
 		],
 		"main": [
 			"nishio.lazuli_lib.internals.Lazuli_Lib"
