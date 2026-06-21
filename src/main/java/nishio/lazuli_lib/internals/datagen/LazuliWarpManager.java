@@ -38,9 +38,6 @@ public class LazuliWarpManager {
 
     public static void generate(){
         parseWarps();
-        LazuliShader test = new LazuliShader(
-                Identifier.of(TestModClient.MOD_ID, "ripple_geometry2")
-        ).addSampler("Sampler1").addDefaultUniforms().register();
 
         Map<String, LazuliShader> uniqueTargets = new HashMap<>();
 
@@ -75,11 +72,6 @@ public class LazuliWarpManager {
 
                     String shaderVertex = LazuliEasyFileAcess.getVanillaPathString("assets/%s/shaders/core/%s.vsh".formatted(target.getNamespace(), shader.vertexId.getPath()));
                     warp.vertexes.put("%s.vsh".formatted(shader.vertexId.getPath()), shaderVertex);
-
-
-
-
-
 
 
                 } catch (IOException e) {
