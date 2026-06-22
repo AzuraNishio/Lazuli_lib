@@ -38,9 +38,6 @@ public class LazuliWarpManager {
 
     public static void generate(){
         parseWarps();
-        LazuliShader test = new LazuliShader(
-                Identifier.of(TestModClient.MOD_ID, "ripple_geometry2")
-        ).addSampler("Sampler1").addDefaultUniforms().register();
 
         Map<String, LazuliShader> uniqueTargets = new HashMap<>();
 
