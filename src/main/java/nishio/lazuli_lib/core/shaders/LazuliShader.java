@@ -3,9 +3,11 @@ package nishio.lazuli_lib.core.shaders;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.gl.ShaderProgram;
+import net.minecraft.client.gl.Uniform;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.core.miscellaneous.LazuliClock;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.world_rendering.LapisRenderer;
 import nishio.lazuli_lib.internals.LazuliShaderTop;
@@ -74,6 +76,17 @@ public class LazuliShader extends LazuliShaderTop<LazuliShader> {
     }
 
     @Override
+    public LazuliShader updateAutomaticUniforms() {
+        if(this.hasTicksUniform){
+            self().getUniformByNameOrDummy("Tick").set((float) LazuliClock.lerpedTicks());
+        }
+        if(this.hasTimeUniform){
+            self().getUniformByNameOrDummy("Time").set((float) LazuliClock.lerpedSeconds());
+        }
+        return this;
+    }
+
+    @Override
     public String jsonPath(){return "core/";}
 
     @Override
@@ -93,6 +106,11 @@ public class LazuliShader extends LazuliShaderTop<LazuliShader> {
     public LazuliShader setUniform(String name, Object value) {
         uniforms.get(name).setShaderUniformGeneric(this.getProgram(), value);
         return this;
+    }
+
+    @Override
+    public Uniform getUniformByNameOrDummy(String name){
+        return getProgram().getUniformOrDefault(name);
     }
 
     @Override

@@ -3,10 +3,12 @@ package nishio.lazuli_lib.internals;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.client.gl.Uniform;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
+import nishio.lazuli_lib.core.miscellaneous.LazuliClock;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;
 import nishio.lazuli_lib.core.world_rendering.LazuliVertex;
@@ -24,6 +26,8 @@ public abstract class LazuliShaderTop<T extends LazuliShaderTop<T>> {
     protected final Map<String, LazuliUniform<?>> uniforms;
     protected final VertexFormat vertexFormat;
     protected final List<String> samplers;
+    protected boolean hasTimeUniform = false;
+    protected boolean hasTicksUniform = false;
 
     protected LazuliShaderTop(String namespace, String jsonPath, String fragmentPath, String vertexPath,
                               VertexFormat vertexFormat, Map<String, LazuliUniform<?>> uniforms, List<String> samplers) {
@@ -81,7 +85,28 @@ public abstract class LazuliShaderTop<T extends LazuliShaderTop<T>> {
         return self();
     }
 
+    /** Add a "Time" uniform in seconds*/
+    public T addGlobalTimeUniform(){
+        if (!hasTimeUniform){
+            hasTimeUniform = true;
+            this.uniforms.put("Time", new LazuliUniform<>("Time", 0f));
+        }
+        return self();
+    }
+
+    /** Add a "Tick" uniform in ticks*/
+    public T addGlobalTickUniform(){
+        if (!hasTicksUniform){
+            hasTicksUniform = true;
+            this.uniforms.put("Tick", new LazuliUniform<>("Tick", 0f));
+        }
+        return self();
+    }
+
+    public abstract T updateAutomaticUniforms();
+
     public abstract T addDefaultUniforms();
+    public abstract Uniform getUniformByNameOrDummy(String name);
 
     public T addSampler(String s){
         this.samplers.add(s);

@@ -9,6 +9,7 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 import nishio.lazuli_lib.core.framebuffers.LazuliFramebufferUtills;
+import nishio.lazuli_lib.core.miscellaneous.LazuliClock;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.world_rendering.LapisRenderer;
 import nishio.lazuli_lib.internals.LazuliShaderTop;
@@ -55,6 +56,17 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
     }
 
     @Override
+    public LazuliFramebufferShader updateAutomaticUniforms() {
+        if(this.hasTicksUniform){
+            self().getUniformByNameOrDummy("Tick").set((float) LazuliClock.lerpedTicks());
+        }
+        if(this.hasTimeUniform){
+            self().getUniformByNameOrDummy("Time").set((float) LazuliClock.lerpedSeconds());
+        }
+        return this;
+    }
+
+    @Override
     public LazuliFramebufferShader addDefaultUniforms() {
         for(LazuliUniform<?> u : LazulidefaultUniforms.defaultFramebufferUniforms){
             uniforms.put(u.name, u);
@@ -97,6 +109,7 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
         return this;
     }
 
+    @Override
     public Uniform getUniformByNameOrDummy(String name){
         return getProgram().getProgram().getUniformByNameOrDummy(name);
     }
