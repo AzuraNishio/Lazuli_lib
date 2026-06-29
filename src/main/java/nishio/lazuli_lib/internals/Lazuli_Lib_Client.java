@@ -6,8 +6,8 @@ import nishio.lazuli_lib.core.events.LazuliRenderEvents;
 import nishio.lazuli_lib.core.framebuffers.LazuliFramebufferUtills;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.miscellaneous.LazuliClock;
+import nishio.lazuli_lib.internals.compat.LazuliSodiumResourcePackCompat;
 import nishio.lazuli_lib.internals.datagen.LazuliShaderDatagenManager;
-import nishio.lazuli_lib.internals.datagen.LazuliWarpManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

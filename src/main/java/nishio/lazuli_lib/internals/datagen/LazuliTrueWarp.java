@@ -3,11 +3,9 @@ package nishio.lazuli_lib.internals.datagen;
 import net.minecraft.util.Identifier;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;
 import nishio.lazuli_lib.internals.LazuliLog;
+import nishio.lazuli_lib.internals.compat.LazuliSodiumResourcePackCompat;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class LazuliTrueWarp {
     static class Injection{
@@ -118,8 +116,10 @@ public class LazuliTrueWarp {
 
     public Map<String, String> generateFiles(){
         Map<String, String> files = new HashMap<>();
-        for (String name : fragments.keySet()){
-            String content = fragments.get(name);
+        for (String id : fragments.keySet()){
+            String content = fragments.get(id);
+            String name = new Identifier(id).getPath();
+            LazuliLog.Shaders.info(id);
 
             for (LazuliUniform uni : uniform) {
                 String replacement = "#version 150\nuniform ";
@@ -135,7 +135,7 @@ public class LazuliTrueWarp {
             }
 
             for (Injection inj : injections) {
-                if(inj.type == "FRAGMENT") {
+                if(Objects.equals(inj.type, "FRAGMENT")) {
                     String target = inj.target.replace("X", "");
                     String replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
 
@@ -163,11 +163,13 @@ public class LazuliTrueWarp {
                 }
             }
 
-            files.put(name, content);
+            files.put(id, content);
         }
 
-        for (String name : vertexes.keySet()){
-            String content = vertexes.get(name);
+        for (String id : vertexes.keySet()){
+            String content = vertexes.get(id);
+            String name = new Identifier(id).getPath();
+
 
             for (LazuliUniform uni : uniform) {
                 String replacement = "#version 150\nuniform ";
@@ -183,7 +185,7 @@ public class LazuliTrueWarp {
             }
 
             for (Injection inj : injections) {
-                if(inj.type == "VERTEX") {
+                if(Objects.equals(inj.type, "VERTEX")) {
 
                     String target = inj.target.replace("X", "");
                     String replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
@@ -210,7 +212,7 @@ public class LazuliTrueWarp {
                     content = content.replace(target, replacement);
                 }
             }
-            files.put(name, content);
+            files.put(id, content);
         }
 
         return files;

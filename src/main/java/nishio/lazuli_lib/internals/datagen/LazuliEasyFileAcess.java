@@ -4,38 +4,66 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
+import java.util.Optional;
 
 import static net.minecraft.datafixer.fix.BlockEntitySignTextStrictJsonFix.GSON;
 
 
 public class LazuliEasyFileAcess {
-    public static InputStream getVanillaPath(String path) throws IOException {
-        InputStream stream = MinecraftClient.class
-                .getClassLoader()
-                .getResourceAsStream(path);
+    public static InputStream getPathFromGameAssets(String path) throws IOException {
+        if (path.contains("minecraft")) {
+            InputStream stream = MinecraftClient.class
+                    .getClassLoader()
+                    .getResourceAsStream(path);
 
-        if (stream == null) {
-            throw new IOException("File not found: " + path);
+            if (stream == null) {
+                throw new IOException("File not found: " + path);
+            }
+
+            return stream;
+        } else {
+            String[] parts = path.split("[/\\\\]"); // handles both / and \
+
+            String modId = parts[1];
+
+            Optional<ModContainer> containerOpt =
+                    FabricLoader.getInstance().getModContainer(modId);
+
+            if (containerOpt.isEmpty()) {
+                throw new IOException("Mod not found: " + modId);
+            }
+
+            ModContainer container = containerOpt.get();
+
+            Path jarPath = container.getOrigin().getPaths().get(0);
+
+            FileSystem fs = FileSystems.newFileSystem(jarPath, (ClassLoader) null);
+
+            Path resourcePath = fs.getPath(path);
+
+            InputStream stream = Files.newInputStream(resourcePath);
+
+            if (stream == null) {
+                throw new IOException("File not found in mod: " + path);
+            }
+
+            return stream;
         }
-
-        return stream;
     }
 
-    public static JsonElement getVanillaPathJson(String path) throws IOException {
-        return JsonParser.parseString(getVanillaPathString(path));
+    public static JsonElement getGameAssetsPathJson(String path) throws IOException {
+        return JsonParser.parseString(getGameAssetsPathString(path));
     }
 
-    public static String getVanillaPathString(String path) throws IOException {
-        InputStream stream = getVanillaPath(path);
+    public static String getGameAssetsPathString(String path) throws IOException {
+        InputStream stream = getPathFromGameAssets(path);
         return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
     }
 

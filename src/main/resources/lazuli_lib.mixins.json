@@ -6,8 +6,12 @@
 		"PostProcessingRegistryMixin",
 		"ZoomMixin",
 		"JsonEffectShaderProgramNamespaceMixin",
-		"LazuliParticleManagerMixin"
+		"LazuliParticleManagerMixin",
+		"LazuliSodiumShaderMixin"
 	],
+
+	"plugin": "nishio.lazuli_lib.internals.mixin.LazuliMixinPlugin",
+
 	"injectors": {
 		"defaultRequire": 1
 	},

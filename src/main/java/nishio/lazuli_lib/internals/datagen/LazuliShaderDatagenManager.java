@@ -11,6 +11,7 @@ import net.minecraft.util.Identifier;
 import nishio.lazuli_lib.core.tools.LazuliShaderDevTools;
 import nishio.lazuli_lib.internals.LazuliLog;
 import nishio.lazuli_lib.internals.LazuliShaderTop;
+import nishio.lazuli_lib.internals.compat.LazuliSodiumResourcePackCompat;
 import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
@@ -181,10 +182,17 @@ public class LazuliShaderDatagenManager {
         Files.writeString(metaPath, GSON.toJson(meta));
 
         Path logoPath = path.resolve("pack.png");
+
         try (var logoStream = LazuliShaderDatagenManager.class.getResourceAsStream("/assets/lazuli_lib/icon.png")) {
             if (logoStream != null) {
                 Files.copy(logoStream, logoPath, StandardCopyOption.REPLACE_EXISTING);
             }
+        }
+
+        if (LazuliSodiumResourcePackCompat.isIsSodiumLoaded()){
+            Path sodiumVersions = path.resolve("assets").resolve("sodiumcoreshadersupport").resolve("versions.json");
+            Files.createDirectories(sodiumVersions.getParent());
+            Files.writeString(sodiumVersions, GSON.toJson(LazuliSodiumResourcePackCompat.createSodiumVersionsFile()));
         }
 
     }

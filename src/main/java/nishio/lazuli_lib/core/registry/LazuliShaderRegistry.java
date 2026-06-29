@@ -30,23 +30,25 @@ public class LazuliShaderRegistry {
     public static void registerShader(String name, String nameSpace, VertexFormat format) {
         Identifier shaderId = Identifier.of(nameSpace, name);
         boolean dataGenerated = false;
-
-        CoreShaderRegistrationCallback.EVENT.register(ctx -> {
-            ctx.register(shaderId, format, shaderProgram -> {
-                SHADER_MAP.put(name, shaderProgram);
-                LazuliLog.Shaders.info("Shader '{}' registered!", name);
+        if (nameSpace != "sodium") {
+            CoreShaderRegistrationCallback.EVENT.register(ctx -> {
+                ctx.register(shaderId, format, shaderProgram -> {
+                    SHADER_MAP.put(name, shaderProgram);
+                    LazuliLog.Shaders.info("Shader '{}' registered!", name);
+                });
             });
-        });
+        }
     }
 
     public static void registerShader(Identifier jsonPath, VertexFormat format) {
         boolean dataGenerated = false;
-
-        CoreShaderRegistrationCallback.EVENT.register(ctx -> {
-            ctx.register(jsonPath, format, shaderProgram -> {
-                SHADER_MAP.put(jsonPath.getPath(), shaderProgram);
+        if (jsonPath.getNamespace() != "sodium") {
+            CoreShaderRegistrationCallback.EVENT.register(ctx -> {
+                ctx.register(jsonPath, format, shaderProgram -> {
+                    SHADER_MAP.put(jsonPath.getPath(), shaderProgram);
+                });
             });
-        });
+        }
     }
 
     public static void registerShader(LazuliShaderTop shader) {
