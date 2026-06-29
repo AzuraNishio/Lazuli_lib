@@ -1,5 +1,7 @@
 package nishio.lazuli_lib.internals.datagen;
 
+import me.jellysquid.mods.sodium.client.gl.shader.GlProgram;
+import me.jellysquid.mods.sodium.client.render.chunk.shader.ChunkShaderInterface;
 import net.minecraft.util.Identifier;
 import nishio.lazuli_lib.core.shaders.LazuliUniform;
 import nishio.lazuli_lib.internals.LazuliLog;
@@ -114,6 +116,63 @@ public class LazuliTrueWarp {
     }
 
 
+    private String addUniforms(String oContent){
+        String content = oContent;
+        String uTarget = content.substring(0, content.indexOf('\n'));
+
+        for (LazuliUniform uni : uniform) {
+            String replacement = "%s\nuniform ".formatted(uTarget);
+
+            replacement = replacement.concat(uni.freeType);
+            replacement = replacement.concat(" ");
+            replacement = replacement.concat(uni.name);
+            replacement = replacement.concat(";");
+
+
+            content = content.replace(uTarget, replacement);
+        }
+        return content;
+    }
+
+    private String processContent(String content, Injection inj){
+        String target = inj.target;
+        String replacement;
+
+        boolean REPLACE = target.contains("<REPLACE>");
+        boolean NOT_WRAP = target.contains("<NOT_WRAP>");
+        boolean SODIUM = target.contains("<SODIUM>");
+
+        target = target.replace("<REPLACE>", "");
+        target = target.replace("<NOT_WRAP>", "");
+        target = target.replace("<SODIUM>", "");
+
+        if (SODIUM && LazuliSodiumResourcePackCompat.isIsSodiumLoaded()){
+            for (LazuliUniform u : this.uniform){
+                LazuliSodiumResourcePackCompat.sodiumLazuliUniforms.put(u.name, u);
+            }
+        }
+
+        if(!SODIUM ^ LazuliSodiumResourcePackCompat.isIsSodiumLoaded()) {
+            if (NOT_WRAP) {
+                if (REPLACE) {
+                    replacement = content;
+                } else {
+                    replacement = target.replace("X", inj.content);
+                }
+            } else {
+                if (REPLACE) {
+                    replacement = "\n".concat(inj.content).concat("\n");
+                } else {
+                    replacement = target.replace("X", "\n".concat(inj.content).concat("\n"));
+                }
+            }
+
+
+            return content.replace(target.replace("X", ""), replacement);
+        }
+        return content;
+    }
+
     public Map<String, String> generateFiles(){
         Map<String, String> files = new HashMap<>();
         for (String id : fragments.keySet()){
@@ -121,95 +180,25 @@ public class LazuliTrueWarp {
             String name = new Identifier(id).getPath();
             LazuliLog.Shaders.info(id);
 
-            for (LazuliUniform uni : uniform) {
-                String replacement = "#version 150\nuniform ";
-                String target = "#version 150";
-
-                replacement = replacement.concat(uni.freeType);
-                replacement = replacement.concat(" ");
-                replacement = replacement.concat(uni.name);
-                replacement = replacement.concat(";");
-
-
-                content = content.replace(target, replacement);
-            }
-
+            content = addUniforms(content);
             for (Injection inj : injections) {
                 if(Objects.equals(inj.type, "FRAGMENT")) {
-                    String target = inj.target.replace("X", "");
-                    String replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
-
-                    boolean REPLACE = target.contains("<REPLACE>");
-                    boolean NOT_WRAP = target.contains("<NOT_WRAP>");
-                    target = target.replace("<REPLACE>", "");
-                    target = target.replace("<NOT_WRAP>", "");
-
-                    if(NOT_WRAP) {
-                        if (REPLACE) {
-                            replacement = inj.content;
-                        } else {
-                            replacement = inj.target.replace("X", inj.content);
-                        }
-                    } else {
-                        if (REPLACE) {
-                            replacement = "\n".concat(inj.content).concat("\n");
-                        } else {
-                            replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
-                        }
-                    }
-
-
-                    content = content.replace(target, replacement);
+                    content = processContent(content, inj);
                 }
             }
 
             files.put(id, content);
         }
+        GlProgram<ChunkShaderInterface> activeProgram;
 
         for (String id : vertexes.keySet()){
             String content = vertexes.get(id);
             String name = new Identifier(id).getPath();
 
-
-            for (LazuliUniform uni : uniform) {
-                String replacement = "#version 150\nuniform ";
-                String target = "#version 150";
-
-                replacement = replacement.concat(uni.freeType);
-                replacement = replacement.concat(" ");
-                replacement = replacement.concat(uni.name);
-                replacement = replacement.concat(";");
-
-
-                content = content.replace(target, replacement);
-            }
-
+            content = addUniforms(content);
             for (Injection inj : injections) {
                 if(Objects.equals(inj.type, "VERTEX")) {
-
-                    String target = inj.target.replace("X", "");
-                    String replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
-
-                    boolean REPLACE = target.contains("<REPLACE>");
-                    boolean NOT_WRAP = target.contains("<NOT_WRAP>");
-                    target = target.replace("<REPLACE>", "");
-                    target = target.replace("<NOT_WRAP>", "");
-
-                    if(NOT_WRAP) {
-                        if (REPLACE) {
-                            replacement = inj.content;
-                        } else {
-                            replacement = inj.target.replace("X", inj.content);
-                        }
-                    } else {
-                        if (REPLACE) {
-                            replacement = "\n".concat(inj.content).concat("\n");
-                        } else {
-                            replacement = inj.target.replace("X", "\n".concat(inj.content).concat("\n"));
-                        }
-                    }
-
-                    content = content.replace(target, replacement);
+                    content = processContent(content, inj);
                 }
             }
             files.put(id, content);

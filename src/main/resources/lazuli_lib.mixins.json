@@ -7,7 +7,8 @@
 		"ZoomMixin",
 		"JsonEffectShaderProgramNamespaceMixin",
 		"LazuliParticleManagerMixin",
-		"LazuliSodiumShaderMixin"
+		"LazuliSodiumShaderMixin",
+		"LazuliSodiumChunkShaderMixin"
 	],
 
 	"plugin": "nishio.lazuli_lib.internals.mixin.LazuliMixinPlugin",

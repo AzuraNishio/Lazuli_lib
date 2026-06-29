@@ -5,6 +5,7 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import nishio.lazuli_lib.internals.LazuliLog;
+import nishio.lazuli_lib.internals.compat.LazuliSodiumResourcePackCompat;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -152,6 +153,9 @@ public class LazuliMinecraftShaderGetter {
             if (program == null) continue;
             program.getUniformOrDefault(name).set(v);
         }
+        if (LazuliSodiumResourcePackCompat.isIsSodiumLoaded()){
+            LazuliSodiumResourcePackCompat.scheduleGlobalUniformSet(name, v);
+        }
     }
 
     public static void setVanillaShaderUniforms(String name, int v1, int v2) {
@@ -184,6 +188,9 @@ public class LazuliMinecraftShaderGetter {
             if (program == null) continue;
             program.getUniformOrDefault(name).set(v);
         }
+        if (LazuliSodiumResourcePackCompat.isIsSodiumLoaded()){
+            LazuliSodiumResourcePackCompat.scheduleGlobalUniformSet(name, new float[]{v});
+        }
     }
 
     public static void setVanillaShaderUniforms(String name, float v1, float v2) {
@@ -191,6 +198,9 @@ public class LazuliMinecraftShaderGetter {
             ShaderProgram program = getProgram(shader);
             if (program == null) continue;
             program.getUniformOrDefault(name).set(v1, v2);
+        }
+        if (LazuliSodiumResourcePackCompat.isIsSodiumLoaded()){
+            LazuliSodiumResourcePackCompat.scheduleGlobalUniformSet(name, new float[]{v1, v2});
         }
     }
 
@@ -200,6 +210,9 @@ public class LazuliMinecraftShaderGetter {
             if (program == null) continue;
             program.getUniformOrDefault(name).set(v1, v2, v3);
         }
+        if (LazuliSodiumResourcePackCompat.isIsSodiumLoaded()){
+            LazuliSodiumResourcePackCompat.scheduleGlobalUniformSet(name, new float[]{v1, v2, v3});
+        }
     }
 
     public static void setVanillaShaderUniforms(String name, float v1, float v2, float v3, float v4) {
@@ -207,6 +220,9 @@ public class LazuliMinecraftShaderGetter {
             ShaderProgram program = getProgram(shader);
             if (program == null) continue;
             program.getUniformOrDefault(name).set(v1, v2, v3, v4);
+        }
+        if (LazuliSodiumResourcePackCompat.isIsSodiumLoaded()){
+            LazuliSodiumResourcePackCompat.scheduleGlobalUniformSet(name, new float[]{v1, v2, v3, v4});
         }
     }
 
@@ -216,6 +232,9 @@ public class LazuliMinecraftShaderGetter {
             if (program == null) continue;
             program.getUniformOrDefault(name).set((float) vec.x, (float) vec.y, (float) vec.z);
         }
+        if (LazuliSodiumResourcePackCompat.isIsSodiumLoaded()){
+            LazuliSodiumResourcePackCompat.scheduleGlobalUniformSet(name, new float[]{(float) vec.x, (float) vec.y, (float) vec.z});
+        }
     }
 
     public static void setVanillaShaderUniforms(String name, Vector3f vec) {
@@ -224,6 +243,9 @@ public class LazuliMinecraftShaderGetter {
             if (program == null) continue;
             program.getUniformOrDefault(name).set(vec);
         }
+        if (LazuliSodiumResourcePackCompat.isIsSodiumLoaded()){
+            LazuliSodiumResourcePackCompat.scheduleGlobalUniformSet(name, new float[]{(float) vec.x, (float) vec.y, (float) vec.z});
+        }
     }
 
     public static void setVanillaShaderUniforms(String name, Vector4f vec) {
@@ -231,6 +253,9 @@ public class LazuliMinecraftShaderGetter {
             ShaderProgram program = getProgram(shader);
             if (program == null) continue;
             program.getUniformOrDefault(name).set(vec);
+        }
+        if (LazuliSodiumResourcePackCompat.isIsSodiumLoaded()){
+            LazuliSodiumResourcePackCompat.scheduleGlobalUniformSet(name, new float[]{(float) vec.x, (float) vec.y, (float) vec.z, vec.w});
         }
     }
 

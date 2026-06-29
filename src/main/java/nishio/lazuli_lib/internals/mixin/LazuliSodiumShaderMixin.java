@@ -36,7 +36,6 @@ public class LazuliSodiumShaderMixin {
 	)
 	private static void getShaderSource(Identifier id, CallbackInfoReturnable<String> cir) {
 		String path = String.format("/assets/%s/shaders/%s", id.getNamespace(), id.getPath());
-		LazuliLog.Warp.info("Sodium currently loading {}!", id);
 		Optional<Resource> shader = MinecraftClient.getInstance().getResourceManager().getResource(Identifier.of(id.getNamespace(), "shaders/%s".formatted(id.getPath())));
 		if (shader.isPresent()){
 			try (InputStream in = shader.get().getInputStream()) {

@@ -1,7 +1,9 @@
 package nishio.test_mod;
 
+import me.jellysquid.mods.sodium.client.gl.shader.uniform.GlUniformFloat3v;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import nishio.lazuli_lib.core.events.LazuliRenderEvents;
 import nishio.lazuli_lib.core.registry.LazuliShaderRegistry;
 import nishio.lazuli_lib.core.shaders.LazuliBlendMode;
@@ -10,6 +12,7 @@ import nishio.lazuli_lib.core.shaders.LazuliShader;
 import nishio.lazuli_lib.core.tools.LazuliShaderDevTools;
 import nishio.lazuli_lib.core.warp.LazuliWarp;
 import nishio.lazuli_lib.core.warp.LazuliWarpDefaultTargets;
+import nishio.lazuli_lib.internals.stuff.LazuliMinecraftShaderGetter;
 
 public class TestModShaders {
     public static LazuliShader RIPPLES_GEOMETRY_SHADER;
@@ -45,6 +48,11 @@ public class TestModShaders {
 
         LazuliWarp waves = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
         //LazuliWarp waves2 = new LazuliWarp(Identifier.of(TestModClient.MOD_ID, "inject2")).addTargets(LazuliWarpDefaultTargets.WORLD_TERRAIN).register();
+
+        LazuliRenderEvents.registerRenderCallback(ctx ->{
+            LazuliMinecraftShaderGetter.setVanillaShaderUniforms("epicenter", new Vec3d(0, 40, 0).subtract(ctx.camera().getPos()));
+        });
+
 
         LazuliShaderRegistry.close();
     }
