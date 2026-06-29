@@ -5,8 +5,10 @@
 	"name": "Lazuli_Lib",
 	"description": "Cool visuals make people go OoooOohhh! ",
 	"authors": [
-		"Azura Nishio",
-		"Architetury compat fix by Megastevian"
+		"Azura Nishio"
+	],
+	"contributors": [
+		"Megastevian: Architetury compat"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
