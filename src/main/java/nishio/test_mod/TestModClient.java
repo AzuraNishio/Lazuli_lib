@@ -25,7 +25,7 @@ public class TestModClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		LOGGER.info("Really cool mod loading");
 		//TestRenderer.register();
-        //TestModShaders.registerShaders();
+        TestModShaders.registerShaders();
 
 		//LazuliShaderDevTools.enableFastShaderReloading();
     }
