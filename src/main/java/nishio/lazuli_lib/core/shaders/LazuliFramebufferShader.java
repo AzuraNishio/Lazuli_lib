@@ -124,9 +124,7 @@ public class LazuliFramebufferShader extends LazuliShaderTop<LazuliFramebufferSh
     }
 
     public void renderToScreen() {
-        Framebuffer main = MinecraftClient.getInstance().getFramebuffer();
-        LazuliFramebufferUtills.copyToSwap(main);
-        getProgram().render(0, LazuliFramebufferUtills.getSwapBuffer(), main, true);
+        renderToScreen(0);
     }
 
     public LazuliFramebufferShader setSampler(String sampler, Identifier texture) {

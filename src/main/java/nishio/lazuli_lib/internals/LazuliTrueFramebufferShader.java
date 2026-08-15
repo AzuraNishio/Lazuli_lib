@@ -120,7 +120,8 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
             out.clear(MinecraftClient.IS_SYSTEM_MAC);
         }
         RenderSystem.depthFunc(519);
-        RenderSystem.disableDepthTest();
+        //RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
         out.beginWrite(viewport);
         BufferBuilder bufferBuilder = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
         bufferBuilder.vertex(A.x * W, A.y * H, 500.0F);
@@ -129,6 +130,8 @@ public class LazuliTrueFramebufferShader implements AutoCloseable {
         bufferBuilder.vertex(D.x * W, C.y * H, 500.0F);
         BufferRenderer.draw(bufferBuilder.end());
         RenderSystem.depthFunc(515);
+        RenderSystem.depthMask(true);
+
         in.endRead();
         this.program.disable();
 

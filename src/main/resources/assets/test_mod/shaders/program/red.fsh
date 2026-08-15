@@ -39,7 +39,8 @@ void main() {
     float depth      = dd( 0.0,  0.0);
 
 
-    color.r += 0.1 / sin(depth);
+    color.r += 0.1 / sin(depth * 1.00);
+    color.g += 0.1;
 
     fragColor = color;
 }

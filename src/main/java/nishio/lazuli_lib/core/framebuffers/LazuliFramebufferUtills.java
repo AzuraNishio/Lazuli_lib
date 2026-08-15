@@ -40,6 +40,7 @@ public class LazuliFramebufferUtills {
 
     public static Framebuffer copyToSwap(Framebuffer in){
         getSwapBuffer().clear(false);
+        getSwapBuffer().copyDepthFrom(in);
         getSwapBuffer().beginWrite(false);
         in.beginRead();
         copy.renderToFramebuffer(0, in, getSwapBuffer());
@@ -47,7 +48,8 @@ public class LazuliFramebufferUtills {
     }
 
     public static Framebuffer copyToSwap2(Framebuffer in){
-        getSwapBuffer().clear(false);
+        getSwapBuffer2().clear(false);
+        getSwapBuffer2().copyDepthFrom(in);
         getSwapBuffer2().beginWrite(false);
         in.beginRead();
         copy.renderToFramebuffer(0, in, getSwapBuffer2());
