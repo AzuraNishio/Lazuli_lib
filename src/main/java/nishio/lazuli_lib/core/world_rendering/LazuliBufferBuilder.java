@@ -212,17 +212,13 @@ public class LazuliBufferBuilder {
     }
 
 
-    public LazuliBufferBuilder color(int r, int g, int b, int a) {
-        buffer.color(
-                (overrideR == -1)? r : overrideR,
-                (overrideG == -1)? g : overrideG,
-                (overrideB == -1)? b : overrideB,
-                (overrideA == -1)? a : overrideA
+    public LazuliBufferBuilder color(float r, float g, float b, float a) {
+        this.color(
+                (int) (r * 255),
+                (int) (g * 255),
+                (int) (b * 255),
+                (int) (a * 255)
         );
-        lastR = r;
-        lastG = g;
-        lastB = b;
-        lastA = a;
         return this;
     }
 
@@ -246,36 +242,43 @@ public class LazuliBufferBuilder {
     }
 
     public LazuliBufferBuilder normal(float x, float y, float z) {
-        buffer.normal(x, y, z);
-        lastNormalX = x;
-        lastNormalY = y;
-        lastNormalZ = z;
+        Vector3f normal = new Vector3f(x, y, z);
+        normal.rotate(renderSpace.rotation);
+        buffer.normal(normal.x, normal.y, normal.z);
+        return this;
+    }
+
+    public LazuliBufferBuilder normal(double x, double y, double z) {
+        normal((float) x, (float) y, (float) z);
         return this;
     }
 
     public LazuliBufferBuilder normal(Vec3d n) {
-        buffer.normal((float) n.x, (float) n.y, (float) n.z);
-        lastNormalX = (float) n.x;
-        lastNormalY = (float) n.y;
-        lastNormalZ = (float) n.z;
+        Vector3f normal = n.toVector3f();
+        normal.rotate(renderSpace.rotation);
+        buffer.normal(normal.x, normal.y, normal.z);
         return this;
     }
 
 
     public LazuliBufferBuilder addVertex(LazuliVertex v) {
         Vec3d pos = v.getPos();
-        if (pos != null) {
-            vertex(pos);
-        } else {
-            vertex(0.0, 0.0, 0.0); // or keep last position if desired
-        }
+
+        assert pos != null;
+        vertex(pos);
 
         // Color
         if (v.r != null) lastR = v.r;
         if (v.g != null) lastG = v.g;
         if (v.b != null) lastB = v.b;
         if (v.a != null) lastA = v.a;
-        color((int)(lastR * 255f), (int)(lastG * 255f), (int)(lastB * 255f), (int)(lastA * 255f));
+
+        color(
+                (overrideR == -1)? lastR : overrideR,
+                (overrideG == -1)? lastG : overrideG,
+                (overrideB == -1)? lastB : overrideB,
+                (overrideA == -1)? lastA : overrideA
+        );
 
         // Texture coordinates
         if (v.u != null) { lastU = v.u; uvSet = true; };
@@ -300,9 +303,7 @@ public class LazuliBufferBuilder {
         if (v.normalY != null) lastNormalY = v.normalY;
         if (v.normalZ != null) lastNormalZ = v.normalZ;
 
-        Vector3f normal = new Vector3f(lastNormalX, lastNormalY, lastNormalZ);
-        normal.rotate(renderSpace.rotation);
-        normal(normal.x, normal.y, normal.z);
+        normal(lastNormalX, lastNormalY, lastNormalZ);
 
         this.buffer.next();
 
