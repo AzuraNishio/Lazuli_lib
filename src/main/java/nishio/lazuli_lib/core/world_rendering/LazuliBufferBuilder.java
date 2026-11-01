@@ -4,6 +4,7 @@ package nishio.lazuli_lib.core.world_rendering;
 import net.minecraft.client.render.*;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class LazuliBufferBuilder {
@@ -21,6 +22,7 @@ public class LazuliBufferBuilder {
     private boolean isEmpty = true;
     private boolean uvSet = false;
     private int vertexCount = 0;
+    private float overrideR = -1, overrideG = -1, overrideB = -1, overrideA = -1;
 
     //===========================================[Bunch of overloaded builder methods]===========================================
     public LazuliBufferBuilder(Tessellator tessellator, VertexFormat.DrawMode drawMode, VertexFormat vertexFormat, Matrix4f matrix, Transform3D renderSpace) {
@@ -136,6 +138,55 @@ public class LazuliBufferBuilder {
         }
     }
 
+    public LazuliBufferBuilder overrideColor(float r, float g, float b, float a){
+        this.overrideR = r; this.overrideG = g; this.overrideB = b; this.overrideA = a;
+        return this;
+    }
+
+    public LazuliBufferBuilder overrideR(float r){
+        this.overrideR = r;
+        return this;
+    }
+
+    public LazuliBufferBuilder overrideG(float g){
+        this.overrideG = g;
+        return this;
+    }
+
+    public LazuliBufferBuilder overrideB(float b){
+        this.overrideB = b;
+        return this;
+    }
+
+    public LazuliBufferBuilder overrideA(float a){
+        this.overrideA = a;
+        return this;
+    }
+
+    public LazuliBufferBuilder clearOverrideR(){
+        this.overrideR = -1;
+        return this;
+    }
+
+    public LazuliBufferBuilder clearOverrideG(){
+        this.overrideG = -1;
+        return this;
+    }
+
+    public LazuliBufferBuilder clearOverrideB(){
+        this.overrideB = -1;
+        return this;
+    }
+
+    public LazuliBufferBuilder clearOverrideA(){
+        this.overrideA = -1;
+        return this;
+    }
+
+    public LazuliBufferBuilder clearColorOverride(){
+        this.overrideR = -1; this.overrideG = -1; this.overrideB = -1; this.overrideA = -1;
+        return this;
+    }
 
     public LazuliBufferBuilder vertex(double x, double y, double z) {
         return vertex(new Vec3d(x, y, z));
@@ -162,7 +213,12 @@ public class LazuliBufferBuilder {
 
 
     public LazuliBufferBuilder color(int r, int g, int b, int a) {
-        buffer.color(r, g, b, a);
+        buffer.color(
+                (overrideR == -1)? r : overrideR,
+                (overrideG == -1)? g : overrideG,
+                (overrideB == -1)? b : overrideB,
+                (overrideA == -1)? a : overrideA
+        );
         lastR = r;
         lastG = g;
         lastB = b;
@@ -231,9 +287,6 @@ public class LazuliBufferBuilder {
             texture((float) Math.floor((double) (vertexCount % 4) / 2), (float) Math.floor((double) ((vertexCount + 1) % 4) / 2));
         }
 
-
-
-
         // Light
         if (v.light != null) lastLight = v.light;
         light(lastLight);
@@ -256,11 +309,21 @@ public class LazuliBufferBuilder {
         return this;
     }
 
-
-
     public void setRenderSpace(Transform3D renderSpace) {
         this.renderSpace = renderSpace;
     }
+
+    public void setRenderSpace(Vec3d displace, Quaternionf rotate) {
+        this.renderSpace = new Transform3D(displace, rotate);
+    }
+
+    public void setRenderSpace(Vec3d displace) {
+        this.setRenderSpace(displace, new Quaternionf());
+    }
+    public void setRenderSpace(Quaternionf rotate) {
+        this.setRenderSpace(Vec3d.ZERO, rotate);
+    }
+
 
     public Transform3D getRenderSpace() {
         return this.renderSpace;

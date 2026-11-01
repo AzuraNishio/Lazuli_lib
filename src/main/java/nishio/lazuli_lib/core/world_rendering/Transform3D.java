@@ -26,6 +26,16 @@ public class Transform3D {
         this.rotation = rotation;
     }
 
+    public Transform3D(Vec3d position) {
+        this.position = position;
+        this.rotation = new Quaternionf();
+    }
+
+    public Transform3D(Quaternionf rotation) {
+        this.position = Vec3d.ZERO;
+        this.rotation = rotation;
+    }
+
     public Transform3D() {
         this.position = Vec3d.ZERO;
         this.rotation = new Quaternionf(); // Identity
@@ -55,6 +65,16 @@ public class Transform3D {
     public Transform3D rotateAround(Vec3d axis, float degrees) {
         Vector3f axisVec = new Vector3f((float) axis.x, (float) axis.y, (float) axis.z).normalize();
         rotation.rotateAxis((float) Math.toRadians(degrees), axisVec.x, axisVec.y, axisVec.z);
+        return this;
+    }
+
+    public Transform3D translate(double x, double y, double z) {
+        this.position = this.position.add(x, y, z);
+        return this;
+    }
+
+    public Transform3D translate(Vec3d t) {
+        this.position = this.position.add(t);
         return this;
     }
 

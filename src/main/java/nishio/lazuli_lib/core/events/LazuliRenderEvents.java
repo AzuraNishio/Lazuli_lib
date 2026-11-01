@@ -68,6 +68,8 @@ public class LazuliRenderEvents {
         LapisRenderer.enableDepthTest();
         LapisRenderer.setShaderColor(1f,1f,1f,1f);
 
+        LazuliRenderContext.CTX = new LazuliRenderContext(viewProj, context, tickDelta);
+
         //run registered render phases
         for (nishio.lazuli_lib.internals.LazuliRenderEvents.LazuliRenderCallback callback : RENDER_CALLBACKS) {
             callback.render(new LazuliRenderContext(viewProj, context, tickDelta));

@@ -5,6 +5,7 @@ import net.minecraft.client.render.*;
 import org.joml.Matrix4f;
 
 public record LazuliRenderContext(Matrix4f viewProjMatrix, WorldRenderContext context, float tickDelta) {
+    public static LazuliRenderContext CTX = null;
 
     public Camera camera() {
         return context.camera();
