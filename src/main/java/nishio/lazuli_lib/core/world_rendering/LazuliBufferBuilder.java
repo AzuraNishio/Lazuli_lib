@@ -213,7 +213,7 @@ public class LazuliBufferBuilder {
 
 
     public LazuliBufferBuilder color(float r, float g, float b, float a) {
-        this.color(
+        this.buffer.color(
                 (int) (r * 255),
                 (int) (g * 255),
                 (int) (b * 255),
